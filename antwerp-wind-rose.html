@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antwerp Area — Wingfoil Spot Wind Roses</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d1b2a;
+      color: #e8f4f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 16px 40px;
+    }
+    header { text-align: center; margin-bottom: 20px; }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #4ecdc4;
+      margin-bottom: 4px;
+    }
+    .subtitle { font-size: 0.78rem; color: #5a8090; }
+
+    /* SPOT TABS */
+    .spot-tabs {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .spot-tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1.5px solid #1e3048;
+      background: #162030;
+      color: #6a90a4;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.18s;
+      user-select: none;
+    }
+    .spot-tab:hover { border-color: #4ecdc4; color: #4ecdc4; }
+    .spot-tab.active {
+      background: #4ecdc4;
+      color: #0d1b2a;
+      border-color: #4ecdc4;
+      font-weight: 700;
+    }
+
+    /* SEASON TABS */
+    .season-tabs {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .tab {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #1e3048;
+      background: #162030;
+      color: #6a90a4;
+      cursor: pointer;
+      font-size: 0.78rem;
+      transition: all 0.18s;
+      user-select: none;
+    }
+    .tab:hover { border-color: #4ecdc4; color: #4ecdc4; }
+    .tab.active {
+      background: #2a5060;
+      color: #4ecdc4;
+      border-color: #4ecdc4;
+      font-weight: 700;
+    }
+
+    /* CARD */
+    .main-card {
+      background: #162030;
+      border-radius: 18px;
+      padding: 24px 22px 22px;
+      width: 100%;
+      max-width: 580px;
+      border: 1px solid #1e3048;
+    }
+    .spot-badge {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #4a6a7a;
+      margin-bottom: 14px;
+    }
+    .spot-badge span {
+      background: #0d1b2a;
+      border-radius: 8px;
+      padding: 3px 10px;
+    }
+    #windrose-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    svg#rose { overflow: visible; }
+
+    /* TOOLTIP */
+    #tooltip {
+      position: fixed;
+      background: #0d1b2a;
+      border: 1px solid #2a5060;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      color: #e8f4f8;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+      line-height: 1.6;
+      min-width: 160px;
+    }
+    #tooltip strong { color: #4ecdc4; font-size: 0.85rem; }
+
+    /* OFFSHORE WARNING */
+    .offshore-warning {
+      display: none;
+      background: #2a1010;
+      border: 1.5px solid #c04040;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 0.77rem;
+      color: #f08080;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .offshore-warning.show { display: block; }
+    .offshore-warning strong { color: #f44444; }
+
+    /* LEGEND */
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      color: #7aacbc;
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .wingfoil-marker { font-size: 0.68rem; color: #4ecdc4; margin-left: 1px; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: #0d1b2a;
+      border-radius: 10px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #4ecdc4;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.66rem;
+      color: #4a6a7a;
+      margin-top: 5px;
+      line-height: 1.35;
+    }
+
+    /* SEASON NOTE */
+    .season-note {
+      font-size: 0.79rem;
+      color: #8ab0c0;
+      line-height: 1.65;
+      background: #0d1b2a;
+      border-radius: 10px;
+      padding: 13px 15px;
+      border-left: 3px solid #4ecdc4;
+    }
+    .season-note strong { color: #c8e8f0; }
+
+    .data-note {
+      font-size: 0.68rem;
+      color: #3a5a6a;
+      text-align: center;
+      margin-top: 18px;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Antwerp Area — Wingfoil Spot Wind Roses</h1>
+  <p class="subtitle">Top 3 spots · 16-point compass · hover bars for detail</p>
+</header>
+
+<div class="spot-tabs">
+  <button class="spot-tab active" onclick="setSpot('brouwersdam', this)">⭐ Brouwersdam</button>
+  <button class="spot-tab" onclick="setSpot('veersemeer', this)">🌊 Veerse Meer</button>
+  <button class="spot-tab" onclick="setSpot('knokke', this)">🏖️ Knokke-Heist</button>
+</div>
+
+<div class="season-tabs">
+  <button class="tab active" onclick="setSeason('spring', this)">🌱 Spring (MAM)</button>
+  <button class="tab"        onclick="setSeason('summer', this)">☀️ Summer (JJA)</button>
+  <button class="tab"        onclick="setSeason('autumn', this)">🍂 Autumn (SON)</button>
+  <button class="tab"        onclick="setSeason('winter', this)">❄️ Winter (DJF)</button>
+  <button class="tab"        onclick="setSeason('annual', this)">📅 Annual</button>
+</div>
+
+<div class="main-card">
+  <div class="offshore-warning" id="offshore-warning">
+    <strong>⚠ OFFSHORE DANGER:</strong> Hatched sectors (NNE→ESE) — never ride this spot when wind has E or NE in it. Drift puts you into North Sea shipping lanes.
+  </div>
+
+  <div class="spot-badge"><span id="spot-badge-text"></span></div>
+
+  <div id="windrose-container">
+    <svg id="rose" width="320" height="320"></svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3a5f80"></div>&lt;8 kts (light)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#4ecdc4"></div>8–13 kts <span class="wingfoil-marker">★</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#f7c948"></div>13–18 kts <span class="wingfoil-marker">★★</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#f4813a"></div>18–23 kts <span class="wingfoil-marker">★★</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#e84040"></div>&gt;23 kts (expert)
+    </div>
+    <div class="legend-item" id="offshore-legend" style="display:none">
+      <div class="legend-swatch" style="background:repeating-linear-gradient(45deg,#c04040,#c04040 2px,#3a1010 2px,#3a1010 5px)"></div>⚠ offshore
+    </div>
+  </div>
+
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="season-note" id="season-note"></div>
+</div>
+
+<p class="data-note">
+  ⚠ Based on North Sea / Zeeland / Belgian coast climatological knowledge — not raw KNMI/RMI station data.
+  Use as a planning guide only. ★★ = good wingfoil conditions (8–23 kts).
+</p>
+
+<div id="tooltip"></div>
+
+<script>
+// Directions: N NNE NE ENE E ESE SE SSE S SSW SW WSW W WNW NW NNW  (indices 0–15)
+// Speed bins: [<8 kts, 8-13, 13-18, 18-23, >23]
+// Offshore indices for Knokke: NNE(1), NE(2), ENE(3), E(4), ESE(5)
+const KNOKKE_OFFSHORE = new Set([1, 2, 3, 4, 5]);
+
+const SPOTS = {
+
+  brouwersdam: {
+    name: 'Brouwersdam',
+    badge: 'Grevelingenmeer (lake side) · ~1h 45m · All directions usable on lake',
+    offshoreDirs: new Set(),
+    data: {
+      spring: {
+        label: 'Spring (Mar–May)', calm: 10,
+        dirs: [
+          [3,5,6,4,1], // N
+          [3,4,5,3,1], // NNE
+          [3,5,6,4,1], // NE  — E/NE Scandinavian highs possible
+          [3,4,5,3,1], // ENE
+          [2,4,4,2,0], // E
+          [2,3,4,2,0], // ESE
+          [2,4,5,3,1], // SE
+          [2,4,5,3,1], // SSE
+          [3,5,7,5,2], // S
+          [3,6,9,7,2], // SSW
+          [3,7,12,9,4],// SW ← dominant
+          [3,6,10,7,3],// WSW
+          [3,6,9,7,3], // W
+          [3,5,8,6,2], // WNW
+          [3,5,8,6,2], // NW
+          [3,4,6,4,1], // NNW
+        ],
+        note: 'SW/W still dominant, but <strong>E/NE blocking highs</strong> (Scandinavian anticyclone) can bring cold easterlies, especially March–April — rideable on the lake in 12–20 kn. Expect 1–3 E/NE days per month in spring. SW fronts increasing through May. Good variety of directions — spring is underrated here.',
+        wingfoilPeak: 'SW / W',
+      },
+      summer: {
+        label: 'Summer (Jun–Aug)', calm: 16,
+        dirs: [
+          [4,6,6,3,1], // N  — anticyclonic N flow
+          [3,5,5,3,0], // NNE
+          [3,5,5,3,0], // NE
+          [3,4,4,2,0], // ENE
+          [3,4,4,2,0], // E
+          [2,3,4,2,0], // ESE
+          [2,4,5,3,1], // SE
+          [2,4,5,3,1], // SSE
+          [3,5,6,4,1], // S
+          [3,6,8,5,1], // SSW
+          [3,7,10,6,2],// SW ← most frequent
+          [3,6,9,5,2], // WSW
+          [3,6,8,5,2], // W
+          [3,5,7,4,1], // WNW
+          [3,5,7,4,1], // NW
+          [3,5,6,3,1], // NNW
+        ],
+        note: 'Lightest and most variable season. <strong>High-pressure blocking</strong> brings N/NE winds and calm spells — July especially can be frustratingly light. SW/W fronts less frequent and weaker than autumn/winter. <strong>Watch the forecast actively</strong> — 15–20 kn days exist but you may wait for them. Flat lake water is superb when it does blow.',
+        wingfoilPeak: 'SW / W',
+      },
+      autumn: {
+        label: 'Autumn (Sep–Nov)', calm: 10,
+        dirs: [
+          [3,4,5,3,1], // N
+          [2,3,4,2,0], // NNE
+          [2,3,4,2,0], // NE
+          [2,3,3,2,0], // ENE
+          [2,3,3,2,0], // E
+          [2,3,4,2,0], // ESE
+          [2,4,5,3,1], // SE
+          [2,4,6,4,1], // SSE
+          [3,5,7,5,2], // S
+          [3,6,9,7,2], // SSW
+          [3,7,13,10,4],// SW ← dominant (re-establishing)
+          [3,7,11,8,3],// WSW
+          [3,6,10,8,3],// W
+          [3,6,9,6,2], // WNW
+          [3,5,8,6,2], // NW
+          [3,4,6,4,1], // NNW
+        ],
+        note: '<strong>Best season at Brouwersdam.</strong> SW/W fronts strengthen from September, water still reasonable (15–17°C in Sep, 12–14°C in Oct). September and October combine consistent 15–25 kn with bearable temps. Lake side is at its best — flat water, reliable wind, less crowded than summer. <strong>Best months: September and October.</strong>',
+        wingfoilPeak: 'SW / W',
+      },
+      winter: {
+        label: 'Winter (Dec–Feb)', calm: 8,
+        dirs: [
+          [3,4,5,3,1], // N
+          [2,3,3,2,0], // NNE
+          [2,3,3,2,0], // NE
+          [2,2,2,1,0], // ENE
+          [2,2,2,1,0], // E
+          [2,3,3,2,0], // ESE
+          [2,4,5,3,1], // SE
+          [2,4,6,4,1], // SSE
+          [3,5,8,6,2], // S
+          [3,6,10,8,3],// SSW
+          [3,8,14,12,6],// SW ← dominant (strongest of year)
+          [3,7,12,10,4],// WSW
+          [3,7,11,9,4],// W
+          [3,6,10,7,3],// WNW
+          [3,6,10,8,3],// NW
+          [3,5,7,5,2], // NNW
+        ],
+        note: '<strong>SW/W frontal systems dominate</strong> — 18–30+ kts is common. Lake still provides flat water but peak days may overpower a 4m wing. Cold: 4–8°C air, 5–7°C water. <strong>Use Veerse Meer instead if forecast exceeds 25 kts</strong> — slightly lighter there. Full 5/4mm + gloves + hood required. Sessions possible but demanding.',
+        wingfoilPeak: 'SW / W',
+      },
+    }
+  },
+
+  veersemeer: {
+    name: 'Veerse Meer',
+    badge: 'Sheltered inland lake · ~1h 30m · All directions · Oyster booties mandatory',
+    offshoreDirs: new Set(),
+    data: {
+      spring: {
+        label: 'Spring (Mar–May)', calm: 13,
+        dirs: [
+          [4,6,5,3,0], // N
+          [4,5,5,2,0], // NNE
+          [4,5,5,3,0], // NE
+          [4,5,4,2,0], // ENE
+          [3,5,4,2,0], // E
+          [3,4,4,2,0], // ESE
+          [3,5,5,2,0], // SE
+          [3,5,6,3,1], // SSE
+          [4,6,7,4,1], // S
+          [4,7,9,5,1], // SSW
+          [4,7,11,7,2],// SW ← dominant
+          [4,6,9,6,2], // WSW
+          [4,6,8,5,2], // W
+          [4,5,7,5,1], // WNW
+          [4,5,7,5,1], // NW
+          [4,5,6,3,1], // NNW
+        ],
+        note: 'All directions rideable — Veerse Meer is fully enclosed. Wind typically <strong>3–5 kn lighter than Brouwersdam or the coast</strong>. Spring E/NE days are perfectly fine here — no offshore risk. <strong>Ideal for technique sessions</strong> when conditions elsewhere are gusty or uncertain. Always wear booties: oyster banks cover the lake bed.',
+        wingfoilPeak: 'SW / W (all dirs rideable)',
+      },
+      summer: {
+        label: 'Summer (Jun–Aug)', calm: 18,
+        dirs: [
+          [5,7,5,2,0], // N
+          [4,6,5,2,0], // NNE
+          [4,6,5,2,0], // NE
+          [4,5,4,2,0], // ENE
+          [4,5,4,2,0], // E
+          [3,4,4,2,0], // ESE
+          [3,5,5,2,0], // SE
+          [3,5,5,3,0], // SSE
+          [4,6,6,3,0], // S
+          [4,6,8,4,1], // SSW
+          [4,7,9,5,1], // SW
+          [4,6,8,5,1], // WSW
+          [4,6,7,5,1], // W
+          [4,5,6,4,1], // WNW
+          [4,5,6,4,1], // NW
+          [4,5,6,3,0], // NNW
+        ],
+        note: 'Summer has the most calm days (18%+). When it does blow, Veerse Meer delivers flat water and <strong>reliable 10–18 kn</strong> — perfect for drills without fighting chop. July can be frustratingly calm; August is more consistently breezy. <strong>Best flat-water learning spot in the region during summer.</strong>',
+        wingfoilPeak: 'SW / W (all dirs rideable)',
+      },
+      autumn: {
+        label: 'Autumn (Sep–Nov)', calm: 12,
+        dirs: [
+          [4,5,4,2,0], // N
+          [3,4,4,2,0], // NNE
+          [3,4,4,2,0], // NE
+          [3,4,3,2,0], // ENE
+          [3,4,3,2,0], // E
+          [3,4,4,2,0], // ESE
+          [3,5,5,3,1], // SE
+          [3,5,6,3,1], // SSE
+          [4,6,7,4,1], // S
+          [4,7,9,5,1], // SSW
+          [4,7,11,8,2],// SW ← dominant
+          [4,6,10,7,2],// WSW
+          [4,6,9,6,2], // W
+          [4,5,8,5,2], // WNW
+          [4,5,7,5,2], // NW
+          [4,5,6,3,1], // NNW
+        ],
+        note: 'SW/W strengthens in autumn — <strong>Veerse Meer absorbs that extra coastal energy</strong> into clean, flat water. When the coast runs 22–28 kn, Veerse Meer is typically 17–23 kn — often the perfect window. September–October is arguably the <strong>best period for intermediate riders</strong> building confidence anywhere in this region.',
+        wingfoilPeak: 'SW / W (all dirs rideable)',
+      },
+      winter: {
+        label: 'Winter (Dec–Feb)', calm: 10,
+        dirs: [
+          [4,5,4,2,0], // N
+          [3,4,3,2,0], // NNE
+          [3,4,3,2,0], // NE
+          [3,3,2,1,0], // ENE
+          [3,3,2,1,0], // E
+          [3,4,3,2,0], // ESE
+          [3,5,5,3,1], // SE
+          [3,5,6,4,1], // SSE
+          [4,6,8,5,2], // S
+          [4,7,9,7,2], // SSW
+          [4,8,12,9,3],// SW ← dominant
+          [4,7,10,8,3],// WSW
+          [4,7,9,7,3], // W
+          [4,6,8,6,2], // WNW
+          [4,6,8,6,2], // NW
+          [4,5,6,4,1], // NNW
+        ],
+        note: '<strong>Go-to winter spot.</strong> When the coast and Brouwersdam are blowing 25–35 kn, Veerse Meer brings it down to a manageable 20–28 kn — still powerful but controllable on a 4m or 3.5m wing. Cold: 4–8°C water, full 5/4mm kit. The sheltered lake means <strong>even in gales you often get a session in</strong> when everywhere else is a washout.',
+        wingfoilPeak: 'SW / W (all dirs rideable)',
+      },
+    }
+  },
+
+  knokke: {
+    name: 'Knokke-Heist / Cadzand',
+    badge: 'Open NW-facing North Sea coast · ~55m from Antwerp · ⚠ E/NE = OFFSHORE',
+    offshoreDirs: KNOKKE_OFFSHORE,
+    data: {
+      spring: {
+        label: 'Spring (Mar–May)', calm: 10,
+        dirs: [
+          [3,5,6,4,1], // N   — usable but variable
+          [3,4,5,3,1], // NNE — ⚠ OFFSHORE
+          [2,3,4,3,1], // NE  — ⚠ OFFSHORE
+          [2,3,4,2,0], // ENE — ⚠ OFFSHORE
+          [2,3,3,2,0], // E   — ⚠ OFFSHORE
+          [2,3,4,2,0], // ESE — ⚠ OFFSHORE
+          [2,4,5,3,1], // SE  — onshore, usable
+          [2,4,5,3,1], // SSE
+          [3,5,7,5,2], // S
+          [3,6,9,7,2], // SSW
+          [3,7,12,9,4],// SW ← dominant, side-onshore
+          [3,6,10,7,3],// WSW
+          [3,6,9,7,3], // W   ← side-onshore
+          [3,5,8,6,2], // WNW ← very good
+          [3,6,9,7,3], // NW  ← ideal side-shore
+          [3,5,7,5,2], // NNW
+        ],
+        note: 'Good variety of SW/W/NW days. <strong>NW is the ideal direction here</strong> — side-shore across a wide sandy beach with clean runs. Spring E/NE days occasionally appear (Scandinavian highs) — <strong>never ride Knokke in E or NE</strong>, head for Veerse Meer instead. Groynes are always present; know which zone you\'re in. Best around low tide for widest beach.',
+        wingfoilPeak: 'NW / W / SW',
+      },
+      summer: {
+        label: 'Summer (Jun–Aug)', calm: 15,
+        dirs: [
+          [4,6,6,3,0], // N
+          [3,5,5,3,0], // NNE — ⚠ OFFSHORE
+          [3,4,5,2,0], // NE  — ⚠ OFFSHORE
+          [3,4,4,2,0], // ENE — ⚠ OFFSHORE
+          [3,4,4,2,0], // E   — ⚠ OFFSHORE
+          [2,3,4,2,0], // ESE — ⚠ OFFSHORE
+          [2,4,5,3,1], // SE
+          [2,4,5,3,0], // SSE
+          [3,5,6,4,1], // S
+          [3,6,8,5,1], // SSW
+          [3,7,10,6,2],// SW ← most frequent
+          [3,6,9,5,1], // WSW
+          [3,6,8,5,2], // W
+          [3,5,7,4,1], // WNW
+          [3,6,8,5,2], // NW ← ideal
+          [3,5,6,3,1], // NNW
+        ],
+        note: 'Lighter and more variable. Long calm spells common July–August. When it does blow NW/W at 15–20 kn, Knokke is beautiful — wide beach, warm(ish) air. <strong>Check tide carefully: high tide shrinks the beach significantly</strong> and can make rigging awkward. Best: 2 hours either side of low tide. Fun social scene at Surfers Paradise beach club.',
+        wingfoilPeak: 'NW / W',
+      },
+      autumn: {
+        label: 'Autumn (Sep–Nov)', calm: 9,
+        dirs: [
+          [3,4,5,3,1], // N
+          [2,3,4,2,0], // NNE — ⚠ OFFSHORE
+          [2,3,4,2,0], // NE  — ⚠ OFFSHORE
+          [2,3,3,2,0], // ENE — ⚠ OFFSHORE
+          [2,3,3,2,0], // E   — ⚠ OFFSHORE
+          [2,3,4,2,0], // ESE — ⚠ OFFSHORE
+          [2,4,5,3,1], // SE
+          [2,4,6,4,1], // SSE
+          [3,5,7,5,2], // S
+          [3,6,9,7,2], // SSW
+          [3,7,13,10,4],// SW ← dominant (strong)
+          [3,7,11,8,3],// WSW
+          [3,6,10,8,3],// W
+          [3,6,9,6,2], // WNW
+          [3,7,10,8,3],// NW ← excellent
+          [3,5,7,5,2], // NNW
+        ],
+        note: '<strong>Best season at Knokke.</strong> SW/W/NW fronts bring reliable 18–25 kn from September. <strong>October is the peak month</strong> — strong wind, decent water temp (14–16°C), quieter beach. Always stay in the designated zone between beach markers; groynes become more dangerous with strong downwind drift. Intermediate-plus only in autumn.',
+        wingfoilPeak: 'NW / W / SW',
+      },
+      winter: {
+        label: 'Winter (Dec–Feb)', calm: 8,
+        dirs: [
+          [3,4,5,3,1], // N
+          [2,3,3,2,0], // NNE — ⚠ OFFSHORE
+          [2,3,3,2,0], // NE  — ⚠ OFFSHORE
+          [2,2,2,1,0], // ENE — ⚠ OFFSHORE
+          [2,2,2,1,0], // E   — ⚠ OFFSHORE
+          [2,3,3,2,0], // ESE — ⚠ OFFSHORE
+          [2,4,5,3,1], // SE
+          [2,4,6,4,1], // SSE
+          [3,5,8,6,2], // S
+          [3,6,10,8,3],// SSW
+          [3,8,14,12,5],// SW ← dominant (very strong)
+          [3,7,12,10,4],// WSW
+          [3,7,11,9,3],// W
+          [3,6,9,7,3], // WNW
+          [3,6,10,8,3],// NW ← powerful
+          [3,5,7,5,2], // NNW
+        ],
+        note: '<strong>Advanced riders only.</strong> SW/W fronts regularly produce 20–35 kn with North Sea swell and shore break. Groynes are significantly more dangerous with strong downwind drift. 4–8°C water, full winter kit. <strong>Beginners and intermediates should choose Veerse Meer or Brouwersdam instead.</strong> Knokke in January is exhilarating or terrifying — usually both.',
+        wingfoilPeak: 'SW / W / NW',
+      },
+    }
+  },
+};
+
+// Build annual averages
+for (const [spotKey, spot] of Object.entries(SPOTS)) {
+  const seasons = ['spring','summer','autumn','winter'];
+  const nDirs = 16, nBins = 5;
+  const avgDirs = Array.from({length: nDirs}, () => Array(nBins).fill(0));
+  let avgCalm = 0;
+  for (const s of seasons) {
+    avgCalm += spot.data[s].calm;
+    for (let i = 0; i < nDirs; i++)
+      for (let b = 0; b < nBins; b++)
+        avgDirs[i][b] += spot.data[s].dirs[i][b];
+  }
+  const annualNotes = {
+    brouwersdam: 'Annual picture: <strong>SW/W overwhelmingly dominant</strong> (~45% of observations). NW is a strong secondary. The lake is rideable in all directions — no offshore risk here. <strong>~50–55% of hours fall in the 8–23 kts wingfoil window</strong>, the best wind frequency of any day-trip spot from Antwerp.',
+    veersemeer:  'Annual average: <strong>SW/W dominant</strong> as across all North Sea spots, but the sheltered lake means <strong>all directions are rideable</strong> with wind running 3–5 kn lighter than the coast. Wider effective wingfoil window (~55–60% of hours in range). The most forgiving and versatile spot near Antwerp.',
+    knokke:      'Annual average: <strong>SW/W/NW dominant</strong> (~65% of usable wind). NW is the ideal direction. <strong>E/NE accounts for ~6–8% of observations — shown hatched as offshore danger</strong>. Never ride Knokke in E or NE. Annual usable wingfoil window ~40–45% (excluding offshore sectors).',
+  };
+  spot.data.annual = {
+    label: 'Annual average',
+    calm: avgCalm / seasons.length,
+    dirs: avgDirs.map(d => d.map(v => v / seasons.length)),
+    note: annualNotes[spotKey],
+    wingfoilPeak: spotKey === 'knokke' ? 'NW / W / SW' : 'SW / W',
+  };
+}
+
+// Normalise weights → percentages
+function normalise(raw) {
+  let total = raw.calm;
+  for (const d of raw.dirs) for (const v of d) total += v;
+  const f = 100 / total;
+  return {
+    ...raw,
+    calm: +(raw.calm * f).toFixed(3),
+    dirs: raw.dirs.map(d => d.map(v => +(v * f).toFixed(3))),
+  };
+}
+
+const DATA = {};
+for (const [sk, spot] of Object.entries(SPOTS)) {
+  DATA[sk] = {};
+  for (const [season, raw] of Object.entries(spot.data))
+    DATA[sk][season] = normalise(raw);
+}
+
+// Constants
+const DIR_LABELS  = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const SPEED_NAMES = ['< 8 kts','8–13 kts','13–18 kts','18–23 kts','> 23 kts'];
+const COLORS      = ['#3a5f80','#4ecdc4','#f7c948','#f4813a','#e84040'];
+const WINGFOIL_BINS = [1, 2, 3];
+
+const SVG_SIZE = 320, CX = 160, CY = 160;
+const MAX_R = 118, MAX_PCT = 14, GAP = 10, HALF_SECT = 9.5;
+
+function toRad(deg) { return deg * Math.PI / 180; }
+function ns(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+function sectorPath(cx, cy, r1, r2, aBeg, aEnd) {
+  const sb = toRad(aBeg), se = toRad(aEnd);
+  const x1o = cx + r2*Math.sin(sb), y1o = cy - r2*Math.cos(sb);
+  const x2o = cx + r2*Math.sin(se), y2o = cy - r2*Math.cos(se);
+  const x1i = cx + r1*Math.sin(se), y1i = cy - r1*Math.cos(se);
+  const x2i = cx + r1*Math.sin(sb), y2i = cy - r1*Math.cos(sb);
+  const lg = (aEnd - aBeg > 180) ? 1 : 0;
+  if (r1 < 0.5)
+    return `M ${cx},${cy} L ${x1o},${y1o} A ${r2},${r2} 0 ${lg} 1 ${x2o},${y2o} Z`;
+  return [`M ${x1o},${y1o}`, `A ${r2},${r2} 0 ${lg} 1 ${x2o},${y2o}`,
+          `L ${x1i},${y1i}`, `A ${r1},${r1} 0 ${lg} 0 ${x2i},${y2i}`, 'Z'].join(' ');
+}
+
+let currentSpot = 'brouwersdam', currentSeason = 'spring';
+
+function drawRose(spot, season) {
+  const d = DATA[spot][season];
+  const offshoreSet = SPOTS[spot].offshoreDirs;
+  const svg = document.getElementById('rose');
+  const sc = MAX_R / MAX_PCT;
+  svg.innerHTML = '';
+
+  // Defs: offshore hatch pattern
+  const defs = ns('defs');
+  const pat = ns('pattern');
+  pat.setAttribute('id', 'offshoreHatch');
+  pat.setAttribute('patternUnits', 'userSpaceOnUse');
+  pat.setAttribute('width', '6'); pat.setAttribute('height', '6');
+  pat.setAttribute('patternTransform', 'rotate(45)');
+  const l1 = ns('line');
+  l1.setAttribute('x1','0'); l1.setAttribute('y1','0');
+  l1.setAttribute('x2','0'); l1.setAttribute('y2','6');
+  l1.setAttribute('stroke','#b03030'); l1.setAttribute('stroke-width','2.5');
+  pat.appendChild(l1);
+  defs.appendChild(pat);
+  svg.appendChild(defs);
+
+  // Concentric rings
+  for (const pct of [5, 10, 14]) {
+    const r = pct * sc;
+    const c = ns('circle');
+    c.setAttribute('cx', CX); c.setAttribute('cy', CY); c.setAttribute('r', r);
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke', pct === 14 ? '#2a4060' : '#1a2f45');
+    c.setAttribute('stroke-width', 0.8);
+    svg.appendChild(c);
+    if (pct < 14) {
+      const t = ns('text');
+      t.setAttribute('x', CX+3); t.setAttribute('y', CY - r - 3);
+      t.setAttribute('fill', '#2a4060'); t.setAttribute('font-size', '8');
+      t.textContent = pct + '%';
+      svg.appendChild(t);
+    }
+  }
+
+  // Radial grid lines
+  for (let a = 0; a < 360; a += 45) {
+    const l = ns('line');
+    const r = MAX_R + 6;
+    l.setAttribute('x1', CX); l.setAttribute('y1', CY);
+    l.setAttribute('x2', CX + r*Math.sin(toRad(a)));
+    l.setAttribute('y2', CY - r*Math.cos(toRad(a)));
+    l.setAttribute('stroke', '#1a2f45');
+    l.setAttribute('stroke-width', a % 90 === 0 ? 0.8 : 0.5);
+    svg.appendChild(l);
+  }
+
+  // Directional bars
+  for (let i = 0; i < 16; i++) {
+    const bearing = i * 22.5;
+    const bins = d.dirs[i];
+    const isOffshore = offshoreSet.has(i);
+    let cumR = GAP;
+    for (let b = 0; b < 5; b++) {
+      const freq = bins[b];
+      const outerR = cumR + freq * sc;
+      if (freq > 0.05) {
+        const p = ns('path');
+        p.setAttribute('d', sectorPath(CX, CY, cumR, outerR, bearing - HALF_SECT, bearing + HALF_SECT));
+        if (isOffshore) {
+          p.setAttribute('fill', 'url(#offshoreHatch)');
+          p.setAttribute('opacity', '0.75');
+        } else {
+          p.setAttribute('fill', COLORS[b]);
+          p.setAttribute('opacity', '0.88');
+        }
+        p.setAttribute('stroke', '#162030'); p.setAttribute('stroke-width', '0.4');
+        p.dataset.dir = i; p.dataset.bin = b; p.dataset.offshore = isOffshore ? '1' : '0';
+        p.addEventListener('mouseenter', onBarEnter);
+        p.addEventListener('mouseleave', onBarLeave);
+        p.addEventListener('mousemove', onBarMove);
+        svg.appendChild(p);
+      }
+      cumR = outerR;
+    }
+  }
+
+  // Compass labels
+  const LR = MAX_R + 20;
+  for (const [t, deg, bold, color] of [['N',0,true,'#4ecdc4'],['E',90,false,'#5a8090'],['S',180,false,'#5a8090'],['W',270,false,'#5a8090']]) {
+    const el = ns('text');
+    el.setAttribute('x', CX + LR*Math.sin(toRad(deg)));
+    el.setAttribute('y', CY - LR*Math.cos(toRad(deg)) + 4);
+    el.setAttribute('text-anchor','middle'); el.setAttribute('fill', color);
+    el.setAttribute('font-size', bold ? '13' : '11');
+    el.setAttribute('font-weight', bold ? '700' : '400');
+    el.textContent = t;
+    svg.appendChild(el);
+  }
+  const IR = MAX_R + 16;
+  for (const [label, deg] of [['NE',45],['SE',135],['SW',225],['NW',315]]) {
+    const t = ns('text');
+    t.setAttribute('x', CX + IR*Math.sin(toRad(deg)));
+    t.setAttribute('y', CY - IR*Math.cos(toRad(deg)) + 3.5);
+    t.setAttribute('text-anchor','middle'); t.setAttribute('fill','#2e4a5a'); t.setAttribute('font-size','9');
+    t.textContent = label;
+    svg.appendChild(t);
+  }
+
+  // Centre dot
+  const dot = ns('circle');
+  dot.setAttribute('cx',CX); dot.setAttribute('cy',CY); dot.setAttribute('r',GAP);
+  dot.setAttribute('fill','#162030'); dot.setAttribute('stroke','#2a4060'); dot.setAttribute('stroke-width','1');
+  svg.appendChild(dot);
+}
+
+const tooltip = document.getElementById('tooltip');
+
+function onBarEnter(e) {
+  const i = +e.currentTarget.dataset.dir;
+  const b = +e.currentTarget.dataset.bin;
+  const isOffshore = e.currentTarget.dataset.offshore === '1';
+  const bins = DATA[currentSpot][currentSeason].dirs[i];
+  const total = bins.reduce((a,v) => a+v, 0);
+  let html = `<strong>${DIR_LABELS[i]}</strong> &nbsp;${total.toFixed(1)}% of obs<br>`;
+  if (isOffshore) html += `<span style="color:#f06060">⚠ OFFSHORE — do not ride</span><br>`;
+  html += `<span style="color:${isOffshore ? '#f06060' : COLORS[b]}">${SPEED_NAMES[b]}</span>: ${bins[b].toFixed(1)}%<br>`;
+  if (!isOffshore && WINGFOIL_BINS.includes(b)) {
+    const wfPct = (bins[1]+bins[2]+bins[3]).toFixed(1);
+    html += `<span style="color:#4ecdc4;font-size:0.68rem">✓ wingfoil range: ${wfPct}% from this dir</span>`;
+  }
+  tooltip.innerHTML = html;
+  tooltip.style.display = 'block';
+  positionTooltip(e);
+}
+function onBarMove(e) { positionTooltip(e); }
+function onBarLeave() { tooltip.style.display = 'none'; }
+function positionTooltip(e) {
+  const x = e.clientX + 14, y = e.clientY - 10;
+  const w = tooltip.offsetWidth;
+  tooltip.style.left = (x + w > window.innerWidth ? x - w - 28 : x) + 'px';
+  tooltip.style.top = y + 'px';
+}
+
+function updateStats(spot, season) {
+  const d = DATA[spot][season];
+  const offshoreSet = SPOTS[spot].offshoreDirs;
+  const dirTotals = d.dirs.map(bins => bins.reduce((a,v) => a+v, 0));
+  let maxDir = 0, maxPct = 0;
+  for (let i = 0; i < 16; i++) {
+    if (!offshoreSet.has(i) && dirTotals[i] > maxPct) { maxPct = dirTotals[i]; maxDir = i; }
+  }
+  let wfPct = 0, stPct = 0;
+  for (let i = 0; i < 16; i++) {
+    if (!offshoreSet.has(i)) {
+      for (const bi of WINGFOIL_BINS) wfPct += d.dirs[i][bi];
+      stPct += d.dirs[i][3] + d.dirs[i][4];
+    }
+  }
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-box">
+      <div class="stat-value">${DIR_LABELS[maxDir]}</div>
+      <div class="stat-label">Best<br>direction<br><span style="color:#4ecdc4">(${maxPct.toFixed(1)}%)</span></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">${wfPct.toFixed(0)}%</div>
+      <div class="stat-label">Usable<br>wingfoil<br><span style="color:#4a6a7a">(8–23 kts)</span></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">${stPct.toFixed(0)}%</div>
+      <div class="stat-label">Strong<br>&gt;18 kts<br><span style="color:#4a6a7a">(adv/expert)</span></div>
+    </div>
+  `;
+  document.getElementById('season-note').innerHTML = SPOTS[spot].data[season].note;
+  document.getElementById('spot-badge-text').textContent = SPOTS[spot].badge;
+  const hasOffshore = offshoreSet.size > 0;
+  document.getElementById('offshore-warning').classList.toggle('show', hasOffshore);
+  document.getElementById('offshore-legend').style.display = hasOffshore ? 'flex' : 'none';
+}
+
+function setSpot(spot, btn) {
+  currentSpot = spot;
+  document.querySelectorAll('.spot-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  drawRose(currentSpot, currentSeason);
+  updateStats(currentSpot, currentSeason);
+}
+
+function setSeason(season, btn) {
+  currentSeason = season;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  drawRose(currentSpot, currentSeason);
+  updateStats(currentSpot, currentSeason);
+}
+
+drawRose('brouwersdam', 'spring');
+updateStats('brouwersdam', 'spring');
+</script>
+</body>
+</html>

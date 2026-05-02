@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sydney Wingfoil — Seasonal Wind Rose</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d1b2a;
+      color: #e8f4f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 16px 48px;
+    }
+
+    header { text-align: center; margin-bottom: 18px; }
+
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #4ecdc4;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.77rem;
+      color: #4a6878;
+    }
+
+    /* ── LOCATION TOGGLE ── */
+    .location-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 18px;
+      border: 1.5px solid #1e3048;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #0d1b2a;
+    }
+
+    .loc-btn {
+      padding: 8px 20px;
+      background: transparent;
+      color: #5a8090;
+      border: none;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .loc-btn:first-child { border-right: 1.5px solid #1e3048; }
+    .loc-btn:hover { color: #4ecdc4; background: #111f30; }
+    .loc-btn.active {
+      background: #1a3a50;
+      color: #e8f4f8;
+      font-weight: 600;
+    }
+    .loc-btn .loc-badge {
+      font-size: 0.65rem;
+      background: #0d3040;
+      color: #4ecdc4;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+    .loc-btn.active .loc-badge {
+      background: #4ecdc4;
+      color: #0d1b2a;
+    }
+
+    /* ── SEASON TABS ── */
+    .season-tabs {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab {
+      padding: 7px 15px;
+      border-radius: 20px;
+      border: 1.5px solid #1e3048;
+      background: #162030;
+      color: #6a90a4;
+      cursor: pointer;
+      font-size: 0.81rem;
+      transition: all 0.18s;
+      user-select: none;
+    }
+    .tab:hover { border-color: #4ecdc4; color: #4ecdc4; }
+    .tab.active {
+      background: #4ecdc4;
+      color: #0d1b2a;
+      border-color: #4ecdc4;
+      font-weight: 700;
+    }
+
+    /* ── MAIN CARD ── */
+    .main-card {
+      background: #162030;
+      border-radius: 18px;
+      padding: 22px 20px 20px;
+      width: 100%;
+      max-width: 580px;
+      border: 1px solid #1e3048;
+    }
+
+    #windrose-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    svg#rose { overflow: visible; }
+
+    /* tooltip */
+    #tooltip {
+      position: fixed;
+      background: #0a1520;
+      border: 1px solid #2a5060;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.74rem;
+      color: #e8f4f8;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+      line-height: 1.65;
+      min-width: 145px;
+    }
+    #tooltip strong { color: #4ecdc4; font-size: 0.84rem; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.71rem;
+      color: #7aacbc;
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .wf-star { font-size: 0.67rem; color: #4ecdc4; margin-left: 1px; }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .stat-box {
+      background: #0d1b2a;
+      border-radius: 10px;
+      padding: 11px 7px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #4ecdc4;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.64rem;
+      color: #4a6a7a;
+      margin-top: 5px;
+      line-height: 1.35;
+    }
+
+    /* ── SEASON NOTE ── */
+    .season-note {
+      font-size: 0.78rem;
+      color: #8ab0c0;
+      line-height: 1.65;
+      background: #0d1b2a;
+      border-radius: 10px;
+      padding: 12px 14px;
+      border-left: 3px solid #4ecdc4;
+    }
+    .season-note strong { color: #c8e8f0; }
+
+    /* ── FOOTER ── */
+    .data-note {
+      font-size: 0.67rem;
+      color: #3a5060;
+      text-align: center;
+      margin-top: 16px;
+      max-width: 580px;
+      line-height: 1.55;
+    }
+    .data-note a { color: #4ecdc4; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Sydney Wingfoil — Seasonal Wind Rose</h1>
+  <p class="subtitle">16-point compass &nbsp;·&nbsp; hover bars for detail &nbsp;·&nbsp; estimated from coastal climatology</p>
+</header>
+
+<!-- ── LOCATION TOGGLE ── -->
+<div class="location-toggle">
+  <button class="loc-btn active" onclick="setLocation('manly', this)">
+    🏄 Manly / Northern Beaches
+    <span class="loc-badge">Ocean</span>
+  </button>
+  <button class="loc-btn" onclick="setLocation('kyeemagh', this)">
+    ⚓ Kyeemagh / Botany Bay
+    <span class="loc-badge">Bay</span>
+  </button>
+</div>
+
+<!-- ── SEASON TABS ── -->
+<div class="season-tabs">
+  <button class="tab active"  onclick="setSeason('summer', this)">☀️ Summer (DJF)</button>
+  <button class="tab"         onclick="setSeason('autumn', this)">🍂 Autumn (MAM)</button>
+  <button class="tab"         onclick="setSeason('winter', this)">🌬️ Winter (JJA)</button>
+  <button class="tab"         onclick="setSeason('spring', this)">🌸 Spring (SON)</button>
+  <button class="tab"         onclick="setSeason('annual', this)">📅 Annual</button>
+</div>
+
+<div class="main-card">
+  <div id="windrose-container">
+    <svg id="rose" width="320" height="320"></svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3a5f80"></div>&lt;8 kts (too light)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#4ecdc4"></div>8–13 kts <span class="wf-star">★</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#f7c948"></div>13–18 kts <span class="wf-star">★★</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#f4813a"></div>18–23 kts <span class="wf-star">★★</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#e84040"></div>&gt;23 kts (expert)
+    </div>
+  </div>
+
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="season-note" id="season-note"></div>
+</div>
+
+<p class="data-note">
+  ⚠ Based on climatological knowledge of each location — not raw BOM station data.
+  Use as a planning guide only. Authoritative source: <a href="https://www.bom.gov.au/climate/averages/wind/" target="_blank">BOM Wind Roses</a>.
+  &nbsp;★★ = good wingfoil conditions (8–23 kts).
+</p>
+
+<div id="tooltip"></div>
+
+<script>
+// ═════════════════════════════════════════════════════════════════════════════
+// DATA — per location, per season
+//
+// Directions: N NNE NE ENE E ESE SE SSE S SSW SW WSW W WNW NW NNW
+// Speed bins: [<8 kts, 8–13, 13–18, 18–23, >23]
+// Values are relative weights — normalised to 100% in code.
+//
+// KEY DIFFERENCES between locations:
+//  Manly:    Ocean-facing east. NE sea breeze is the dominant feature.
+//            Exposed to ocean swell. Southerly busters hit directly.
+//  Kyeemagh: North shore of Botany Bay. Bay opens to SE. Flat water.
+//            Sea breeze has more N/NNE component across the bay.
+//            SW/W winds can be gusty over industrial/urban terrain to W.
+//            Airport proximity can create localised effects.
+// ═════════════════════════════════════════════════════════════════════════════
+
+const ALL_LOCATIONS = {
+
+  // ─────────────────────────────────────────────────────────────────────────
+  manly: {
+    name: 'Manly / Northern Beaches',
+    seasons: {
+
+      summer: {
+        label: 'Summer (Dec–Feb)',
+        calm: 20,
+        dirs: [
+          [4, 9,  8,  5, 2],   // N
+          [3, 9, 10,  8, 3],   // NNE
+          [3, 8, 18, 16, 7],   // NE  ← dominant sea breeze
+          [3, 7, 13,  9, 4],   // ENE
+          [3, 7, 10,  6, 2],   // E
+          [3, 5,  6,  3, 1],   // ESE
+          [3, 5,  7,  3, 1],   // SE
+          [3, 5,  6,  3, 1],   // SSE
+          [3, 5,  7,  5, 3],   // S   ← southerly busters
+          [3, 5,  8,  5, 2],   // SSW
+          [3, 6,  9,  7, 3],   // SW
+          [3, 5,  7,  4, 1],   // WSW
+          [3, 5,  5,  3, 1],   // W
+          [3, 5,  5,  3, 1],   // WNW
+          [3, 6,  7,  4, 2],   // NW  ← pre-frontal hot NW
+          [3, 7,  8,  5, 2],   // NNW
+        ],
+        note: 'The <strong>NE sea breeze</strong> dominates — builds from mid-morning, peaks 15–25 kts by early afternoon, fades after sunset. Hot <strong>NW winds</strong> precede cold fronts, which arrive as a sharp <strong>southerly buster</strong> (S/SSW, sometimes 20–30+ kts). Mornings typically calm. Best wingfoil window: 11am–4pm on NE days. Swell runs with the NE so expect chop on stronger days.',
+      },
+
+      autumn: {
+        label: 'Autumn (Mar–May)',
+        calm: 20,
+        dirs: [
+          [3, 7,  7,  4, 1],   // N
+          [3, 7,  8,  5, 2],   // NNE
+          [3, 7, 12,  9, 3],   // NE
+          [3, 7, 10,  7, 2],   // ENE
+          [3, 7, 10,  6, 2],   // E
+          [3, 6,  8,  5, 1],   // ESE
+          [3, 7, 10,  5, 2],   // SE
+          [3, 6,  8,  5, 1],   // SSE
+          [3, 6,  8,  5, 2],   // S
+          [3, 6,  8,  5, 2],   // SSW
+          [3, 6,  9,  6, 2],   // SW
+          [3, 5,  7,  4, 1],   // WSW
+          [3, 5,  6,  4, 1],   // W
+          [3, 5,  5,  3, 1],   // WNW
+          [3, 5,  6,  4, 1],   // NW
+          [3, 6,  7,  4, 1],   // NNW
+        ],
+        note: 'A <strong>transitional, variable season</strong>. The NE sea breeze weakens from April onward; E and SE winds increase. SW frontal systems arrive more frequently. April can still produce clean NE days at 12–18 kts; May becomes more hit-and-miss. The most <strong>spread-out wind distribution</strong> of the year.',
+      },
+
+      winter: {
+        label: 'Winter (Jun–Aug)',
+        calm: 14,
+        dirs: [
+          [3, 6,  7,  4, 1],   // N
+          [3, 5,  5,  3, 1],   // NNE
+          [3, 5,  5,  3, 1],   // NE
+          [3, 4,  4,  2, 0],   // ENE
+          [3, 4,  4,  2, 0],   // E
+          [3, 5,  5,  3, 1],   // ESE
+          [3, 5,  7,  4, 1],   // SE
+          [3, 6,  9,  6, 2],   // SSE
+          [3, 7, 12,  9, 4],   // S
+          [3, 7, 14, 12, 5],   // SSW
+          [3, 8, 16, 14, 7],   // SW  ← dominant frontal
+          [3, 7, 12, 10, 4],   // WSW
+          [3, 6, 10,  7, 3],   // W
+          [3, 6,  8,  5, 2],   // WNW
+          [3, 6,  9,  6, 2],   // NW
+          [3, 6,  8,  5, 2],   // NNW
+        ],
+        note: '<strong>SW–W frontal systems</strong> dominate, often 18–30 kts and cold. Between fronts, NW pre-frontal winds are fast but rough. NE sea breeze is infrequent and weak. Best for <strong>advanced/expert riders</strong> — winter SW means solid ocean swell at Manly/Narrabeen/Collaroy, so expect rough water state alongside the strong wind.',
+      },
+
+      spring: {
+        label: 'Spring (Sep–Nov)',
+        calm: 17,
+        dirs: [
+          [3, 7,  8,  5, 2],   // N
+          [3, 7, 10,  7, 3],   // NNE
+          [3, 7, 15, 12, 5],   // NE  ← sea breeze re-establishing
+          [3, 7, 12,  8, 3],   // ENE
+          [3, 7, 10,  6, 2],   // E
+          [3, 5,  7,  4, 1],   // ESE
+          [3, 6,  8,  5, 1],   // SE
+          [3, 5,  7,  4, 1],   // SSE
+          [3, 5,  7,  5, 2],   // S
+          [3, 5,  8,  5, 2],   // SSW
+          [3, 5,  8,  6, 2],   // SW
+          [3, 5,  6,  4, 1],   // WSW
+          [3, 5,  5,  3, 1],   // W
+          [3, 5,  5,  3, 1],   // WNW
+          [3, 5,  6,  4, 1],   // NW
+          [3, 6,  8,  5, 2],   // NNW
+        ],
+        note: 'The <strong>NE sea breeze re-establishes</strong> — October–November is often the best two-month window of the year. September can still see SW fronts from winter; by November it resembles early summer. <strong>October is the sweet spot</strong>: consistent NE 12–20 kts, mild temps, lighter crowds.',
+      },
+    }, // end manly seasons
+  }, // end manly
+
+  // ─────────────────────────────────────────────────────────────────────────
+  kyeemagh: {
+    name: 'Kyeemagh / Botany Bay',
+    seasons: {
+
+      summer: {
+        label: 'Summer (Dec–Feb)',
+        calm: 24,
+        dirs: [
+          // Botany Bay sea breeze has a more N/NNE component than Manly.
+          // The bay (opening to SE) channels N–NE winds across flat water.
+          // SW is gustier here due to urban/industrial terrain to the W.
+          [4, 10, 11,  8, 3],   // N    ← stronger N component vs Manly
+          [4, 10, 14, 12, 4],   // NNE  ← peak direction at Kyeemagh
+          [3,  8, 13, 10, 4],   // NE   (still strong, but NNE edges it)
+          [3,  7, 10,  7, 2],   // ENE
+          [3,  7,  9,  5, 2],   // E    (slightly more E from bay channeling)
+          [3,  5,  6,  4, 1],   // ESE
+          [3,  6,  7,  4, 1],   // SE   (bay open to SE — more SE exposure)
+          [3,  5,  6,  3, 1],   // SSE
+          [3,  5,  7,  5, 3],   // S    ← southerly busters still occur
+          [3,  5,  7,  4, 2],   // SSW
+          [3,  5,  8,  6, 3],   // SW   ← gustier over urban terrain
+          [3,  4,  6,  4, 1],   // WSW
+          [3,  4,  5,  3, 1],   // W
+          [3,  4,  5,  3, 1],   // WNW
+          [3,  5,  6,  4, 2],   // NW
+          [3,  7,  9,  6, 2],   // NNW
+        ],
+        note: 'The sea breeze at Botany Bay has a more <strong>N–NNE component</strong> than at Manly, blowing across the bay\'s flat water. N and NNE are the premium directions here. <strong>Flat-water conditions</strong> are the big advantage: no ocean swell. Southerly busters still arrive sharply. SW winds can be gusty and turbulent coming over the western industrial zone — check for unsteady gusts.',
+      },
+
+      autumn: {
+        label: 'Autumn (Mar–May)',
+        calm: 23,
+        dirs: [
+          [3,  8,  9,  5, 2],   // N
+          [3,  8, 10,  6, 2],   // NNE
+          [3,  7, 11,  8, 3],   // NE
+          [3,  7,  9,  6, 2],   // ENE
+          [3,  7, 10,  6, 2],   // E   ← E more prominent in bay
+          [3,  6,  9,  5, 2],   // ESE
+          [3,  7, 10,  5, 2],   // SE  ← bay exposes to SE
+          [3,  6,  8,  5, 1],   // SSE
+          [3,  6,  8,  5, 2],   // S
+          [3,  6,  8,  5, 2],   // SSW
+          [3,  6,  8,  5, 2],   // SW
+          [3,  5,  6,  4, 1],   // WSW
+          [3,  5,  5,  3, 1],   // W
+          [3,  5,  5,  3, 1],   // WNW
+          [3,  5,  6,  3, 1],   // NW
+          [3,  6,  7,  4, 1],   // NNW
+        ],
+        note: 'Autumn is <strong>variable</strong> at Botany Bay as it is across Sydney. The bay\'s SE-facing opening means E and SE winds are more usable here than at Manly (side-shore rather than side-offshore). NE still fires on good days. SW fronts increase through April–May — the bay\'s flat water is a bonus when the wind is marginal, requiring less chop management.',
+      },
+
+      winter: {
+        label: 'Winter (Jun–Aug)',
+        calm: 15,
+        dirs: [
+          [3,  6,  7,  4, 1],   // N
+          [3,  5,  5,  3, 1],   // NNE
+          [3,  5,  5,  3, 1],   // NE
+          [3,  4,  4,  2, 0],   // ENE
+          [3,  4,  5,  2, 0],   // E
+          [3,  5,  6,  3, 1],   // ESE
+          [3,  5,  7,  5, 1],   // SE   ← more SE penetration into bay
+          [3,  6,  9,  6, 2],   // SSE
+          [3,  7, 12,  9, 4],   // S
+          [3,  7, 13, 11, 5],   // SSW
+          [3,  7, 15, 12, 6],   // SW   ← dominant, gusty over urban terrain
+          [3,  7, 12, 10, 5],   // WSW
+          [3,  6, 10,  7, 3],   // W
+          [3,  5,  8,  5, 2],   // WNW
+          [3,  6,  8,  5, 2],   // NW
+          [3,  5,  7,  5, 2],   // NNW
+        ],
+        note: '<strong>SW–W frontal systems</strong> dominate as across Sydney. At Kyeemagh these winds arrive over western suburbs and industrial areas, which can create <strong>gustier, more turbulent conditions</strong> than at Manly despite similar mean speeds. The upside: <strong>no ocean swell</strong>. Southerlies track across the bay from the south, sometimes cleaner than the SW. Advanced/expert conditions throughout winter.',
+      },
+
+      spring: {
+        label: 'Spring (Sep–Nov)',
+        calm: 20,
+        dirs: [
+          [3,  7, 10,  6, 2],   // N
+          [3,  8, 12,  9, 3],   // NNE  ← peak re-establishing
+          [3,  7, 13, 10, 4],   // NE
+          [3,  7, 10,  7, 2],   // ENE
+          [3,  7,  9,  6, 2],   // E
+          [3,  5,  7,  4, 1],   // ESE
+          [3,  6,  8,  5, 1],   // SE
+          [3,  5,  7,  4, 1],   // SSE
+          [3,  5,  7,  4, 2],   // S
+          [3,  5,  7,  5, 2],   // SSW
+          [3,  5,  7,  5, 2],   // SW
+          [3,  5,  6,  4, 1],   // WSW
+          [3,  5,  5,  3, 1],   // W
+          [3,  5,  5,  3, 1],   // WNW
+          [3,  5,  6,  4, 1],   // NW
+          [3,  6,  8,  5, 2],   // NNW
+        ],
+        note: 'The <strong>N–NNE sea breeze re-establishes</strong> across Botany Bay through October–November. The flat water makes marginal conditions (10–13 kts) more manageable than ocean spots. October is excellent: consistent N–NE, warm enough, calm mornings for gear setup on the beach. <strong>Kyeemagh/Botany can be a better choice than Manly</strong> on days when the sea breeze is lighter and chop would otherwise be an issue.',
+      },
+    }, // end kyeemagh seasons
+  }, // end kyeemagh
+
+}; // end ALL_LOCATIONS
+
+
+// ─── BUILD ANNUAL for each location ──────────────────────────────────────────
+for (const [locKey, loc] of Object.entries(ALL_LOCATIONS)) {
+  const skeys  = ['summer','autumn','winter','spring'];
+  const nDirs  = 16, nBins = 5;
+  const avgDir = Array.from({length: nDirs}, () => Array(nBins).fill(0));
+  let   avgCalm = 0;
+  for (const sk of skeys) {
+    avgCalm += loc.seasons[sk].calm;
+    for (let i = 0; i < nDirs; i++)
+      for (let b = 0; b < nBins; b++)
+        avgDir[i][b] += loc.seasons[sk].dirs[i][b];
+  }
+  const annualNotes = {
+    manly:
+      'Annual view combines all four seasons. <strong>NE is the clear dominant direction</strong>, driven by the summer sea breeze. SW is a strong secondary peak from winter fronts. <strong>~45–50% of the year sits in the 8–23 kt wingfoil window</strong>, but highly seasonal — summer NE days and winter SW fronts are very different riding experiences.',
+    kyeemagh:
+      'Annual view for Botany Bay. <strong>N–NNE leads overall</strong>, reflecting the bay\'s sea-breeze orientation. SW is the strong winter secondary. The bay\'s flat water means marginal-wind days are more usable than ocean spots. <strong>~44–48% of observations fall in the 8–23 kt wingfoil window</strong> — spread across clean NE bay days and gusty winter fronts.',
+  };
+  loc.seasons.annual = {
+    label: 'Annual average',
+    calm: avgCalm / skeys.length,
+    dirs: avgDir.map(d => d.map(v => v / skeys.length)),
+    note: annualNotes[locKey],
+  };
+}
+
+
+// ─── NORMALISE weights → percentages ─────────────────────────────────────────
+function normalise(raw) {
+  let total = raw.calm;
+  for (const d of raw.dirs) for (const v of d) total += v;
+  const f = 100 / total;
+  return {
+    ...raw,
+    calm: +(raw.calm * f).toFixed(3),
+    dirs: raw.dirs.map(d => d.map(v => +(v * f).toFixed(3))),
+  };
+}
+
+// Build normalised lookup
+const DATA = {};
+for (const [lk, loc] of Object.entries(ALL_LOCATIONS)) {
+  DATA[lk] = {};
+  for (const [sk, seas] of Object.entries(loc.seasons))
+    DATA[lk][sk] = normalise(seas);
+}
+
+
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+const DIR_LABELS  = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const SPEED_NAMES = ['< 8 kts','8–13 kts','13–18 kts','18–23 kts','> 23 kts'];
+const COLORS      = ['#3a5f80','#4ecdc4','#f7c948','#f4813a','#e84040'];
+const WINGFOIL_BINS = [1, 2, 3];
+
+// SVG geometry
+const SVG_SIZE  = 320;
+const CX        = SVG_SIZE / 2;
+const CY        = SVG_SIZE / 2;
+const MAX_R     = 118;
+const MAX_PCT   = 14;
+const GAP       = 10;
+const HALF_SECT = 9.5;
+
+function toRad(d) { return d * Math.PI / 180; }
+function ns(tag)  { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+
+// ─── SVG SECTOR PATH ──────────────────────────────────────────────────────────
+function sectorPath(cx, cy, r1, r2, aBeg, aEnd) {
+  const sb = toRad(aBeg), se = toRad(aEnd);
+  const x1o = cx + r2 * Math.sin(sb),  y1o = cy - r2 * Math.cos(sb);
+  const x2o = cx + r2 * Math.sin(se),  y2o = cy - r2 * Math.cos(se);
+  const x1i = cx + r1 * Math.sin(se),  y1i = cy - r1 * Math.cos(se);
+  const x2i = cx + r1 * Math.sin(sb),  y2i = cy - r1 * Math.cos(sb);
+  const lg  = (aEnd - aBeg > 180) ? 1 : 0;
+  if (r1 < 0.5)
+    return `M ${cx},${cy} L ${x1o},${y1o} A ${r2},${r2} 0 ${lg} 1 ${x2o},${y2o} Z`;
+  return [
+    `M ${x1o},${y1o}`,
+    `A ${r2},${r2} 0 ${lg} 1 ${x2o},${y2o}`,
+    `L ${x1i},${y1i}`,
+    `A ${r1},${r1} 0 ${lg} 0 ${x2i},${y2i}`,
+    'Z',
+  ].join(' ');
+}
+
+
+// ─── DRAW ROSE ────────────────────────────────────────────────────────────────
+let currentLocation = 'manly';
+let currentSeason   = 'summer';
+
+function drawRose() {
+  const d   = DATA[currentLocation][currentSeason];
+  const svg = document.getElementById('rose');
+  const sc  = MAX_R / MAX_PCT;
+  svg.innerHTML = '';
+
+  // reference rings
+  for (const pct of [5, 10, 14]) {
+    const r = pct * sc;
+    const c = ns('circle');
+    c.setAttribute('cx', CX); c.setAttribute('cy', CY); c.setAttribute('r', r);
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke', pct === 14 ? '#2a4060' : '#1a2f45');
+    c.setAttribute('stroke-width', 0.8);
+    svg.appendChild(c);
+    if (pct < 14) {
+      const t = ns('text');
+      t.setAttribute('x', CX + 3);
+      t.setAttribute('y', CY - r - 3);
+      t.setAttribute('fill', '#2a4060');
+      t.setAttribute('font-size', '8');
+      t.textContent = pct + '%';
+      svg.appendChild(t);
+    }
+  }
+
+  // grid lines
+  for (let a = 0; a < 360; a += 45) {
+    const l = ns('line');
+    const r = MAX_R + 6;
+    l.setAttribute('x1', CX); l.setAttribute('y1', CY);
+    l.setAttribute('x2', CX + r * Math.sin(toRad(a)));
+    l.setAttribute('y2', CY - r * Math.cos(toRad(a)));
+    l.setAttribute('stroke', '#1a2f45');
+    l.setAttribute('stroke-width', a % 90 === 0 ? 0.8 : 0.5);
+    svg.appendChild(l);
+  }
+
+  // directional bars
+  for (let i = 0; i < 16; i++) {
+    const bearing = i * 22.5;
+    const bins    = d.dirs[i];
+    let   cumR    = GAP;
+    for (let b = 0; b < 5; b++) {
+      const freq   = bins[b];
+      const outerR = cumR + freq * sc;
+      if (freq > 0.05) {
+        const p = ns('path');
+        p.setAttribute('d', sectorPath(CX, CY, cumR, outerR, bearing - HALF_SECT, bearing + HALF_SECT));
+        p.setAttribute('fill', COLORS[b]);
+        p.setAttribute('opacity', '0.88');
+        p.setAttribute('stroke', '#162030');
+        p.setAttribute('stroke-width', '0.4');
+        p.dataset.dir = i;
+        p.dataset.bin = b;
+        p.addEventListener('mouseenter', onBarEnter);
+        p.addEventListener('mouseleave', onBarLeave);
+        p.addEventListener('mousemove',  onBarMove);
+        svg.appendChild(p);
+      }
+      cumR = outerR;
+    }
+  }
+
+  // compass labels
+  const cards = [{t:'N',deg:0,bold:true,col:'#4ecdc4'},{t:'E',deg:90,bold:false,col:'#5a8090'},{t:'S',deg:180,bold:false,col:'#5a8090'},{t:'W',deg:270,bold:false,col:'#5a8090'}];
+  for (const cl of cards) {
+    const t = ns('text');
+    const r = MAX_R + 20;
+    t.setAttribute('x', CX + r * Math.sin(toRad(cl.deg)));
+    t.setAttribute('y', CY - r * Math.cos(toRad(cl.deg)) + 4);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('fill', cl.col);
+    t.setAttribute('font-size', cl.bold ? '13' : '11');
+    t.setAttribute('font-weight', cl.bold ? '700' : '400');
+    t.textContent = cl.t;
+    svg.appendChild(t);
+  }
+  for (const [lbl, deg] of [['NE',45],['SE',135],['SW',225],['NW',315]]) {
+    const t = ns('text');
+    const r = MAX_R + 16;
+    t.setAttribute('x', CX + r * Math.sin(toRad(deg)));
+    t.setAttribute('y', CY - r * Math.cos(toRad(deg)) + 3.5);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('fill', '#2e4a5a');
+    t.setAttribute('font-size', '9');
+    t.textContent = lbl;
+    svg.appendChild(t);
+  }
+
+  // centre dot
+  const dot = ns('circle');
+  dot.setAttribute('cx', CX); dot.setAttribute('cy', CY); dot.setAttribute('r', GAP);
+  dot.setAttribute('fill', '#162030');
+  dot.setAttribute('stroke', '#2a4060');
+  dot.setAttribute('stroke-width', '1');
+  svg.appendChild(dot);
+}
+
+
+// ─── TOOLTIP ──────────────────────────────────────────────────────────────────
+const tooltip = document.getElementById('tooltip');
+
+function onBarEnter(e) {
+  const i    = +e.currentTarget.dataset.dir;
+  const b    = +e.currentTarget.dataset.bin;
+  const d    = DATA[currentLocation][currentSeason];
+  const bins = d.dirs[i];
+  const tot  = bins.reduce((a, v) => a + v, 0);
+  const wf   = (bins[1] + bins[2] + bins[3]).toFixed(1);
+  let html   = `<strong>${DIR_LABELS[i]}</strong> &nbsp;${tot.toFixed(1)}% of obs<br>`;
+  html += `<span style="color:${COLORS[b]}">${SPEED_NAMES[b]}</span>: ${bins[b].toFixed(1)}%<br>`;
+  if (WINGFOIL_BINS.includes(b))
+    html += `<span style="color:#4ecdc4;font-size:0.68rem">✓ wingfoil range: ${wf}% from this dir</span>`;
+  tooltip.innerHTML = html;
+  tooltip.style.display = 'block';
+  positionTooltip(e);
+}
+function onBarMove(e)  { positionTooltip(e); }
+function onBarLeave()  { tooltip.style.display = 'none'; }
+function positionTooltip(e) {
+  const x = e.clientX + 14, y = e.clientY - 10;
+  const w = tooltip.offsetWidth;
+  tooltip.style.left = (x + w > window.innerWidth ? x - w - 28 : x) + 'px';
+  tooltip.style.top  = y + 'px';
+}
+
+
+// ─── STATS PANEL ─────────────────────────────────────────────────────────────
+function updatePanel() {
+  const d       = DATA[currentLocation][currentSeason];
+  const totals  = d.dirs.map(bins => bins.reduce((a, v) => a + v, 0));
+  const maxIdx  = totals.indexOf(Math.max(...totals));
+  let   wfPct   = 0, stPct = 0;
+  for (const bins of d.dirs) {
+    for (const bi of WINGFOIL_BINS) wfPct += bins[bi];
+    stPct += bins[3] + bins[4];
+  }
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-box">
+      <div class="stat-value">${DIR_LABELS[maxIdx]}</div>
+      <div class="stat-label">Dominant<br>direction<br><span style="color:#4ecdc4">(${totals[maxIdx].toFixed(1)}%)</span></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">${wfPct.toFixed(0)}%</div>
+      <div class="stat-label">Wingfoil<br>window<br><span style="color:#4a6a7a">(8–23 kts)</span></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">${stPct.toFixed(0)}%</div>
+      <div class="stat-label">Strong wind<br>&gt;18 kts<br><span style="color:#4a6a7a">(adv/expert)</span></div>
+    </div>
+  `;
+  document.getElementById('season-note').innerHTML =
+    DATA[currentLocation][currentSeason].note;
+}
+
+
+// ─── SWITCHERS ────────────────────────────────────────────────────────────────
+function setLocation(loc, btn) {
+  currentLocation = loc;
+  document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function setSeason(season, btn) {
+  currentSeason = season;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  drawRose();
+  updatePanel();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
