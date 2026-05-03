@@ -196,7 +196,7 @@
 <div id="main">
   <div class="loading" id="loading">
     <p style="font-size:15px;color:var(--txt);margin-bottom:10px">Fetching forecasts…</p>
-    <p>Open-Meteo · 14-day hourly · 6 spots</p>
+    <p>Open-Meteo · 14-day hourly · 12 spots</p>
   </div>
 </div>
 
@@ -219,7 +219,10 @@ const SPOTS = [
 ,
   { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'intermediate', lat:-33.869, lon:151.270, adj:0,    vc:247, vt:45, drive:'22 min', notes:'Open harbour. Best in SW/W — wind runs across the harbour. Worth the drive when SW is 18+ kn.' },
   { id:'pittwater',  name:'Pittwater',    area:'north', water:'flat', skill:'intermediate', lat:-33.671, lon:151.290, adj:0,    vc:292, vt:45, drive:'35 min', notes:'Church Point. NW is onshore across Pittwater. Only good NW option. Also works in W.' },
-  { id:'brighton',   name:'Brighton LS',  area:'south', water:'flat', skill:'intermediate', lat:-33.955, lon:151.155, adj:0,    vc:157, vt:45, drive:'30 min', notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' }
+  { id:'brighton',   name:'Brighton LS',  area:'south', water:'flat', skill:'intermediate', lat:-33.955, lon:151.155, adj:0,    vc:157, vt:45, drive:'30 min', notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' },
+  { id:'fishermans',   name:'Fishermans Beach', area:'north', water:'wave', skill:'advanced', lat:-33.735, lon:151.301, adj:0,  vc:45,  vt:45, drive:'45 min', notes:'North face of Long Reef headland, off Anzac Ave Collaroy. NE wind. Reef ramps and jumps. Intermediate/advanced.' },
+  { id:'long-reef',    name:'Long Reef Beach',  area:'north', water:'wave', skill:'advanced', lat:-33.742, lon:151.297, adj:0,  vc:135, vt:45, drive:'45 min', notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' },
+  { id:'wanda',      name:'Wanda',        area:'south', water:'wave', skill:'intermediate', lat:-34.028, lon:151.163, adj:0,    vc:158, vt:45, drive:'45 min', notes:'Cronulla ocean beach. Best in S/SE. NE also works cross-offshore from the left but not captured in direction filter. Gets big in southerly swell.' }
 ];
 
 const SKILL_RANK = { beginner:0, intermediate:1, advanced:2 };
