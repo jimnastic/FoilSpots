@@ -48,8 +48,8 @@
     .brow button:hover:not(.on) { background: var(--surf2); color: var(--txt); }
 
     /* Grid */
-    .gwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    #main   { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .gwrap { /* horizontal scroll handled by #main */ }
+    #main   { overflow: auto; -webkit-overflow-scrolling: touch; }
     table { border-collapse: collapse; }
 
     thead th {
@@ -642,7 +642,7 @@ function initTooltip() {
     tt.style.left = Math.min(e.clientX+14, window.innerWidth-235)+'px';
     tt.style.top  = Math.min(e.clientY+14, window.innerHeight-210)+'px';
   });
-  document.querySelector('.gwrap')?.addEventListener('scroll', ()=>tt.classList.remove('vis'));
+  document.getElementById('main')?.addEventListener('scroll', ()=>tt.classList.remove('vis'));
 
   // Click on spot column header → star toggle or open modal
   document.querySelectorAll('#g thead th[data-sid]').forEach(th => {
