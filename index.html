@@ -356,7 +356,7 @@ function buildGrid() {
     h += `<th class="scol" data-sid="${sp.id}" data-area="${sp.area}" data-water="${sp.water}" data-skill="${sp.skill}">
       <div class="sth">
         <span class="sth-name">${sp.name}</span>
-        <span class="sth-sub">${sp.area} · ${sp.drive}</span>
+        <span class="sth-sub">${sp.area}</span>
         <span class="spip ${sp.skill}">${sp.skill}</span>
       </div>
     </th>`;
@@ -482,10 +482,9 @@ function initTooltip() {
       const sp = SPOTS.find(s=>s.id===el.dataset.sid);
       h  = `<div class="ttn">${sp?sp.name:''}</div>`;
       if (el.dataset.raw!=='') {
-        h += `<div class="ttr"><span>Model (Open-Meteo)</span><span>${el.dataset.raw} kn</span></div>`;
-        h += `<div class="ttr"><span>Local adjustment</span><span>${parseFloat(el.dataset.spotadj)>0?'+':''}${el.dataset.spotadj} kn</span></div>`;
-        h += `<div class="ttr"><span>Adjusted wind</span><span>${el.dataset.adj} kn</span></div>`;
-        if (el.dataset.gust) h += `<div class="ttr"><span>Max gust</span><span>${el.dataset.gust} kn</span></div>`;
+        const adj_sign = parseFloat(el.dataset.spotadj)>=0?'+':'';
+        h += `<div class="ttr"><span>Wind</span><span>${el.dataset.adj} kn = ${el.dataset.raw} ${adj_sign}${el.dataset.spotadj} kn</span></div>`;
+        if (el.dataset.gust) h += `<div class="ttr"><span>Gusts</span><span>${el.dataset.gust} kn</span></div>`;
       }
       if (el.dataset.dir) h += `<div class="ttr"><span>Direction</span><span>${el.dataset.dir}</span></div>`;
       if (el.dataset.reason) h += `<div class="ttnote">${el.dataset.reason}</div>`;
