@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoilSpots Sydney</title>
+  <style>
+    :root {
+      --bg: #0d1b2a;
+      --surf: #132130;
+      --surf2: #1a2d40;
+      --acc: #4ecdc4;
+      --txt: #dde8f0;
+      --muted: #6b8fa6;
+      --border: rgba(255,255,255,0.07);
+      --go: #4ade80;
+      --go-bg: rgba(74,222,128,0.12);
+      --go-bd: rgba(74,222,128,0.28);
+      --mar: #fbbf24;
+      --mar-bg: rgba(251,191,36,0.1);
+      --mar-bd: rgba(251,191,36,0.28);
+      --no: #7a92a8;
+      --no-bg: rgba(71,85,105,0.14);
+      --no-bd: rgba(71,85,105,0.28);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--txt); min-height: 100vh; font-size: 13px; }
+    a { color: var(--acc); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+    .hdr { padding: 14px 20px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .hdr-left h1 { font-size: 18px; font-weight: 700; color: var(--acc); letter-spacing: -0.3px; }
+    .hdr-left p  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .hdr-nav { display: flex; gap: 16px; }
+    .hdr-nav a { font-size: 12px; color: var(--muted); }
+    .hdr-nav a:hover { color: var(--acc); }
+
+    /* Filters */
+    .filters { position: sticky; top: 0; z-index: 30; background: var(--surf); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+    .fg { display: flex; align-items: center; gap: 5px; }
+    .fg label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); white-space: nowrap; }
+    .brow { display: flex; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); }
+    .brow button { background: none; border: none; border-right: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 500; padding: 5px 11px; cursor: pointer; white-space: nowrap; transition: background 0.12s, color 0.12s; }
+    .brow button:last-child { border-right: none; }
+    .brow button.on { background: var(--acc); color: #0a1a28; font-weight: 700; }
+    .brow button:hover:not(.on) { background: var(--surf2); color: var(--txt); }
+
+    /* Grid */
+    .gwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { border-collapse: collapse; }
+
+    thead th {
+      background: var(--surf2); border-bottom: 2px solid var(--border);
+      padding: 9px 10px; text-align: center; white-space: nowrap;
+      position: sticky; z-index: 15;
+    }
+    thead th.dcol { text-align: left; left: 0; z-index: 20; min-width: 108px; }
+    thead th.scol  { min-width: 92px; }
+
+    .sth { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .sth-name { font-size: 12px; font-weight: 600; color: var(--txt); }
+    .sth-sub  { font-size: 10px; color: var(--muted); }
+    .spip { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .spip.beginner     { background: rgba(74,222,128,0.14); color: #4ade80; }
+    .spip.intermediate { background: rgba(251,191,36,0.14); color: #fbbf24; }
+    .spip.advanced     { background: rgba(248,113,113,0.14); color: #f87171; }
+
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr.wkd   { background: rgba(78,205,196,0.03); }
+    tbody tr.today { background: rgba(78,205,196,0.07); }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+    tbody td { padding: 7px 8px; text-align: center; vertical-align: middle; }
+    tbody td.dtd {
+      text-align: left; position: sticky; left: 0; z-index: 10;
+      background: var(--bg); padding-left: 16px; border-right: 1px solid var(--border);
+    }
+    tbody tr.wkd   td.dtd { background: #0e2133; }
+    tbody tr.today td.dtd { background: #102436; }
+
+    .dlbl { display: flex; flex-direction: column; gap: 1px; }
+    .dlbl .dn   { font-weight: 600; font-size: 13px; }
+    .dlbl .dd   { font-size: 11px; color: var(--muted); }
+    .dlbl .tbdg { font-size: 9px; font-weight: 700; color: var(--acc); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1px; }
+
+    /* Chips */
+    .chip {
+      display: inline-flex; flex-direction: column; align-items: center;
+      padding: 5px 7px; border-radius: 6px; min-width: 68px;
+      cursor: default; user-select: none;
+    }
+    .arr { font-size: 13px; display: inline-block; line-height: 1; }
+    .chip .spd { font-size: 13px; font-weight: 700; line-height: 1.2; margin-top: 1px; }
+    .chip .lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+    .chip.go       { background: var(--go-bg);  border: 1px solid var(--go-bd);  color: var(--go); }
+    .chip.marginal { background: var(--mar-bg); border: 1px solid var(--mar-bd); color: var(--mar); }
+    .chip.no-go    { background: var(--no-bg);  border: 1px solid var(--no-bd);  color: var(--no); }
+    .chip.no-go .spd { font-size: 12px; font-weight: 500; }
+
+    /* Tooltip */
+    #tt { position: fixed; background: var(--surf2); border: 1px solid rgba(255,255,255,0.13); border-radius: 8px; padding: 10px 13px; font-size: 12px; max-width: 220px; pointer-events: none; display: none; z-index: 999; line-height: 1.6; }
+    #tt.vis { display: block; }
+    #tt .ttn  { font-weight: 600; color: var(--txt); margin-bottom: 7px; font-size: 13px; }
+    #tt .ttr  { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); }
+    #tt .ttr span:last-child { color: var(--txt); font-weight: 500; }
+    #tt .ttnote  { margin-top: 7px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 7px; }
+    #tt .ttspot  { margin-top: 5px; font-size: 11px; color: var(--muted); }
+
+    /* Loading / error */
+    .loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .loading p { margin-bottom: 6px; }
+    .err { margin: 16px; padding: 12px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 7px; color: #f87171; font-size: 12px; }
+    .freshbar { padding: 6px 20px; font-size: 11px; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .freshbar a { color: var(--acc); cursor: pointer; }
+
+    /* Legend */
+    .legend { display: flex; gap: 16px; padding: 10px 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); align-items: center; }
+    .legend > span { font-size: 11px; color: var(--muted); }
+    .li { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+    .li-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .li-dot.go  { background: var(--go-bg);  border: 1px solid var(--go-bd); }
+    .li-dot.mar { background: var(--mar-bg); border: 1px solid var(--mar-bd); }
+    .li-dot.no  { background: var(--no-bg);  border: 1px solid var(--no-bd); }
+  
+    footer { padding: 14px 20px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 20px; line-height: 1.8; }
+  </style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-left">
+    <h1>FoilSpots Sydney</h1>
+    <p>14-day forecast — pick the best spot for your day</p>
+  </div>
+  <nav class="hdr-nav">
+    <a href="sydney-wind-rose.html">Wind rose</a>
+    <a href="spots-by-direction.html">Spots by direction</a>
+  </nav>
+</header>
+
+<div class="filters" id="filters">
+  <div class="fg">
+    <label>Water</label>
+    <div class="brow" id="fw">
+      <button data-v="flat">Flat</button>
+      <button data-v="wave">Wave</button>
+      <button data-v="all">All</button>
+    </div>
+  </div>
+  <div class="fg">
+    <label>Area</label>
+    <div class="brow" id="fa">
+      <button data-v="north">North</button>
+      <button data-v="south">South</button>
+      <button data-v="all">All</button>
+    </div>
+  </div>
+  <div class="fg">
+    <label>Days</label>
+    <div class="brow" id="fd">
+      <button data-v="weekends">Weekends</button>
+      <button data-v="all">All</button>
+    </div>
+  </div>
+  <div class="fg">
+    <label>Skill</label>
+    <div class="brow" id="fs">
+      <button data-v="beginner">Beginner</button>
+      <button data-v="intermediate">Intermediate</button>
+      <button data-v="advanced">Advanced</button>
+    </div>
+  </div>
+</div>
+
+<div class="legend">
+  <span>Key:</span>
+  <div class="li"><div class="li-dot go"></div><span style="color:var(--go)">✓ GO</span></div>
+  <div class="li"><div class="li-dot mar"></div><span style="color:var(--mar)">~ Marginal</span></div>
+  <div class="li"><div class="li-dot no"></div><span>No go</span></div>
+<span style="margin-left:auto">Hover a cell for details · Arrow shows wind direction (going to)</span>
+</div>
+
+<div id="freshbar" class="freshbar" style="display:none"></div>
+<div id="main">
+  <div class="loading" id="loading">
+    <p style="font-size:15px;color:var(--txt);margin-bottom:10px">Fetching forecasts…</p>
+    <p>Open-Meteo · 14-day hourly · 6 spots</p>
+  </div>
+</div>
+
+<div id="tt"></div>
+
+<footer>
+  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly).
+  Spot adjustments are estimates based on local knowledge — hover any cell to see raw vs adjusted values.
+  GO/NO-GO: wind direction within viable range + adjusted speed within skill-level range.
+</footer>
+
+<script>
+const SPOTS = [
+  { id:'clontarf',  name:'Clontarf',     area:'north', water:'flat', skill:'beginner',     lat:-33.812, lon:151.255, adj:-2.5, vc:135, vt:50, drive:'5 min',  notes:'Sheltered Middle Harbour inlet. Quick SE spot.' },
+  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:-2.5, vc:56,  vt:45, drive:'25 min', notes:'Narrabeen Lagoon W shore. Very flat. NNE–E winds.' },
+  { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:-2.5, vc:225, vt:90, drive:'25 min', notes:'Narrabeen Lagoon N shore. W through SE winds.' },
+  { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min', notes:'NE seabreeze spot. Chop builds above ~20 kn.' },
+  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  vc:135, vt:50, drive:'20 min', notes:'Airport thermal boosts seabreeze. Solid SE spot.' },
+  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:135, vt:67, drive:'30 min', notes:'Exposed peninsula. Windiest Sydney spot. SE–S.' }
+];
+
+const SKILL_RANK = { beginner:0, intermediate:1, advanced:2 };
+const RANGES = {
+  beginner:     { goLo:12, goHi:18, mgLo:9, mgHi:22 },
+  intermediate: { goLo:12, goHi:25, mgLo:9, mgHi:30 },
+  advanced:     { goLo:12, goHi:30, mgLo:9, mgHi:38 }
+};
+
+// ── Prefs ──────────────────────────────────────────────────────
+let prefs = { water:'all', area:'all', days:'all', skill:'intermediate' };
+try { Object.assign(prefs, JSON.parse(localStorage.getItem('fs-prefs')||'{}')); } catch(e){}
+
+let rawData = {};
+
+// ── Filter buttons ─────────────────────────────────────────────
+function setBtn(gid, val) {
+  document.getElementById(gid).querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === val));
+}
+function initFilters() {
+  setBtn('fw', prefs.water); setBtn('fa', prefs.area); setBtn('fd', prefs.days); setBtn('fs', prefs.skill);
+  [['fw','water'],['fa','area'],['fd','days'],['fs','skill']].forEach(([gid,key]) => {
+    document.getElementById(gid).querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        prefs[key] = btn.dataset.v;
+        setBtn(gid, prefs[key]);
+        try { localStorage.setItem('fs-prefs', JSON.stringify(prefs)); } catch(e){}
+        applyFilters();
+      });
+    });
+  });
+}
+
+// ── Maths ──────────────────────────────────────────────────────
+function angDiff(a, b) { const d = Math.abs(a-b)%360; return d>180?360-d:d; }
+function circMean(angles) {
+  const rads = angles.map(a=>a*Math.PI/180);
+  const sinM = rads.reduce((s,r)=>s+Math.sin(r),0)/rads.length;
+  const cosM = rads.reduce((s,r)=>s+Math.cos(r),0)/rads.length;
+  let m = Math.atan2(sinM,cosM)*180/Math.PI;
+  return m<0?m+360:m;
+}
+function dirLabel(d) {
+  return ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(d/22.5)%16];
+}
+// Arrow rotation: wind goes TO = FROM direction + 180°
+function arrowRot(fromDeg) { return Math.round((fromDeg + 180) % 360); }
+
+function daySum(hourly, di) {
+  const s=di*24+9, e=di*24+18;
+  const spds = hourly.wind_speed_10m.slice(s,e).filter(v=>v!=null);
+  const gsts = hourly.wind_gusts_10m.slice(s,e).filter(v=>v!=null);
+  const dirs = hourly.wind_direction_10m.slice(s,e).filter(v=>v!=null);
+  if (!spds.length) return null;
+  return { avg:spds.reduce((a,b)=>a+b,0)/spds.length, gust:Math.max(...gsts), dir:circMean(dirs) };
+}
+
+function rateCell(spot, sum, skill) {
+  if (!sum) return { st:'no-go', reason:'No data', dirDeg:null };
+  const adj = sum.avg + spot.adj;
+  const dirOk = angDiff(sum.dir, spot.vc) <= spot.vt;
+  const r = RANGES[skill]||RANGES.intermediate;
+  const d = dirLabel(sum.dir);
+  const base = { raw:Math.round(sum.avg), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir) };
+  if (!dirOk)           return { ...base, st:'no-go',    reason:`Wind from ${d} — outside viable range` };
+  if (adj>=r.goLo&&adj<=r.goHi) return { ...base, st:'go',       reason:`${d} at ${Math.round(adj)} kn` };
+  if (adj>=r.mgLo&&adj<=r.mgHi) return { ...base, st:'marginal', reason: adj<r.goLo ? 'Light wind — marginal' : 'Strong wind — marginal' };
+  return { ...base, st:'no-go', reason: adj<r.mgLo ? 'Too light' : 'Too strong' };
+}
+
+// ── Chip HTML helpers ──────────────────────────────────────────
+function spotChipHtml(sp, di, skill) {
+  const sd = rawData[sp.id];
+  if (!sd) return `<span style="color:var(--muted);font-size:11px">—</span>`;
+  const sum = daySum(sd.hourly, di);
+  const rv  = rateCell(sp, sum, skill);
+  const label   = rv.st==='go' ? '✓ GO' : rv.st==='marginal' ? '~ OK' : '—';
+  const spd     = rv.adj!=null ? `${rv.adj} kn` : '';
+  const rot     = rv.dirDeg!=null ? arrowRot(rv.dirDeg) : 0;
+  const arrHTML = rv.dirDeg!=null ? `<span class="arr" style="transform:rotate(${rot}deg)">↑</span>` : '';
+  return `<div class="chip ${rv.st}"
+    data-sid="${sp.id}" data-di="${di}"
+    data-raw="${rv.raw??''}" data-adj="${rv.adj??''}" data-gust="${rv.gust??''}"
+    data-dir="${rv.dir||''}" data-dir-deg="${rv.dirDeg??''}"
+    data-reason="${(rv.reason||'').replace(/"/g,"'")}" data-spotadj="${sp.adj}">
+    ${arrHTML}<span class="spd">${spd}</span><span class="lbl">${label}</span>
+  </div>`;
+}
+
+
+// ── Fetch ──────────────────────────────────────────────────────
+function fetchPt(lat, lon) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=14&timezone=Australia%2FSydney`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 9000);
+  return fetch(url, { signal: ctrl.signal })
+    .then(r => { clearTimeout(timer); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .catch(e => { clearTimeout(timer); throw e; });
+}
+
+// ── Day labels ─────────────────────────────────────────────────
+function getDays() {
+  const out=[], now=new Date();
+  const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  for (let i=0;i<14;i++) {
+    const d=new Date(now); d.setDate(now.getDate()+i);
+    out.push({ i, dn:DN[d.getDay()], dd:`${d.getDate()} ${MN[d.getMonth()]}`, wkd:d.getDay()===0||d.getDay()===6, today:i===0 });
+  }
+  return out;
+}
+
+// ── Build grid ─────────────────────────────────────────────────
+function buildGrid() {
+  const days = getDays();
+  let h = `<div class="gwrap"><table id="g">`;
+
+  // thead
+  h += `<thead><tr><th class="dcol">Day</th>`;
+  SPOTS.forEach(sp => {
+    h += `<th class="scol" data-sid="${sp.id}" data-area="${sp.area}" data-water="${sp.water}" data-skill="${sp.skill}">
+      <div class="sth">
+        <span class="sth-name">${sp.name}</span>
+        <span class="sth-sub">${sp.area} · ${sp.drive}</span>
+        <span class="spip ${sp.skill}">${sp.skill}</span>
+      </div>
+    </th>`;
+  });
+  h += `</tr></thead><tbody>`;
+
+  // rows
+  days.forEach(day => {
+    const rc = day.today?'today':day.wkd?'wkd':'';
+    h += `<tr class="${rc}" data-wkd="${day.wkd}">`;
+    h += `<td class="dtd"><div class="dlbl">`;
+    if (day.today) h += `<span class="tbdg">Today</span>`;
+    h += `<span class="dn">${day.dn}</span><span class="dd">${day.dd}</span></div></td>`;
+    SPOTS.forEach(sp => {
+      h += `<td data-sid="${sp.id}">${spotChipHtml(sp, day.i, prefs.skill)}</td>`;
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table></div>`;
+  document.getElementById('main').innerHTML = h;
+
+  const fh = document.getElementById('filters').offsetHeight;
+  document.querySelectorAll('thead th').forEach(th => th.style.top = fh+'px');
+
+  applyFilters();
+  initTooltip();
+}
+
+// ── Filters ────────────────────────────────────────────────────
+function applyFilters() {
+  const g = document.getElementById('g');
+  if (!g) return;
+  const skillRank = SKILL_RANK[prefs.skill]??1;
+
+  document.querySelectorAll('#g thead th[data-sid]').forEach(th => {
+    const show = (prefs.area==='all'||th.dataset.area===prefs.area)
+              && (prefs.water==='all'||th.dataset.water===prefs.water)
+              && (SKILL_RANK[th.dataset.skill]??0) <= skillRank;
+    th.style.display = show?'':'none';
+    document.querySelectorAll(`#g td[data-sid="${th.dataset.sid}"]`).forEach(td=>td.style.display=show?'':'none');
+  });
+
+  document.querySelectorAll('#g tbody tr').forEach(tr => {
+    tr.style.display = (prefs.days==='all'||tr.dataset.wkd==='true')?'':'none';
+  });
+
+  if (Object.keys(rawData).length) rerateAll();
+}
+
+function rerateAll() {
+  document.querySelectorAll('#g .chip').forEach(chip => {
+    const sp = SPOTS.find(s=>s.id===chip.dataset.sid);
+    if (!sp||!rawData[sp.id]) return;
+    const sum = daySum(rawData[sp.id].hourly, +chip.dataset.di);
+    const rv  = rateCell(sp, sum, prefs.skill);
+    chip.className = `chip ${rv.st}`;
+    Object.assign(chip.dataset, {
+      adj:rv.adj??'', raw:rv.raw??'', gust:rv.gust??'',
+      dir:rv.dir||'', dirDeg:rv.dirDeg??'',
+      reason:(rv.reason||'').replace(/"/g,"'")
+    });
+    const label   = rv.st==='go'?'✓ GO':rv.st==='marginal'?'~ OK':'—';
+    const spd     = rv.adj!=null?`${rv.adj} kn`:'';
+    const rot     = rv.dirDeg!=null?arrowRot(rv.dirDeg):0;
+    const arrHTML = rv.dirDeg!=null?`<span class="arr" style="transform:rotate(${rot}deg)">↑</span>`:'';
+    chip.innerHTML = `${arrHTML}<span class="spd">${spd}</span><span class="lbl">${label}</span>`;
+  });
+}
+
+// ── Tooltip ────────────────────────────────────────────────────
+function initTooltip() {
+  const tt = document.getElementById('tt');
+  document.addEventListener('mousemove', e => {
+    const el = e.target.closest('.chip');
+    if (!el) { tt.classList.remove('vis'); return; }
+
+    let h = '';
+    {
+      const sp = SPOTS.find(s=>s.id===el.dataset.sid);
+      h  = `<div class="ttn">${sp?sp.name:''}</div>`;
+      if (el.dataset.raw!=='') {
+        h += `<div class="ttr"><span>Model (Open-Meteo)</span><span>${el.dataset.raw} kn</span></div>`;
+        h += `<div class="ttr"><span>Local adjustment</span><span>${parseFloat(el.dataset.spotadj)>0?'+':''}${el.dataset.spotadj} kn</span></div>`;
+        h += `<div class="ttr"><span>Adjusted wind</span><span>${el.dataset.adj} kn</span></div>`;
+        if (el.dataset.gust) h += `<div class="ttr"><span>Max gust</span><span>${el.dataset.gust} kn</span></div>`;
+      }
+      if (el.dataset.dir) h += `<div class="ttr"><span>Direction</span><span>${el.dataset.dir}</span></div>`;
+      if (el.dataset.reason) h += `<div class="ttnote">${el.dataset.reason}</div>`;
+      if (sp) h += `<div class="ttspot">${sp.notes}</div>`;
+
+    tt.innerHTML = h;
+    tt.classList.add('vis');
+    tt.style.left = Math.min(e.clientX+14, window.innerWidth-235)+'px';
+    tt.style.top  = Math.min(e.clientY+14, window.innerHeight-210)+'px';
+  });
+  document.querySelector('.gwrap')?.addEventListener('scroll', ()=>tt.classList.remove('vis'));
+}
+
+// ── Cache ──────────────────────────────────────────────────────
+const CACHE_KEY = 'fs-weather-v1';
+const CACHE_TTL = 2 * 60 * 60 * 1000; // 2 hours
+
+function saveCache(data) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch(e){}
+}
+
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) return null;
+    return { ts, data };
+  } catch(e) { return null; }
+}
+
+function showFreshBar(ts, fromCache) {
+  const bar = document.getElementById('freshbar');
+  if (!bar) return;
+  const age = Date.now() - ts;
+  const mins = Math.floor(age / 60000);
+  const ageStr = mins < 2 ? 'just now' : mins < 60 ? `${mins} min ago` : `${Math.floor(mins/60)}h ${mins%60}m ago`;
+  const src = fromCache ? `cached · fetched ${ageStr}` : `fetched just now`;
+  bar.innerHTML = `Weather data: ${src} · <a onclick="forceRefresh()">refresh now</a>`;
+  bar.style.display = 'flex';
+}
+
+function forceRefresh() {
+  try { localStorage.removeItem(CACHE_KEY); } catch(e){}
+  document.getElementById('freshbar').innerHTML = 'Refreshing…';
+  fetchAll();
+}
+
+function fetchAll() {
+  Promise.all(SPOTS.map(sp => fetchPt(sp.lat, sp.lon).then(d=>({id:sp.id,d})).catch(()=>({id:sp.id,d:null})))).then(results => {
+    const newData = {};
+    results.forEach(r => { if (r.d) newData[r.id] = r.d; });
+    if (!Object.keys(newData).length) {
+      document.getElementById('loading').innerHTML =
+        `<div class="err">Could not reach Open-Meteo (network timeout or connection blocked).<br>
+        Try opening the page in a browser, or check your internet connection. 
+        <a href="#" onclick="forceRefresh();return false">Retry</a></div>`;
+      return;
+    }
+    Object.assign(rawData, newData);
+    saveCache(newData);
+    document.getElementById('loading')?.remove();
+    buildGrid();
+    showFreshBar(Date.now(), false);
+  }).catch(err => {
+    document.getElementById('loading').innerHTML =
+      `<div class="err">Error loading forecasts: ${err.message}. Please check your connection and refresh.</div>`;
+  });
+}
+
+// ── Boot ───────────────────────────────────────────────────────
+initFilters();
+
+const cached = loadCache();
+if (cached) {
+  Object.assign(rawData, cached.data);
+  document.getElementById('loading')?.remove();
+  buildGrid();
+  showFreshBar(cached.ts, true);
+} else {
+  fetchAll();
+}
+</script>
+</body>
+</html>
