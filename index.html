@@ -37,9 +37,10 @@
     .hdr-nav a:hover { color: var(--acc); }
 
     /* Filters */
-    .filters { position: sticky; top: 0; z-index: 30; background: var(--surf); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
-    .fg { display: flex; align-items: center; gap: 5px; }
-    .fg label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); white-space: nowrap; }
+    .filters { position: sticky; top: 0; z-index: 30; background: var(--surf); border-bottom: 1px solid var(--border); padding: 8px 0; display: flex; flex-wrap: wrap; align-items: center; }
+    .fg { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 6px 18px; border-right: 1px solid rgba(255,255,255,0.1); }
+    .fg:last-child { border-right: none; }
+    .fg label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--acc); white-space: nowrap; }
     .brow { display: flex; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); }
     .brow button { background: none; border: none; border-right: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 500; padding: 5px 11px; cursor: pointer; white-space: nowrap; transition: background 0.12s, color 0.12s; }
     .brow button:last-child { border-right: none; }
@@ -66,7 +67,7 @@
     .spip.advanced     { background: rgba(248,113,113,0.14); color: #f87171; }
 
     tbody tr { border-bottom: 1px solid var(--border); }
-    tbody tr.wkd   { background: rgba(78,205,196,0.03); }
+    tbody tr.wkd   { background: rgba(78,205,196,0.05); }
     tbody tr.today { background: rgba(78,205,196,0.07); }
     tbody tr:hover { background: rgba(255,255,255,0.025); }
     tbody td { padding: 7px 8px; text-align: center; vertical-align: middle; }
@@ -74,8 +75,9 @@
       text-align: left; position: sticky; left: 0; z-index: 10;
       background: var(--bg); padding-left: 16px; border-right: 1px solid var(--border);
     }
-    tbody tr.wkd   td.dtd { background: #0e2133; }
+    tbody tr.wkd   td.dtd { background: #0e2133; border-left: 3px solid var(--acc); }
     tbody tr.today td.dtd { background: #102436; }
+    tbody tr.wkd .dn { color: var(--acc); }
 
     .dlbl { display: flex; flex-direction: column; gap: 1px; }
     .dlbl .dn   { font-weight: 600; font-size: 13px; }
@@ -142,7 +144,7 @@
 <header class="hdr">
   <div class="hdr-left">
     <h1>FoilSpots Sydney</h1>
-    <p>14-day forecast — pick the best spot for your day</p>
+    <p>16-day forecast — pick the best spot for your day</p>
   </div>
   <nav class="hdr-nav">
     <a href="sydney-wind-rose.html">Wind rose</a>
@@ -196,7 +198,7 @@
 <div id="main">
   <div class="loading" id="loading">
     <p style="font-size:15px;color:var(--txt);margin-bottom:10px">Fetching forecasts…</p>
-    <p>Open-Meteo · 14-day hourly · 12 spots</p>
+    <p>Open-Meteo · 16-day hourly · 12 spots</p>
   </div>
 </div>
 
@@ -234,7 +236,9 @@ const RANGES = {
 
 // ── Prefs ──────────────────────────────────────────────────────
 let prefs = { water:'all', area:'all', days:'all', skill:'intermediate' };
-try { Object.assign(prefs, JSON.parse(localStorage.getItem('fs-prefs')||'{}')); } catch(e){}
+let savedPrefs = {};
+try { savedPrefs = JSON.parse(localStorage.getItem('fs-prefs')||'{}'); } catch(e){}
+Object.assign(prefs, savedPrefs);
 
 let rawData = {};
 
@@ -242,6 +246,20 @@ let rawData = {};
 function setBtn(gid, val) {
   document.getElementById(gid).querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === val));
 }
+
+// ── GPS area detection ─────────────────────────────────────────
+// Sydney Harbour sits at ~-33.85°. North of that → 'north', south → 'south'.
+function detectAreaFromGPS() {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos => {
+    const area = pos.coords.latitude > -33.85 ? 'north' : 'south';
+    prefs.area = area;
+    setBtn('fa', area);
+    try { localStorage.setItem('fs-prefs', JSON.stringify(prefs)); } catch(e){}
+    applyFilters();
+  }, () => {}); // silently ignore denial or timeout
+}
+
 function initFilters() {
   setBtn('fw', prefs.water); setBtn('fa', prefs.area); setBtn('fd', prefs.days); setBtn('fs', prefs.skill);
   [['fw','water'],['fa','area'],['fd','days'],['fs','skill']].forEach(([gid,key]) => {
@@ -316,7 +334,7 @@ function spotChipHtml(sp, di, skill) {
 
 // ── Fetch ──────────────────────────────────────────────────────
 function fetchPt(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=14&timezone=Australia%2FSydney`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Australia%2FSydney`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 9000);
   return fetch(url, { signal: ctrl.signal })
@@ -329,7 +347,7 @@ function getDays() {
   const out=[], now=new Date();
   const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  for (let i=0;i<14;i++) {
+  for (let i=0;i<16;i++) {
     const d=new Date(now); d.setDate(now.getDate()+i);
     out.push({ i, dn:DN[d.getDay()], dd:`${d.getDate()} ${MN[d.getMonth()]}`, wkd:d.getDay()===0||d.getDay()===6, today:i===0 });
   }
@@ -590,6 +608,7 @@ function fetchAll() {
 
 // ── Boot ───────────────────────────────────────────────────────
 initFilters();
+if (!('area' in savedPrefs)) detectAreaFromGPS();
 
 const cached = loadCache();
 if (cached) {
