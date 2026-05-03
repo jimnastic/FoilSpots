@@ -53,7 +53,6 @@
     thead th {
       background: var(--surf2); border-bottom: 2px solid var(--border);
       padding: 9px 10px; text-align: center; white-space: nowrap;
-      position: sticky; z-index: 15;
     }
     thead th.dcol { text-align: left; left: 0; z-index: 20; min-width: 108px; }
     thead th.scol  { min-width: 92px; }
@@ -109,11 +108,11 @@
     .loading { text-align: center; padding: 60px 20px; color: var(--muted); }
     .loading p { margin-bottom: 6px; }
     .err { margin: 16px; padding: 12px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 7px; color: #f87171; font-size: 12px; }
-    .freshbar { padding: 6px 20px; font-size: 11px; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .freshbar { position: sticky; top: 0; z-index: 28; background: var(--surf); padding: 6px 20px; font-size: 11px; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
     .freshbar a { color: var(--acc); cursor: pointer; }
 
     /* Legend */
-    .legend { display: flex; gap: 16px; padding: 10px 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); align-items: center; }
+    .legend { position: sticky; top: 0; z-index: 26; background: var(--bg); display: flex; gap: 16px; padding: 10px 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); align-items: center; }
     .legend > span { font-size: 11px; color: var(--muted); }
     .li { display: flex; align-items: center; gap: 5px; font-size: 11px; }
     .li-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
@@ -121,6 +120,20 @@
     .li-dot.mar { background: var(--mar-bg); border: 1px solid var(--mar-bd); }
     .li-dot.no  { background: var(--no-bg);  border: 1px solid var(--no-bd); }
   
+
+    /* Hourly detail row */
+    .detail-row td { padding: 0; }
+    .detail-inner { padding: 12px 18px 14px; background: var(--surf2); border-bottom: 2px solid rgba(78,205,196,0.2); }
+    .detail-hdr { font-size: 12px; font-weight: 600; color: var(--txt); margin-bottom: 10px; display: flex; align-items: baseline; gap: 10px; }
+    .detail-hdr span { font-size: 11px; font-weight: 400; color: var(--muted); }
+    .detail-hours { display: flex; gap: 5px; flex-wrap: wrap; }
+    .hrc { display: flex; flex-direction: column; align-items: center; padding: 5px 7px; border-radius: 6px; min-width: 50px; }
+    .hrc .ht { font-size: 10px; opacity: 0.75; margin-bottom: 2px; }
+    .hrc .hs { font-size: 12px; font-weight: 700; margin-top: 2px; }
+    .hrc.go       { background: var(--go-bg);  border: 1px solid var(--go-bd);  color: var(--go); }
+    .hrc.marginal { background: var(--mar-bg); border: 1px solid var(--mar-bd); color: var(--mar); }
+    .hrc.no-go    { background: var(--no-bg);  border: 1px solid var(--no-bd);  color: var(--no); }
+    .chip.active  { outline: 2px solid var(--acc); outline-offset: 2px; }
     footer { padding: 14px 20px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 20px; line-height: 1.8; }
   </style>
 </head>
@@ -318,6 +331,20 @@ function getDays() {
   return out;
 }
 
+// ── Sticky offset ─────────────────────────────────────────────────
+function fixStickyTop() {
+  const filtersEl  = document.getElementById('filters');
+  const freshbarEl = document.getElementById('freshbar');
+  const legendEl   = document.querySelector('.legend');
+  const fh  = filtersEl  ? filtersEl.offsetHeight  : 0;
+  const fbh = (freshbarEl && freshbarEl.style.display !== 'none') ? freshbarEl.offsetHeight : 0;
+  const lh  = legendEl   ? legendEl.offsetHeight   : 0;
+  // cascade: each sticky element sits just below the previous
+  if (freshbarEl) freshbarEl.style.top = fh + 'px';
+  if (legendEl)   legendEl.style.top   = (fh + fbh) + 'px';
+
+}
+
 // ── Build grid ─────────────────────────────────────────────────
 function buildGrid() {
   const days = getDays();
@@ -339,7 +366,7 @@ function buildGrid() {
   // rows
   days.forEach(day => {
     const rc = day.today?'today':day.wkd?'wkd':'';
-    h += `<tr class="${rc}" data-wkd="${day.wkd}" data-today="${day.today}">`;
+    h += `<tr class="${rc}" data-wkd="${day.wkd}">`;
     h += `<td class="dtd"><div class="dlbl">`;
     if (day.today) h += `<span class="tbdg">Today</span>`;
     h += `<span class="dn">${day.dn}</span><span class="dd">${day.dd}</span></div></td>`;
@@ -350,9 +377,6 @@ function buildGrid() {
   });
   h += `</tbody></table></div>`;
   document.getElementById('main').innerHTML = h;
-
-  const fh = document.getElementById('filters').offsetHeight;
-  document.querySelectorAll('thead th').forEach(th => th.style.top = fh+'px');
 
   applyFilters();
   initTooltip();
@@ -373,7 +397,7 @@ function applyFilters() {
   });
 
   document.querySelectorAll('#g tbody tr').forEach(tr => {
-    tr.style.display = (prefs.days==='all'||tr.dataset.wkd==='true'||tr.dataset.today==='true')?'':'none';
+    tr.style.display = (prefs.days==='all'||tr.dataset.wkd==='true')?'':'none';
   });
 
   if (Object.keys(rawData).length) rerateAll();
@@ -396,6 +420,54 @@ function rerateAll() {
     const arrHTML = rv.dirDeg!=null?`<span class="arr" style="transform:rotate(${rot}deg)">↑</span>`:'';
     chip.innerHTML = `${arrHTML}<span class="spd">${spd}</span>`;
   });
+}
+
+
+// ── Hourly detail ──────────────────────────────────────────────
+function getHourlyDetail(spot, dayIdx) {
+  const sd = rawData[spot.id];
+  if (!sd) return [];
+  const out = [];
+  for (let h = 9; h <= 19; h++) {
+    const idx = dayIdx * 24 + h;
+    const rawSpd = sd.hourly.wind_speed_10m[idx];
+    const dir    = sd.hourly.wind_direction_10m[idx];
+    const gust   = sd.hourly.wind_gusts_10m[idx];
+    if (rawSpd == null || dir == null) continue;
+    const adj  = rawSpd + spot.adj;
+    const dirOk = angDiff(dir, spot.vc) <= spot.vt;
+    const r    = RANGES[prefs.skill] || RANGES.intermediate;
+    let st;
+    if (!dirOk)                        st = 'no-go';
+    else if (adj>=r.goLo&&adj<=r.goHi) st = 'go';
+    else if (adj>=r.mgLo&&adj<=r.mgHi) st = 'marginal';
+    else                               st = 'no-go';
+    const label = h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
+    out.push({ label, adj: Math.round(adj), dirDeg: Math.round(dir), st });
+  }
+  return out;
+}
+
+function buildDetailRow(spot, dayIdx, dayLabel) {
+  const hours = getHourlyDetail(spot, dayIdx);
+  const hoursHTML = hours.map(h => {
+    const rot = arrowRot(h.dirDeg);
+    return `<div class="hrc ${h.st}">
+      <span class="ht">${h.label}</span>
+      <span class="arr" style="transform:rotate(${rot}deg)">↑</span>
+      <span class="hs">${h.adj} kn</span>
+    </div>`;
+  }).join('');
+  const adjStr = `${spot.adj > 0 ? '+' : ''}${spot.adj} kn local adjustment`;
+  const tr = document.createElement('tr');
+  tr.className = 'detail-row';
+  tr.dataset.sid = spot.id;
+  tr.dataset.di  = dayIdx;
+  tr.innerHTML = `<td colspan="20"><div class="detail-inner">
+    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr} · click again to close</span></div>
+    <div class="detail-hours">${hoursHTML}</div>
+  </div></td>`;
+  return tr;
 }
 
 // ── Tooltip ────────────────────────────────────────────────────
@@ -425,6 +497,31 @@ function initTooltip() {
     tt.style.top  = Math.min(e.clientY+14, window.innerHeight-210)+'px';
   });
   document.querySelector('.gwrap')?.addEventListener('scroll', ()=>tt.classList.remove('vis'));
+
+  // Click → hourly detail row
+  document.getElementById('g')?.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const sp     = SPOTS.find(s => s.id === chip.dataset.sid);
+    const dayIdx = parseInt(chip.dataset.di);
+    if (!sp) return;
+
+    const dayRow  = chip.closest('tr');
+    const dayLabel = (dayRow.querySelector('.dn')?.textContent || '') + ' ' +
+                     (dayRow.querySelector('.dd')?.textContent || '');
+
+    // Toggle off if same chip clicked again
+    const existing = document.querySelector('.detail-row');
+    const sameChip = existing?.dataset.sid === sp.id && existing?.dataset.di === String(dayIdx);
+    document.querySelectorAll('.chip.active').forEach(c => c.classList.remove('active'));
+    if (existing) existing.remove();
+    if (sameChip) return;
+
+    chip.classList.add('active');
+    const detailRow = buildDetailRow(sp, dayIdx, dayLabel.trim());
+    dayRow.after(detailRow);
+    detailRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
 }
 
 // ── Cache ──────────────────────────────────────────────────────
@@ -454,6 +551,7 @@ function showFreshBar(ts, fromCache) {
   const src = fromCache ? `cached · fetched ${ageStr}` : `fetched just now`;
   bar.innerHTML = `Weather data: ${src} · <a onclick="forceRefresh()">refresh now</a>`;
   bar.style.display = 'flex';
+  requestAnimationFrame(fixStickyTop);
 }
 
 function forceRefresh() {
