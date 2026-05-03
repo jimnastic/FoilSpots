@@ -212,19 +212,77 @@
 
 <script>
 const SPOTS = [
-  { id:'clontarf',  name:'Clontarf',     area:'north', water:'flat', skill:'beginner',     lat:-33.812, lon:151.255, adj:-2.5, vc:135, vt:50, drive:'5 min',  notes:'Sheltered Middle Harbour inlet. Quick SE spot.' },
-  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:-2.5, vc:56,  vt:45, drive:'25 min', notes:'Narrabeen Lagoon W shore. Very flat. NNE–E winds.' },
-  { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:-2.5, vc:225, vt:90, drive:'25 min', notes:'Narrabeen Lagoon N shore. W through SE winds.' },
-  { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min', notes:'NE seabreeze spot. Chop builds above ~20 kn.' },
-  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  adjDir:45, adjDirTol:45, vc:135, vt:50, drive:'20 min', notes:'Airport tarmac thermal boosts NE by +2–3 kn. Solid SE spot.' },
-  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:22,  vt:60, drive:'30 min', notes:'Windiest Sydney spot. N and NE are best — peninsula accelerates wind. NW possible but gusty. ⚠️ NEVER in southerly — offshore wind toward Sydney Airport runways.' }
-,
-  { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'intermediate', lat:-33.869, lon:151.270, adj:0,    vc:247, vt:45, drive:'22 min', notes:'Open harbour. Best in SW/W — wind runs across the harbour. Worth the drive when SW is 18+ kn.' },
-  { id:'pittwater',  name:'Pittwater',    area:'north', water:'flat', skill:'intermediate', lat:-33.671, lon:151.290, adj:0,    vc:292, vt:45, drive:'35 min', notes:'Church Point. NW is onshore across Pittwater. Only good NW option. Also works in W.' },
-  { id:'brighton',   name:'Brighton LS',  area:'south', water:'flat', skill:'intermediate', lat:-33.955, lon:151.155, adj:0,    vc:157, vt:45, drive:'30 min', notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' },
-  { id:'manly',      name:'Manly',        area:'north', water:'flat', skill:'intermediate', lat:-33.800, lon:151.291, adj:-1,   vc:22,  vt:45, drive:'20 min', notes:'Shelly Beach / Cabbage Tree Bay. NE cross-onshore over the headland. Sheltered cove — can be gusty off the headland. Not a kite spot.' },
-  { id:'fishermans',   name:'Fishermans Beach', area:'north', water:'wave', skill:'advanced', lat:-33.735, lon:151.301, adj:0,  vc:45,  vt:45, drive:'20 min', notes:'North face of Long Reef headland, off Anzac Ave Collaroy. NE wind. Reef ramps and jumps. Intermediate/advanced.' },
-  { id:'long-reef',    name:'Long Reef Beach',  area:'north', water:'wave', skill:'advanced', lat:-33.742, lon:151.297, adj:0,  vc:135, vt:45, drive:'20 min', notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' },
+  { id:'clontarf',  name:'Clontarf',     area:'north', water:'flat', skill:'beginner',     lat:-33.812, lon:151.255, adj:-2.5, vc:135, vt:50, drive:'5 min',
+    desc:'Sheltered Middle Harbour inlet, 5 minutes from Seaforth. SE makes for easy, low-pressure sessions with no open-water drift risk. Best for a quick session when SE is light to moderate — upgrade to Kyeemagh for a solid SE day.',
+    warnings:['Harbour kitesurfing is banned — wingfoiling only here','Ferry traffic in Middle Harbour — stay alert to vessel movements','Shallow reef and kelp in areas of brown water','N wind is cross-shore with offshore component — not suitable'],
+    parking:{ type:'free', notes:'Free street parking on Holmes Ave, Monash Crescent and Allenby St. Can fill summer weekends — arrive early.' },
+    notes:'Sheltered Middle Harbour inlet. Quick SE spot.' },
+
+  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:-2.5, vc:56,  vt:45, drive:'25 min',
+    desc:'Western shore of Narrabeen Lagoon — the most popular lagoon launch. Wind blows cleanly east across the lagoon giving flat, consistent water. When NE is strong and Balmoral chops up, the enclosed water here makes the extra 7-minute drive worthwhile.',
+    warnings:['Shallow near shore — watch foil on launch and landing','Gusty near the treeline on the western shore in light winds'],
+    parking:{ type:'paid', notes:'Paid ~$6/hr off Wakehurst Pkwy. Free street options near Jamieson Park ~200m south.' },
+    notes:'Narrabeen Lagoon W shore. Very flat. NNE–E winds.' },
+
+  { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:-2.5, vc:225, vt:90, drive:'25 min',
+    desc:'North shore of Narrabeen Lagoon, facing SSW. The right lagoon choice for SW sessions — wind blows cleanly across toward the southern shore. Also works in S and SE. Can be gusty in strong SW as wind descends from the hills to the north.',
+    warnings:['Gusty in strong SW — wind channels down from the northern ridgeline','Shallow near shore on launch and landing'],
+    parking:{ type:'free', notes:'Free car park at the reserve. No time limits during the day. Quiet on weekdays.' },
+    notes:'Narrabeen Lagoon N shore. W through SE winds.' },
+
+  { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min',
+    desc:'Jim's home spot — 5 minutes from Seaforth on Sydney Harbour. Side-shore NE seabreeze with flat harbour water. Works well up to ~20 kn; above that, harbour chop builds quickly and Middle Creek becomes the better call.',
+    warnings:['Stay seaward of the yellow swimming buoys','Middle Head rocks to the NE — do not drift in offshore conditions','W/SW/NW winds are offshore from the hill behind the beach — do not launch','Shallow near shore at low tide — watch foil','Very busy summer weekend afternoons'],
+    parking:{ type:'paid', notes:'Metered — up to $40/day peak (Oct–Apr), $35/day off-peak. Free street parking ~300m walk. Go early or take the bus.' },
+    notes:'NE seabreeze spot. Chop builds above ~20 kn.' },
+
+  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  adjDir:45, adjDirTol:45, vc:135, vt:50, drive:'20 min',
+    desc:'Best SE spot in Sydney. Large boat ramp reserve on Botany Bay with a big grassy rigging area and clean sandy beach. Airport tarmac thermal boosts NE by 2–3 kn. Shallow water 50m off shore makes standing resets easy. Uncrowded and well-facilitated.',
+    warnings:['⚠️ Do NOT go within 48hrs of heavy rain — Cook's River E. coli spikes','Oyster shells and sea urchins on rocks at low tide — wear booties','Stingrays in shallows — shuffle feet on launch and land','Boat ramp busy weekend mornings — launch before 8am or mid-afternoon','Airport proximity — kites banned, wings tolerated but be sensible'],
+    parking:{ type:'free', notes:'Large free car park at the reserve (80 Mutch Ave). Rarely full.' },
+    notes:'Airport tarmac thermal boosts NE by +2–3 kn. Solid SE spot.' },
+
+  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:22,  vt:60, drive:'30 min',
+    desc:'The windiest spot in Sydney — flat exposed peninsula with no terrain to block wind. N and NE consistently run 3–4 kn stronger here than anywhere else in Botany Bay. The only reliable northerly option from Seaforth. Long drive but unique, powerful conditions.',
+    warnings:['⚠️ NEVER launch in a southerly — offshore wind blows directly toward Sydney Airport runways','NW wind is possible but gusty and unpredictable off the flat terrain','Advanced only — stronger and gustier than forecast; assess carefully before committing'],
+    parking:{ type:'paid', notes:'$8/day national park entry fee, pay and display. Free parking on Polo St ~500m walk.' },
+    notes:'Windiest Sydney spot. N and NE are best — peninsula accelerates wind. NW possible but gusty. ⚠️ NEVER in southerly — offshore wind toward Sydney Airport runways.' },
+
+  { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'intermediate', lat:-33.869, lon:151.270, adj:0,    vc:247, vt:45, drive:'22 min',
+    desc:'Open harbour spot that earns the drive when SW is strong and clean — wind runs across the harbour rather than out to sea. The broad open water can outperform the sheltered lagoon in a solid SW. Watch for ferry lanes and moorings throughout.',
+    warnings:['Active seaplane and ferry lanes — stay alert at all times','Moorings throughout — watch for submerged lines','Strong SW can have offshore component toward the harbour entrance — confirm upwind ability'],
+    parking:{ type:'paid', notes:'Metered on New South Head Rd. Lyne Park has 2hr free. Tight on weekends — arrive early.' },
+    notes:'Open harbour. Best in SW/W — wind runs across the harbour. Worth the drive when SW is 18+ kn.' },
+
+  { id:'pittwater',  name:'Pittwater',    area:'north', water:'flat', skill:'intermediate', lat:-33.671, lon:151.290, adj:0,    vc:292, vt:45, drive:'35 min',
+    desc:'Church Point on western Pittwater — the only reliable NW option from Sydney. NW blows cross/onshore across the full width of Pittwater giving flat, consistent conditions. Worth the 35-minute drive when NW is forecast and nothing else is viable.',
+    warnings:['Gusty off the Scotland Island hills — check before committing','Stay clear of the Church Point ferry commuter lane','Limited water depth near shore at low tide'],
+    parking:{ type:'paid', notes:'Metered car park fills fast with Scotland Island ferry commuters — very busy on weekdays. Arrive early; no convenient free alternative nearby.' },
+    notes:'Church Point. NW is onshore across Pittwater. Only good NW option. Also works in W.' },
+
+  { id:'brighton',   name:'Brighton LS',  area:'south', water:'flat', skill:'intermediate', lat:-33.955, lon:151.155, adj:0,    vc:157, vt:45, drive:'30 min',
+    desc:'Brighton Le Sands / Dolls Point on the northern shore of Botany Bay. Flat, shallow water with a long sandy foreshore. Best in SE and moderate S. A lesser-known option with easy parking. Airport exclusion zone applies north of President Avenue.',
+    warnings:['Stay south of President Ave — airport exclusion zone applies north of this line','Shallow — watch foil in choppy conditions'],
+    parking:{ type:'free', notes:'Free 3hr parking at the Boulevarde car park (230 spaces) and free street parking along The Grand Parade. Generally straightforward.' },
+    notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' },
+
+  { id:'manly',      name:'Manly',        area:'north', water:'flat', skill:'intermediate', lat:-33.800, lon:151.291, adj:-1,   vc:22,  vt:45, drive:'20 min',
+    desc:'Shelly Beach / Cabbage Tree Bay — a north-facing sheltered cove at the south end of the Manly headland. N and NE are cross-onshore over the headland. Protected from swell by the outer reef. Small cove so the run is short, but flat water when conditions align.',
+    warnings:['Wingfoiling only — kite restrictions apply in this area','Cabbage Tree Bay is an aquatic reserve — be mindful of divers and snorkellers at all times','Can be gusty and patchy as wind breaks over the headland','Small cove — watch the southern reef on the far side of the bay'],
+    parking:{ type:'paid', notes:'Pay and display during daylight hours. Parking is very difficult — go early or walk from Manly (15 min). Free after 7pm, no overnight.' },
+    notes:'Shelly Beach / Cabbage Tree Bay. NE cross-onshore over the headland. Sheltered cove — can be gusty off the headland. Not a kite spot.' },
+
+  { id:'fishermans',   name:'Fishermans Beach', area:'north', water:'wave', skill:'advanced', lat:-33.735, lon:151.301, adj:0,  vc:45,  vt:45, drive:'20 min',
+    desc:'North face of Long Reef headland, off Anzac Avenue in Collaroy. NE wind blows cross-onshore over the headland onto reef ramps that produce good jumps and short rides. The go-to northern beaches wave spot for NE days.',
+    warnings:['Reef directly in front of the car park at low tide — booties essential','Gets crowded on weekends — reef plus crowds demands awareness of others','Assess swell size before launching — bigger days are advanced only'],
+    parking:{ type:'paid', notes:'Paid car park off Anzac Ave (coin and card, patrolled). Free street parking on Anzac Ave side streets.' },
+    notes:'North face of Long Reef headland, off Anzac Ave Collaroy. NE wind. Reef ramps and jumps. Intermediate/advanced.' },
+
+  { id:'long-reef',    name:'Long Reef Beach',  area:'north', water:'wave', skill:'advanced', lat:-33.742, lon:151.297, adj:0,  vc:135, vt:45, drive:'20 min',
+    desc:'South face of Long Reef headland, accessed via the Greenlink walking track. SE wind and swell produce excellent reef breaks: ButterBox works in NE and SE, Little Makaha gives a clean right in S wind. A step up from Fishermans in commitment. Advanced only.',
+    warnings:['Walk-in required via Greenlink track — carry all gear from the car park','Reef throughout — booties essential','Advanced only — assess swell carefully before committing','Can be offshore in W/SW — check wind direction carefully'],
+    parking:{ type:'paid', notes:'Same car park area as Fishermans Beach — paid off Anzac Ave, free on side streets.' },
+    notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' }
 ];
 
 const SKILL_RANK = { beginner:0, intermediate:1, advanced:2 };
