@@ -214,15 +214,15 @@ const SPOTS = [
   { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:-2.5, vc:56,  vt:45, drive:'25 min', notes:'Narrabeen Lagoon W shore. Very flat. NNE–E winds.' },
   { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:-2.5, vc:225, vt:90, drive:'25 min', notes:'Narrabeen Lagoon N shore. W through SE winds.' },
   { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min', notes:'NE seabreeze spot. Chop builds above ~20 kn.' },
-  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  vc:135, vt:50, drive:'20 min', notes:'Airport thermal boosts seabreeze. Solid SE spot.' },
-  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:67,  vt:90, drive:'30 min', notes:'Windiest Sydney spot. N / NE / SE. S is offshore at the launch.' }
+  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  adjDir:45, adjDirTol:45, vc:135, vt:50, drive:'20 min', notes:'Airport tarmac thermal boosts NE by +2–3 kn. Solid SE spot.' },
+  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:22,  vt:60, drive:'30 min', notes:'Windiest Sydney spot. N and NE are best — peninsula accelerates wind. NW possible but gusty. ⚠️ NEVER in southerly — offshore wind toward Sydney Airport runways.' }
 ,
   { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'intermediate', lat:-33.869, lon:151.270, adj:0,    vc:247, vt:45, drive:'22 min', notes:'Open harbour. Best in SW/W — wind runs across the harbour. Worth the drive when SW is 18+ kn.' },
   { id:'pittwater',  name:'Pittwater',    area:'north', water:'flat', skill:'intermediate', lat:-33.671, lon:151.290, adj:0,    vc:292, vt:45, drive:'35 min', notes:'Church Point. NW is onshore across Pittwater. Only good NW option. Also works in W.' },
   { id:'brighton',   name:'Brighton LS',  area:'south', water:'flat', skill:'intermediate', lat:-33.955, lon:151.155, adj:0,    vc:157, vt:45, drive:'30 min', notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' },
-  { id:'fishermans',   name:'Fishermans Beach', area:'north', water:'wave', skill:'advanced', lat:-33.735, lon:151.301, adj:0,  vc:45,  vt:45, drive:'45 min', notes:'North face of Long Reef headland, off Anzac Ave Collaroy. NE wind. Reef ramps and jumps. Intermediate/advanced.' },
-  { id:'long-reef',    name:'Long Reef Beach',  area:'north', water:'wave', skill:'advanced', lat:-33.742, lon:151.297, adj:0,  vc:135, vt:45, drive:'45 min', notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' },
-  { id:'wanda',      name:'Wanda',        area:'south', water:'wave', skill:'intermediate', lat:-34.028, lon:151.163, adj:0,    vc:158, vt:45, drive:'45 min', notes:'Cronulla ocean beach. Best in S/SE. NE also works cross-offshore from the left but not captured in direction filter. Gets big in southerly swell.' }
+  { id:'manly',      name:'Manly',        area:'north', water:'flat', skill:'intermediate', lat:-33.800, lon:151.291, adj:-1,   vc:22,  vt:45, drive:'20 min', notes:'Shelly Beach / Cabbage Tree Bay. NE cross-onshore over the headland. Sheltered cove — can be gusty off the headland. Not a kite spot.' },
+  { id:'fishermans',   name:'Fishermans Beach', area:'north', water:'wave', skill:'advanced', lat:-33.735, lon:151.301, adj:0,  vc:45,  vt:45, drive:'20 min', notes:'North face of Long Reef headland, off Anzac Ave Collaroy. NE wind. Reef ramps and jumps. Intermediate/advanced.' },
+  { id:'long-reef',    name:'Long Reef Beach',  area:'north', water:'wave', skill:'advanced', lat:-33.742, lon:151.297, adj:0,  vc:135, vt:45, drive:'20 min', notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' },
 ];
 
 const SKILL_RANK = { beginner:0, intermediate:1, advanced:2 };
@@ -282,11 +282,13 @@ function daySum(hourly, di) {
 
 function rateCell(spot, sum, skill) {
   if (!sum) return { st:'no-go', reason:'No data', dirDeg:null };
-  const adj = sum.avg + spot.adj;
+  const adjApplies = (spot.adjDir != null) ? angDiff(sum.dir, spot.adjDir) <= spot.adjDirTol : true;
+  const appliedAdj = adjApplies ? spot.adj : 0;
+  const adj = sum.avg + appliedAdj;
   const dirOk = angDiff(sum.dir, spot.vc) <= spot.vt;
   const r = RANGES[skill]||RANGES.intermediate;
   const d = dirLabel(sum.dir);
-  const base = { raw:Math.round(sum.avg), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir) };
+  const base = { raw:Math.round(sum.avg), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir), appliedAdj:Math.round(appliedAdj) };
   if (!dirOk)           return { ...base, st:'no-go',    reason:`Wind from ${d} — outside viable range` };
   if (adj>=r.goLo&&adj<=r.goHi) return { ...base, st:'go',       reason:`${d} at ${Math.round(adj)} kn` };
   if (adj>=r.mgLo&&adj<=r.mgHi) return { ...base, st:'marginal', reason: adj<r.goLo ? 'Light wind — marginal' : 'Strong wind — marginal' };
@@ -485,8 +487,10 @@ function initTooltip() {
       const sp = SPOTS.find(s=>s.id===el.dataset.sid);
       h  = `<div class="ttn">${sp?sp.name:''}</div>`;
       if (el.dataset.raw!=='') {
-        const adj_sign = parseFloat(el.dataset.spotadj)>=0?'+':'';
-        h += `<div class="ttr"><span>Wind</span><span>${el.dataset.adj} kn = ${el.dataset.raw} ${adj_sign}${el.dataset.spotadj} kn</span></div>`;
+        const appliedAdj = parseFloat(el.dataset.adjApplied||'0');
+        const adj_sign = appliedAdj>=0?'+':'';
+        const adjNote = appliedAdj !== 0 ? ` = ${el.dataset.raw} ${adj_sign}${appliedAdj} kn` : '';
+        h += `<div class="ttr"><span>Wind</span><span>${el.dataset.adj} kn${adjNote}</span></div>`;
         if (el.dataset.gust) h += `<div class="ttr"><span>Gusts</span><span>${el.dataset.gust} kn</span></div>`;
       }
       if (el.dataset.dir) h += `<div class="ttr"><span>Direction</span><span>${el.dataset.dir}</span></div>`;
