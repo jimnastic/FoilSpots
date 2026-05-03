@@ -91,7 +91,6 @@
     }
     .arr { font-size: 13px; display: inline-block; line-height: 1; }
     .chip .spd { font-size: 13px; font-weight: 700; line-height: 1.2; margin-top: 1px; }
-    .chip .lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
     .chip.go       { background: var(--go-bg);  border: 1px solid var(--go-bd);  color: var(--go); }
     .chip.marginal { background: var(--mar-bg); border: 1px solid var(--mar-bd); color: var(--mar); }
     .chip.no-go    { background: var(--no-bg);  border: 1px solid var(--no-bd);  color: var(--no); }
@@ -174,8 +173,8 @@
 
 <div class="legend">
   <span>Key:</span>
-  <div class="li"><div class="li-dot go"></div><span style="color:var(--go)">✓ GO</span></div>
-  <div class="li"><div class="li-dot mar"></div><span style="color:var(--mar)">~ Marginal</span></div>
+  <div class="li"><div class="li-dot go"></div><span style="color:var(--go)">Go</span></div>
+  <div class="li"><div class="li-dot mar"></div><span style="color:var(--mar)">Marginal</span></div>
   <div class="li"><div class="li-dot no"></div><span>No go</span></div>
 <span style="margin-left:auto">Hover a cell for details · Arrow shows wind direction (going to)</span>
 </div>
@@ -280,7 +279,6 @@ function spotChipHtml(sp, di, skill) {
   if (!sd) return `<span style="color:var(--muted);font-size:11px">—</span>`;
   const sum = daySum(sd.hourly, di);
   const rv  = rateCell(sp, sum, skill);
-  const label   = rv.st==='go' ? '✓ GO' : rv.st==='marginal' ? '~ OK' : '—';
   const spd     = rv.adj!=null ? `${rv.adj} kn` : '';
   const rot     = rv.dirDeg!=null ? arrowRot(rv.dirDeg) : 0;
   const arrHTML = rv.dirDeg!=null ? `<span class="arr" style="transform:rotate(${rot}deg)">↑</span>` : '';
@@ -289,7 +287,7 @@ function spotChipHtml(sp, di, skill) {
     data-raw="${rv.raw??''}" data-adj="${rv.adj??''}" data-gust="${rv.gust??''}"
     data-dir="${rv.dir||''}" data-dir-deg="${rv.dirDeg??''}"
     data-reason="${(rv.reason||'').replace(/"/g,"'")}" data-spotadj="${sp.adj}">
-    ${arrHTML}<span class="spd">${spd}</span><span class="lbl">${label}</span>
+    ${arrHTML}<span class="spd">${spd}</span>
   </div>`;
 }
 
@@ -389,11 +387,10 @@ function rerateAll() {
       dir:rv.dir||'', dirDeg:rv.dirDeg??'',
       reason:(rv.reason||'').replace(/"/g,"'")
     });
-    const label   = rv.st==='go'?'✓ GO':rv.st==='marginal'?'~ OK':'—';
     const spd     = rv.adj!=null?`${rv.adj} kn`:'';
     const rot     = rv.dirDeg!=null?arrowRot(rv.dirDeg):0;
     const arrHTML = rv.dirDeg!=null?`<span class="arr" style="transform:rotate(${rot}deg)">↑</span>`:'';
-    chip.innerHTML = `${arrHTML}<span class="spd">${spd}</span><span class="lbl">${label}</span>`;
+    chip.innerHTML = `${arrHTML}<span class="spd">${spd}</span>`;
   });
 }
 
