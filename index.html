@@ -202,7 +202,11 @@ const SPOTS = [
   { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:-2.5, vc:225, vt:90, drive:'25 min', notes:'Narrabeen Lagoon N shore. W through SE winds.' },
   { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min', notes:'NE seabreeze spot. Chop builds above ~20 kn.' },
   { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  vc:135, vt:50, drive:'20 min', notes:'Airport thermal boosts seabreeze. Solid SE spot.' },
-  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:135, vt:67, drive:'30 min', notes:'Exposed peninsula. Windiest Sydney spot. SE–S.' }
+  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:67,  vt:90, drive:'30 min', notes:'Windiest Sydney spot. N / NE / SE. S is offshore at the launch.' }
+,
+  { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'intermediate', lat:-33.869, lon:151.270, adj:0,    vc:247, vt:45, drive:'22 min', notes:'Open harbour. Best in SW/W — wind runs across the harbour. Worth the drive when SW is 18+ kn.' },
+  { id:'pittwater',  name:'Pittwater',    area:'north', water:'flat', skill:'intermediate', lat:-33.671, lon:151.290, adj:0,    vc:292, vt:45, drive:'35 min', notes:'Church Point. NW is onshore across Pittwater. Only good NW option. Also works in W.' },
+  { id:'brighton',   name:'Brighton LS',  area:'south', water:'flat', skill:'intermediate', lat:-33.955, lon:151.155, adj:0,    vc:157, vt:45, drive:'30 min', notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' }
 ];
 
 const SKILL_RANK = { beginner:0, intermediate:1, advanced:2 };
@@ -335,7 +339,7 @@ function buildGrid() {
   // rows
   days.forEach(day => {
     const rc = day.today?'today':day.wkd?'wkd':'';
-    h += `<tr class="${rc}" data-wkd="${day.wkd}">`;
+    h += `<tr class="${rc}" data-wkd="${day.wkd}" data-today="${day.today}">`;
     h += `<td class="dtd"><div class="dlbl">`;
     if (day.today) h += `<span class="tbdg">Today</span>`;
     h += `<span class="dn">${day.dn}</span><span class="dd">${day.dd}</span></div></td>`;
@@ -369,7 +373,7 @@ function applyFilters() {
   });
 
   document.querySelectorAll('#g tbody tr').forEach(tr => {
-    tr.style.display = (prefs.days==='all'||tr.dataset.wkd==='true')?'':'none';
+    tr.style.display = (prefs.days==='all'||tr.dataset.wkd==='true'||tr.dataset.today==='true')?'':'none';
   });
 
   if (Object.keys(rawData).length) rerateAll();
