@@ -59,7 +59,7 @@
     thead th.scol  { min-width: 92px; }
 
     .sth { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .sth-name { font-size: 12px; font-weight: 600; color: var(--txt); }
+    .sth-name { font-size: 12px; font-weight: 600; color: var(--acc); }
     .sth-sub  { font-size: 10px; color: var(--muted); }
     .spip { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
     .spip.beginner     { background: rgba(74,222,128,0.14); color: #4ade80; }
@@ -173,8 +173,10 @@
     .adj-label        { color:var(--muted); flex-shrink:0; }
     .rose-loading     { font-size:12px; color:var(--muted); font-style:italic; }
     .modal-hdr-spot   { cursor:pointer; }
-    thead th[data-sid] { cursor:pointer; }
-    thead th[data-sid]:hover .spot-name-inner { text-decoration:underline; text-decoration-color:var(--acc); }
+    thead th[data-sid] { cursor:pointer; transition: background 0.12s; }
+    thead th[data-sid]:hover { background: rgba(78,205,196,0.08); }
+    .sth-name { text-decoration: underline dotted rgba(78,205,196,0.4); text-underline-offset: 3px; }
+    thead th[data-sid]:hover .sth-name { text-decoration-color: var(--acc); text-decoration-style: solid; }
   </style>
 </head>
 <body>
@@ -488,8 +490,7 @@ function buildGrid() {
   SPOTS.forEach(sp => {
     h += `<th class="scol" data-sid="${sp.id}" data-area="${sp.area}" data-water="${sp.water}" data-skill="${sp.skill}">
       <div class="sth">
-        <span class="sth-name">${sp.name}</span>
-        <span class="sth-sub">${sp.area}</span>
+        <span class="sth-name">${sp.name} <span style="font-size:9px;opacity:0.55;font-weight:400">ⓘ</span></span>
         <span class="spip ${sp.skill}">${sp.skill}</span>
       </div>
     </th>`;
@@ -796,7 +797,7 @@ function buildModalContent(spot) {
   // Wind rose placeholder
   const roseHTML = `
     <div class="modal-section">
-      <h3>Seasonal wind rose — current season, 3 prior years</h3>
+      <h3>Wind rose — ${currentMonthName()}, 3 prior years</h3>
       <div id="rose-container"><p class="rose-loading">Loading historical data from Open-Meteo archive&hellip;</p></div>
     </div>`;
 
@@ -901,17 +902,22 @@ function buildAdjDetails(spot) {
 
 // ── Seasonal wind rose ──────────────────────────────────────────────────────
 // 3 prior years, ±45 days around today's calendar position
-function getSeasonDateRanges() {
+function getMonthDateRanges() {
   const now = new Date();
-  const mm = now.getMonth(), dd = now.getDate(), yyyy = now.getFullYear();
+  const mm = now.getMonth(), yyyy = now.getFullYear();
   const fmt = d => d.toISOString().slice(0, 10);
   const ranges = [];
   for (let y = yyyy - 3; y <= yyyy - 1; y++) {
-    const start = new Date(y, mm, dd - 45);
-    const end   = new Date(y, mm, dd + 45);
+    // First and last day of the same calendar month
+    const start = new Date(y, mm, 1);
+    const end   = new Date(y, mm + 1, 0); // day 0 of next month = last day of this month
     ranges.push({ start: fmt(start), end: fmt(end) });
   }
   return ranges;
+}
+
+function currentMonthName() {
+  return new Date().toLocaleString('en-AU', { month: 'long' });
 }
 
 async function loadSeasonalRose(spot) {
@@ -919,7 +925,7 @@ async function loadSeasonalRose(spot) {
   if (!ctnr) return;
 
   // Check cache
-  const cacheKey = `${ROSE_CACHE_KEY}-${spot.id}-${prefs.skill}`;
+  const month = new Date().getMonth(); const cacheKey = `${ROSE_CACHE_KEY}-${spot.id}-${prefs.skill}-${month}`;
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
     if (cached && (Date.now() - cached.ts) < ROSE_CACHE_TTL) {
@@ -928,7 +934,7 @@ async function loadSeasonalRose(spot) {
     }
   } catch(e) {}
 
-  const ranges = getSeasonDateRanges();
+  const ranges = getMonthDateRanges();
   const allSpeeds = [], allDirs = [];
 
   try {
