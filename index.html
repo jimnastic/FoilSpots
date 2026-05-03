@@ -137,6 +137,44 @@
     .hrc.no-go    { background: var(--no-bg);  border: 1px solid var(--no-bd);  color: var(--no); }
     .chip.active  { outline: 2px solid var(--acc); outline-offset: 2px; }
     footer { padding: 14px 20px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 20px; line-height: 1.8; }
+
+    /* ── Spot Detail Modal ───────────────────────────────────────────── */
+    .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100; align-items:center; justify-content:center; padding:20px; }
+    .modal-backdrop.open { display:flex; }
+    .modal { background:var(--surf); border:1px solid var(--border); border-radius:12px; max-width:660px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,0.6); }
+    .modal-hdr { display:flex; align-items:flex-start; gap:12px; padding:20px 20px 14px; border-bottom:1px solid var(--border); }
+    .modal-hdr h2 { font-size:20px; font-weight:700; color:var(--txt); margin:0; flex:1; }
+    .modal-badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:5px; }
+    .badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:2px 8px; border-radius:20px; border:1px solid; }
+    .badge-flat  { color:var(--acc);  border-color:var(--acc); }
+    .badge-wave  { color:#a78bfa;     border-color:#a78bfa; }
+    .badge-north,.badge-south { color:var(--muted); border-color:var(--muted); }
+    .badge-beginner     { color:var(--go);  border-color:var(--go); }
+    .badge-intermediate { color:var(--mar); border-color:var(--mar); }
+    .badge-advanced     { color:#f87171;    border-color:#f87171; }
+    .modal-close { background:none; border:none; color:var(--muted); font-size:24px; cursor:pointer; line-height:1; padding:0 0 2px; margin-left:8px; flex-shrink:0; }
+    .modal-close:hover { color:var(--txt); }
+    .modal-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
+    .modal-section h3 { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--acc); margin:0 0 9px; }
+    .modal-section p  { color:var(--txt); font-size:13px; line-height:1.65; margin:0; }
+    .modal-warnings   { display:flex; flex-direction:column; gap:7px; }
+    .modal-warning    { display:flex; gap:8px; align-items:flex-start; font-size:13px; color:var(--txt); line-height:1.5; }
+    .modal-warning::before { content:'⚠'; font-size:12px; color:#fbbf24; flex-shrink:0; margin-top:1px; }
+    .modal-parking    { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--txt); flex-wrap:wrap; }
+    .parking-pill     { font-size:10px; font-weight:700; text-transform:uppercase; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+    .parking-free     { background:rgba(74,222,128,0.12);  color:var(--go);  border:1px solid rgba(74,222,128,0.3); }
+    .parking-paid     { background:rgba(251,191,36,0.12);  color:var(--mar); border:1px solid rgba(251,191,36,0.3); }
+    .parking-limited  { background:rgba(248,113,113,0.12); color:#f87171;    border:1px solid rgba(248,113,113,0.3); }
+    .modal-diagrams   { display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+    .modal-dir-wrap   { flex:0 0 auto; }
+    .modal-adj-wrap   { flex:1; min-width:180px; }
+    .adj-row          { display:flex; justify-content:space-between; gap:12px; font-size:12px; padding:5px 0; border-bottom:1px solid var(--border); color:var(--txt); }
+    .adj-row:last-child { border-bottom:none; }
+    .adj-label        { color:var(--muted); flex-shrink:0; }
+    .rose-loading     { font-size:12px; color:var(--muted); font-style:italic; }
+    .modal-hdr-spot   { cursor:pointer; }
+    thead th[data-sid] { cursor:pointer; }
+    thead th[data-sid]:hover .spot-name-inner { text-decoration:underline; text-decoration-color:var(--acc); }
   </style>
 </head>
 <body>
@@ -203,6 +241,20 @@
 </div>
 
 <div id="tt"></div>
+<!-- ── Spot Detail Modal ─────────────────────────────── -->
+<div class="modal-backdrop" id="spotModal" onclick="if(event.target===this)closeSpotModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div style="flex:1">
+        <h2 id="modal-title"></h2>
+        <div class="modal-badges" id="modal-badges"></div>
+      </div>
+      <button class="modal-close" onclick="closeSpotModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
 
 <footer>
   Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly).
@@ -231,14 +283,14 @@ const SPOTS = [
     notes:'Narrabeen Lagoon N shore. W through SE winds.' },
 
   { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min',
-    desc:'Jim's home spot — 5 minutes from Seaforth on Sydney Harbour. Side-shore NE seabreeze with flat harbour water. Works well up to ~20 kn; above that, harbour chop builds quickly and Middle Creek becomes the better call.',
+    desc:'Jim\u2019s home spot — 5 minutes from Seaforth on Sydney Harbour. Side-shore NE seabreeze with flat harbour water. Works well up to ~20 kn; above that, harbour chop builds quickly and Middle Creek becomes the better call.',
     warnings:['Stay seaward of the yellow swimming buoys','Middle Head rocks to the NE — do not drift in offshore conditions','W/SW/NW winds are offshore from the hill behind the beach — do not launch','Shallow near shore at low tide — watch foil','Very busy summer weekend afternoons'],
     parking:{ type:'paid', notes:'Metered — up to $40/day peak (Oct–Apr), $35/day off-peak. Free street parking ~300m walk. Go early or take the bus.' },
     notes:'NE seabreeze spot. Chop builds above ~20 kn.' },
 
   { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'intermediate', lat:-33.929, lon:151.170, adj:2.5,  adjDir:45, adjDirTol:45, vc:135, vt:50, drive:'20 min',
     desc:'Best SE spot in Sydney. Large boat ramp reserve on Botany Bay with a big grassy rigging area and clean sandy beach. Airport tarmac thermal boosts NE by 2–3 kn. Shallow water 50m off shore makes standing resets easy. Uncrowded and well-facilitated.',
-    warnings:['⚠️ Do NOT go within 48hrs of heavy rain — Cook's River E. coli spikes','Oyster shells and sea urchins on rocks at low tide — wear booties','Stingrays in shallows — shuffle feet on launch and land','Boat ramp busy weekend mornings — launch before 8am or mid-afternoon','Airport proximity — kites banned, wings tolerated but be sensible'],
+    warnings:['⚠️ Do NOT go within 48hrs of heavy rain — Cook’s River E. coli spikes','Oyster shells and sea urchins on rocks at low tide — wear booties','Stingrays in shallows — shuffle feet on launch and land','Boat ramp busy weekend mornings — launch before 8am or mid-afternoon','Airport proximity — kites banned, wings tolerated but be sensible'],
     parking:{ type:'free', notes:'Large free car park at the reserve (80 Mutch Ave). Rarely full.' },
     notes:'Airport tarmac thermal boosts NE by +2–3 kn. Solid SE spot.' },
 
@@ -580,6 +632,11 @@ function initTooltip() {
   });
   document.querySelector('.gwrap')?.addEventListener('scroll', ()=>tt.classList.remove('vis'));
 
+  // Click on spot column header → open spot detail modal
+  document.querySelectorAll('#g thead th[data-sid]').forEach(th => {
+    th.addEventListener('click', () => openSpotModal(th.dataset.sid));
+  });
+
   // Click → hourly detail row
   document.getElementById('g')?.addEventListener('click', e => {
     const chip = e.target.closest('.chip');
@@ -662,6 +719,343 @@ function fetchAll() {
     document.getElementById('loading').innerHTML =
       `<div class="err">Error loading forecasts: ${err.message}. Please check your connection and refresh.</div>`;
   });
+}
+
+
+// ── Spot Detail Modal ─────────────────────────────────────────────────────
+const ROSE_CACHE_KEY = 'fs-rose-v2';
+const ROSE_CACHE_TTL = 90 * 24 * 60 * 60 * 1000;
+
+function openSpotModal(sid) {
+  const spot = SPOTS.find(s => s.id === sid);
+  if (!spot) return;
+
+  document.getElementById('modal-title').textContent = spot.name;
+
+  const areaLabel = spot.area === 'north' ? 'North Sydney' : 'South Sydney';
+  document.getElementById('modal-badges').innerHTML =
+    `<span class="badge badge-${spot.water}">${spot.water} water</span>` +
+    `<span class="badge badge-${spot.area}">${areaLabel}</span>` +
+    `<span class="badge badge-${spot.skill}">${spot.skill}</span>`;
+
+  document.getElementById('modal-body').innerHTML = buildModalContent(spot);
+  document.getElementById('spotModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Kick off async wind rose fetch
+  loadSeasonalRose(spot);
+}
+
+function closeSpotModal() {
+  document.getElementById('spotModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSpotModal(); });
+
+// ── Modal content builder ──────────────────────────────────────────────────
+function buildModalContent(spot) {
+  // Description
+  const descHTML = spot.desc ? `
+    <div class="modal-section">
+      <h3>About this spot</h3>
+      <p>${spot.desc}</p>
+    </div>` : '';
+
+  // Warnings
+  const warnsHTML = (spot.warnings && spot.warnings.length) ? `
+    <div class="modal-section">
+      <h3>Warnings</h3>
+      <div class="modal-warnings">${spot.warnings.map(w => `<div class="modal-warning">${w}</div>`).join('')}</div>
+    </div>` : '';
+
+  // Parking
+  let parkHTML = '';
+  if (spot.parking) {
+    const p = spot.parking;
+    parkHTML = `
+    <div class="modal-section">
+      <h3>Parking</h3>
+      <div class="modal-parking">
+        <span class="parking-pill parking-${p.type}">${p.type}</span>
+        <span>${p.notes}</span>
+      </div>
+    </div>`;
+  }
+
+  // Direction diagram + adjustments
+  const diagHTML = `
+    <div class="modal-section">
+      <h3>Wind window &amp; adjustments</h3>
+      <div class="modal-diagrams">
+        <div class="modal-dir-wrap">${buildDirArcSVG(spot)}</div>
+        <div class="modal-adj-wrap">${buildAdjDetails(spot)}</div>
+      </div>
+    </div>`;
+
+  // Wind rose placeholder
+  const roseHTML = `
+    <div class="modal-section">
+      <h3>Seasonal wind rose — current season, 3 prior years</h3>
+      <div id="rose-container"><p class="rose-loading">Loading historical data from Open-Meteo archive&hellip;</p></div>
+    </div>`;
+
+  return descHTML + warnsHTML + parkHTML + diagHTML + roseHTML;
+}
+
+// ── Direction arc SVG ──────────────────────────────────────────────────────
+function buildDirArcSVG(spot) {
+  const cx = 90, cy = 90, R = 66, r0 = 20;
+  const W = 180, H = 180;
+
+  // Convert met degrees (0=N, clockwise) → SVG radians (0=right)
+  const toRad = d => (d - 90) * Math.PI / 180;
+
+  // Annular sector path from fromDeg to toDeg (clockwise), radii inner→outer
+  function sectorPath(fromDeg, toDeg, inner, outer) {
+    const f = toRad(fromDeg), t = toRad(toDeg);
+    const x1 = cx + outer * Math.cos(f), y1 = cy + outer * Math.sin(f);
+    const x2 = cx + outer * Math.cos(t), y2 = cy + outer * Math.sin(t);
+    const x3 = cx + inner * Math.cos(t), y3 = cy + inner * Math.sin(t);
+    const x4 = cx + inner * Math.cos(f), y4 = cy + inner * Math.sin(f);
+    const span = ((toDeg - fromDeg) + 360) % 360;
+    const laf  = span > 180 ? 1 : 0;
+    return `M${x1.toFixed(2)},${y1.toFixed(2)} A${outer},${outer} 0 ${laf},1 ${x2.toFixed(2)},${y2.toFixed(2)} L${x3.toFixed(2)},${y3.toFixed(2)} A${inner},${inner} 0 ${laf},0 ${x4.toFixed(2)},${y4.toFixed(2)}Z`;
+  }
+
+  // Main viable arc
+  const mainPath = sectorPath(spot.vc - spot.vt, spot.vc + spot.vt, r0, R);
+
+  // Optional adj-direction boost arc (dashed orange)
+  let adjPath = '';
+  if (spot.adjDir != null) {
+    const p = sectorPath(spot.adjDir - spot.adjDirTol, spot.adjDir + spot.adjDirTol, r0, R);
+    adjPath = `<path d="${p}" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,3" fill-rule="nonzero"/>`;
+  }
+
+  // Arrow pointing to vc (viable centre)
+  const aRad = toRad(spot.vc);
+  const ax1 = cx + r0 * Math.cos(aRad), ay1 = cy + r0 * Math.sin(aRad);
+  const ax2 = cx + (R - 8) * Math.cos(aRad), ay2 = cy + (R - 8) * Math.sin(aRad);
+
+  // Compass labels (only N, E, S, W at outer edge)
+  const compassLabels = [['N',0],['E',90],['S',180],['W',270]].map(([lbl,d]) => {
+    const a = toRad(d);
+    const x = cx + (R + 13) * Math.cos(a);
+    const y = cy + (R + 13) * Math.sin(a);
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6b8fa6" font-family="system-ui,sans-serif" font-weight="${lbl==='N'?700:400}">${lbl}</text>`;
+  }).join('');
+
+  // Tick marks at 45° increments
+  const ticks = [0,45,90,135,180,225,270,315].map(d => {
+    const a = toRad(d);
+    const x1 = cx + R * Math.cos(a), y1 = cy + R * Math.sin(a);
+    const x2 = cx + (R+4) * Math.cos(a), y2 = cy + (R+4) * Math.sin(a);
+    return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#1a2d40" stroke-width="1"/>`;
+  }).join('');
+
+  // Centre label: ±vt
+  const centreLabel = `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#6b8fa6" font-family="system-ui,sans-serif">±${spot.vt}°</text>`;
+
+  // Adj legend if applicable
+  const adjLegend = spot.adjDir != null
+    ? `<text x="${W/2}" y="${H-6}" text-anchor="middle" font-size="8" fill="#fbbf24" font-family="system-ui,sans-serif">— boost zone (${dirLabel(spot.adjDir)})</text>`
+    : '';
+
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+    <defs>
+      <marker id="mdarr" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto">
+        <polygon points="0,0 0,5 5,2.5" fill="#4ecdc4"/>
+      </marker>
+    </defs>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#1a2d40" stroke-width="1"/>
+    ${ticks}
+    <circle cx="${cx}" cy="${cy}" r="${r0}" fill="#0d1b2a"/>
+    <path d="${mainPath}" fill="rgba(78,205,196,0.18)" stroke="#4ecdc4" stroke-width="1.5"/>
+    ${adjPath}
+    <line x1="${ax1.toFixed(2)}" y1="${ay1.toFixed(2)}" x2="${ax2.toFixed(2)}" y2="${ay2.toFixed(2)}" stroke="#4ecdc4" stroke-width="2" stroke-linecap="round" marker-end="url(#mdarr)"/>
+    ${compassLabels}
+    ${centreLabel}
+    ${adjLegend}
+  </svg>`;
+}
+
+// ── Wind adjustments table ──────────────────────────────────────────────────
+function buildAdjDetails(spot) {
+  const adjSign = spot.adj >= 0 ? '+' : '';
+  const r = RANGES[prefs.skill] || RANGES.intermediate;
+  const rows = [
+    ['Speed adjustment',    `${adjSign}${spot.adj} kn`],
+    [`GO range (${prefs.skill})`, `${r.goLo}–${r.goHi} kn`],
+    ['Marginal range',      `${r.mgLo}–${r.mgHi} kn`],
+    ['Direction centre',    dirLabel(spot.vc)],
+    ['Direction tolerance', `±${spot.vt}°`],
+  ];
+  if (spot.adjDir != null) {
+    rows.push(['Boost applies when', `wind from ${dirLabel(spot.adjDir)} ±${spot.adjDirTol}°`]);
+  }
+  return rows.map(([lbl, val]) =>
+    `<div class="adj-row"><span class="adj-label">${lbl}</span><span>${val}</span></div>`
+  ).join('');
+}
+
+// ── Seasonal wind rose ──────────────────────────────────────────────────────
+// 3 prior years, ±45 days around today's calendar position
+function getSeasonDateRanges() {
+  const now = new Date();
+  const mm = now.getMonth(), dd = now.getDate(), yyyy = now.getFullYear();
+  const fmt = d => d.toISOString().slice(0, 10);
+  const ranges = [];
+  for (let y = yyyy - 3; y <= yyyy - 1; y++) {
+    const start = new Date(y, mm, dd - 45);
+    const end   = new Date(y, mm, dd + 45);
+    ranges.push({ start: fmt(start), end: fmt(end) });
+  }
+  return ranges;
+}
+
+async function loadSeasonalRose(spot) {
+  const ctnr = document.getElementById('rose-container');
+  if (!ctnr) return;
+
+  // Check cache
+  const cacheKey = `${ROSE_CACHE_KEY}-${spot.id}-${prefs.skill}`;
+  try {
+    const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+    if (cached && (Date.now() - cached.ts) < ROSE_CACHE_TTL) {
+      ctnr.innerHTML = buildWindRoseSVG(cached.bins, spot);
+      return;
+    }
+  } catch(e) {}
+
+  const ranges = getSeasonDateRanges();
+  const allSpeeds = [], allDirs = [];
+
+  try {
+    await Promise.all(ranges.map(async rng => {
+      const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${spot.lat}&longitude=${spot.lon}&start_date=${rng.start}&end_date=${rng.end}&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&timezone=auto`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const spds = data.hourly?.wind_speed_10m || [];
+      const dirs = data.hourly?.wind_direction_10m || [];
+      for (let i = 0; i < spds.length; i++) {
+        allSpeeds.push(spds[i]);
+        allDirs.push(dirs[i]);
+      }
+    }));
+  } catch(e) {
+    if (ctnr) ctnr.innerHTML = '<p class="rose-loading">Could not load historical data (network error).</p>';
+    return;
+  }
+
+  if (!allSpeeds.length) {
+    if (ctnr) ctnr.innerHTML = '<p class="rose-loading">No historical data returned.</p>';
+    return;
+  }
+
+  // Build 16 direction bins
+  const NDIRS = 16;
+  const bins = Array.from({length: NDIRS}, () => ({ go:0, marginal:0, nogo:0, total:0 }));
+  const r = RANGES[prefs.skill] || RANGES.intermediate;
+
+  for (let i = 0; i < allSpeeds.length; i++) {
+    const spd = allSpeeds[i], dir = allDirs[i];
+    if (spd == null || dir == null) continue;
+    const bin = Math.round(dir / (360 / NDIRS)) % NDIRS;
+    const dirOk     = angDiff(dir, spot.vc) <= spot.vt;
+    const adjOn     = (spot.adjDir != null) ? angDiff(dir, spot.adjDir) <= spot.adjDirTol : true;
+    const adj       = spd + (adjOn ? spot.adj : 0);
+    let outcome;
+    if (!dirOk)                          outcome = 'nogo';
+    else if (adj >= r.goLo && adj <= r.goHi)   outcome = 'go';
+    else if (adj >= r.mgLo && adj <= r.mgHi)   outcome = 'marginal';
+    else                                 outcome = 'nogo';
+    bins[bin][outcome]++;
+    bins[bin].total++;
+  }
+
+  // Cache & render
+  try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), bins })); } catch(e) {}
+  if (ctnr) ctnr.innerHTML = buildWindRoseSVG(bins, spot);
+}
+
+// ── Wind rose SVG renderer ──────────────────────────────────────────────────
+function buildWindRoseSVG(bins, spot) {
+  const cx = 140, cy = 140, innerR = 16, maxBarLen = 100;
+  const W = 300, H = 310;
+  const NDIRS = 16;
+  const DLBLS = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  const BAR_W = 9; // px, half-width
+
+  const maxTotal = Math.max(...bins.map(b => b.total), 1);
+  let bars = '';
+
+  bins.forEach((bin, i) => {
+    if (bin.total === 0) return;
+    const angleDeg = i * (360 / NDIRS); // 0=N, clockwise
+    const frac  = bin.total / maxTotal;
+    const tLen  = frac * maxBarLen;
+    const noLen = (bin.nogo     / bin.total) * tLen;
+    const mLen  = (bin.marginal / bin.total) * tLen;
+    const gLen  = (bin.go       / bin.total) * tLen;
+
+    // Rects are drawn "upward" (negative y) from innerR, then rotated
+    const drawRect = (from, len, fill) => {
+      if (len < 0.5) return '';
+      return `<rect x="${-BAR_W/2}" y="${-(from + len)}" width="${BAR_W}" height="${len}" fill="${fill}" transform="translate(${cx},${cy}) rotate(${angleDeg})"/>`;
+    };
+
+    bars += drawRect(innerR,           noLen, 'rgba(106,133,155,0.55)');
+    bars += drawRect(innerR + noLen,   mLen,  'rgba(251,191,36,0.75)');
+    bars += drawRect(innerR + noLen + mLen, gLen, 'rgba(74,222,128,0.85)');
+  });
+
+  // Concentric reference rings at 25 / 50 / 75 / 100% of maxBar
+  const rings = [0.25, 0.5, 0.75, 1.0].map(f => {
+    const r = innerR + f * maxBarLen;
+    return `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="rgba(26,45,64,0.9)" stroke-width="${f===1?1:0.5}"/>`;
+  }).join('');
+
+  // Spoke lines every 22.5°
+  const spokes = Array.from({length: NDIRS}, (_, i) => {
+    const a = (i * 22.5 - 90) * Math.PI / 180;
+    const x2 = cx + (innerR + maxBarLen + 2) * Math.cos(a);
+    const y2 = cy + (innerR + maxBarLen + 2) * Math.sin(a);
+    return `<line x1="${(cx + innerR * Math.cos(a)).toFixed(1)}" y1="${(cy + innerR * Math.sin(a)).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="rgba(26,45,64,0.7)" stroke-width="0.4"/>`;
+  }).join('');
+
+  // Direction labels (every 45° = 8 labels, larger spots)
+  const labels = [0,2,4,6,8,10,12,14].map(i => {
+    const a = (i * 22.5 - 90) * Math.PI / 180;
+    const r = innerR + maxBarLen + 14;
+    const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="${DLBLS[i]==='N'?'#dde8f0':'#6b8fa6'}" font-family="system-ui,sans-serif" font-weight="${DLBLS[i]==='N'?700:400}">${DLBLS[i]}</text>`;
+  }).join('');
+
+  // Inner hub
+  const hub = `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#0d1b2a" stroke="#1a2d40" stroke-width="1"/>`;
+
+  // Legend row at bottom
+  const ly = H - 22, lx = 10;
+  const legend = `
+    <rect x="${lx}"    y="${ly}" width="9" height="9" fill="rgba(74,222,128,0.85)" rx="1.5"/>
+    <text x="${lx+13}" y="${ly+4.5}" dominant-baseline="middle" font-size="9" fill="#6b8fa6" font-family="system-ui,sans-serif">Go</text>
+    <rect x="${lx+38}" y="${ly}" width="9" height="9" fill="rgba(251,191,36,0.75)" rx="1.5"/>
+    <text x="${lx+51}" y="${ly+4.5}" dominant-baseline="middle" font-size="9" fill="#6b8fa6" font-family="system-ui,sans-serif">Marginal</text>
+    <rect x="${lx+108}" y="${ly}" width="9" height="9" fill="rgba(106,133,155,0.55)" rx="1.5"/>
+    <text x="${lx+121}" y="${ly+4.5}" dominant-baseline="middle" font-size="9" fill="#6b8fa6" font-family="system-ui,sans-serif">No go</text>
+    <text x="${W-10}" y="${ly+4.5}" text-anchor="end" dominant-baseline="middle" font-size="9" fill="#6b8fa6" font-family="system-ui,sans-serif">bar length = freq</text>
+  `;
+
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+    ${spokes}
+    ${rings}
+    ${bars}
+    ${hub}
+    ${labels}
+    ${legend}
+  </svg>`;
 }
 
 // ── Boot ───────────────────────────────────────────────────────
