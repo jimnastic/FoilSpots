@@ -417,7 +417,7 @@ function initTooltip() {
       if (el.dataset.dir) h += `<div class="ttr"><span>Direction</span><span>${el.dataset.dir}</span></div>`;
       if (el.dataset.reason) h += `<div class="ttnote">${el.dataset.reason}</div>`;
       if (sp) h += `<div class="ttspot">${sp.notes}</div>`;
-
+    }
     tt.innerHTML = h;
     tt.classList.add('vis');
     tt.style.left = Math.min(e.clientX+14, window.innerWidth-235)+'px';
