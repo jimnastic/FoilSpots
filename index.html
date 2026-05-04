@@ -196,7 +196,7 @@
   </div>
   <nav class="hdr-nav">
     <a href="sydney-wind-rose.html">Wind rose</a>
-    <a href="spots-by-direction.html">Spots by direction</a>
+    <a href="wind-windows.html">Wind windows</a>
   </nav>
 </header>
 
@@ -274,17 +274,17 @@
 
 <script>
 const SPOTS = [
-  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:-2.5, vc:56,  vt:45, drive:'25 min',
+  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:0, vc:56,  vt:45, drive:'25 min',
     desc:'Western shore of Narrabeen Lagoon — the most popular lagoon launch. Wind blows cleanly east across the lagoon giving flat, consistent water. When NE is strong and Balmoral chops up, the enclosed water here makes the extra 7-minute drive worthwhile.',
     warnings:['Shallow near shore — watch foil on launch and landing','Gusty near the treeline on the western shore in light winds'],
     parking:{ type:'paid', notes:'Paid ~$6/hr off Wakehurst Pkwy. Free street options near Jamieson Park ~200m south.' },
     notes:'Narrabeen Lagoon W shore. Very flat. NNE–E winds.' },
-  { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:-2.5, vc:225, vt:90, drive:'25 min',
+  { id:'bilarong',  name:'Bilarong',     area:'north', water:'flat', skill:'beginner',     lat:-33.718, lon:151.284, adj:0, vc:225, vt:90, drive:'25 min',
     desc:'North shore of Narrabeen Lagoon, facing SSW. The right lagoon choice for SW sessions — wind blows cleanly across toward the southern shore. Also works in S and SE. Can be gusty in strong SW as wind descends from the hills to the north.',
     warnings:['Gusty in strong SW — wind channels down from the northern ridgeline','Shallow near shore on launch and landing'],
     parking:{ type:'free', notes:'Free car park at the reserve. No time limits during the day. Quiet on weekdays.' },
     notes:'Narrabeen Lagoon N shore. W through SE winds.' },
-  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'beginner', lat:-33.929, lon:151.170, adj:2.5,  adjDir:45, adjDirTol:45, vc:135, vt:50, drive:'20 min',
+  { id:'kyeemagh',  name:'Kyeemagh',     area:'south', water:'flat', skill:'beginner', lat:-33.929, lon:151.170, adj:2,  adjDir:45, adjDirTol:45, vc:135, vt:50, drive:'20 min',
     desc:'Best SE spot in Sydney. Large boat ramp reserve on Botany Bay with a big grassy rigging area and clean sandy beach. Airport tarmac thermal boosts NE by 2–3 kn. Shallow water 50m off shore makes standing resets easy. Uncrowded and well-facilitated.',
     warnings:['⚠️ Do NOT go within 48hrs of heavy rain — Cook’s River E. coli spikes','Oyster shells and sea urchins on rocks at low tide — wear booties','Stingrays in shallows — shuffle feet on launch and land','Boat ramp busy weekend mornings — launch before 8am or mid-afternoon','Airport proximity — kites banned, wings tolerated but be sensible'],
     parking:{ type:'free', notes:'Large free car park at the reserve (80 Mutch Ave). Rarely full.' },
@@ -294,12 +294,12 @@ const SPOTS = [
     warnings:['Stay south of President Ave — airport exclusion zone applies north of this line','Shallow — watch foil in choppy conditions'],
     parking:{ type:'free', notes:'Free 3hr parking at the Boulevarde car park (230 spaces) and free street parking along The Grand Parade. Generally straightforward.' },
     notes:'Brighton Le Sands / Dolls Point. SE and moderate S. Stay south of President Ave (airport zone).' },
-  { id:'clontarf',  name:'Clontarf',     area:'north', water:'flat', skill:'intermediate',     lat:-33.812, lon:151.255, adj:-2.5, vc:135, vt:50, drive:'5 min',
+  { id:'clontarf',  name:'Clontarf',     area:'north', water:'flat', skill:'intermediate',     lat:-33.812, lon:151.255, adj:0, vc:135, vt:50, drive:'5 min',
     desc:'Sheltered Middle Harbour inlet, 5 minutes from Seaforth. SE makes for easy, low-pressure sessions with no open-water drift risk. Best for a quick session when SE is light to moderate — upgrade to Kyeemagh for a solid SE day.',
     warnings:['Harbour kitesurfing is banned — wingfoiling only here','Ferry traffic in Middle Harbour — stay alert to vessel movements','Shallow reef and kelp in areas of brown water','N wind is cross-shore with offshore component — not suitable'],
     parking:{ type:'free', notes:'Free street parking on Holmes Ave, Monash Crescent and Allenby St. Can fill summer weekends — arrive early.' },
     notes:'Sheltered Middle Harbour inlet. Quick SE spot.' },
-  { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:-1.5, vc:45,  vt:45, drive:'10 min',
+  { id:'balmoral',  name:'Balmoral',     area:'north', water:'flat', skill:'intermediate', lat:-33.830, lon:151.249, adj:0, vc:45,  vt:45, drive:'10 min',
     desc:'Jim\u2019s home spot — 5 minutes from Seaforth on Sydney Harbour. Side-shore NE seabreeze with flat harbour water. Works well up to ~20 kn; above that, harbour chop builds quickly and Middle Creek becomes the better call.',
     warnings:['Stay seaward of the yellow swimming buoys','Middle Head rocks to the NE — do not drift in offshore conditions','W/SW/NW winds are offshore from the hill behind the beach — do not launch','Shallow near shore at low tide — watch foil','Very busy summer weekend afternoons'],
     parking:{ type:'paid', notes:'Metered — up to $40/day peak (Oct–Apr), $35/day off-peak. Free street parking ~300m walk. Go early or take the bus.' },
@@ -309,7 +309,7 @@ const SPOTS = [
     warnings:['Gusty off the Scotland Island hills — check before committing','Stay clear of the Church Point ferry commuter lane','Limited water depth near shore at low tide'],
     parking:{ type:'paid', notes:'Metered car park fills fast with Scotland Island ferry commuters — very busy on weekdays. Arrive early; no convenient free alternative nearby.' },
     notes:'Church Point. NW is onshore across Pittwater. Only good NW option. Also works in W.' },
-  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:3.5,  vc:22,  vt:60, drive:'30 min',
+  { id:'kurnell',   name:'Kurnell',      area:'south', water:'flat', skill:'advanced',     lat:-34.004, lon:151.215, adj:0,  vc:22,  vt:60, drive:'30 min',
     desc:'The windiest spot in Sydney — flat exposed peninsula with no terrain to block wind. N and NE consistently run 3–4 kn stronger here than anywhere else in Botany Bay. The only reliable northerly option from Seaforth. Long drive but unique, powerful conditions.',
     warnings:['⚠️ NEVER launch in a southerly — offshore wind blows directly toward Sydney Airport runways','NW wind is possible but gusty and unpredictable off the flat terrain','Advanced only — stronger and gustier than forecast; assess carefully before committing'],
     parking:{ type:'paid', notes:'$8/day national park entry fee, pay and display. Free parking on Polo St ~500m walk.' },
@@ -319,7 +319,7 @@ const SPOTS = [
     warnings:['Active seaplane and ferry lanes — stay alert at all times','Moorings throughout — watch for submerged lines','Strong SW can have offshore component toward the harbour entrance — confirm upwind ability'],
     parking:{ type:'paid', notes:'Metered on New South Head Rd. Lyne Park has 2hr free. Tight on weekends — arrive early.' },
     notes:'Open harbour. Best in SW/W — wind runs across the harbour. Worth the drive when SW is 18+ kn.' },
-  { id:'manly',      name:'Manly',        area:'north', water:'flat', skill:'advanced', lat:-33.800, lon:151.291, adj:-1,   vc:22,  vt:45, drive:'20 min',
+  { id:'manly',      name:'Manly',        area:'north', water:'flat', skill:'advanced', lat:-33.800, lon:151.291, adj:0,   vc:22,  vt:45, drive:'20 min',
     desc:'Shelly Beach / Cabbage Tree Bay — a north-facing sheltered cove at the south end of the Manly headland. N and NE are cross-onshore over the headland. Protected from swell by the outer reef. Small cove so the run is short, but flat water when conditions align.',
     warnings:['Wingfoiling only — kite restrictions apply in this area','Cabbage Tree Bay is an aquatic reserve — be mindful of divers and snorkellers at all times','Can be gusty and patchy as wind breaks over the headland','Small cove — watch the southern reef on the far side of the bay'],
     parking:{ type:'paid', notes:'Pay and display during daylight hours. Parking is very difficult — go early or walk from Manly (15 min). Free after 7pm, no overnight.' },
@@ -399,23 +399,26 @@ function dirLabel(d) {
 function arrowRot(fromDeg) { return Math.round((fromDeg + 180) % 360); }
 
 function daySum(hourly, di) {
-  const s=di*24+9, e=di*24+18;
-  const spds = hourly.wind_speed_10m.slice(s,e).filter(v=>v!=null);
-  const gsts = hourly.wind_gusts_10m.slice(s,e).filter(v=>v!=null);
-  const dirs = hourly.wind_direction_10m.slice(s,e).filter(v=>v!=null);
-  if (!spds.length) return null;
-  return { avg:spds.reduce((a,b)=>a+b,0)/spds.length, gust:Math.max(...gsts), dir:circMean(dirs) };
+  // 9am–7pm (hours 9–19 inclusive); use daily peak speed, direction at peak hour
+  const s = di*24+9, e = di*24+20;
+  const slice = hourly.wind_speed_10m.slice(s, e);
+  const gsts  = hourly.wind_gusts_10m.slice(s, e).filter(v=>v!=null);
+  if (!slice.some(v=>v!=null)) return null;
+  let peakSpd = -Infinity, peakIdx = 0;
+  slice.forEach((v, i) => { if (v != null && v > peakSpd) { peakSpd = v; peakIdx = i; } });
+  const peakDir = hourly.wind_direction_10m[s + peakIdx] ?? 0;
+  return { peak:peakSpd, gust:gsts.length ? Math.max(...gsts) : peakSpd, dir:peakDir };
 }
 
 function rateCell(spot, sum, skill) {
   if (!sum) return { st:'no-go', reason:'No data', dirDeg:null };
   const adjApplies = (spot.adjDir != null) ? angDiff(sum.dir, spot.adjDir) <= spot.adjDirTol : true;
   const appliedAdj = adjApplies ? spot.adj : 0;
-  const adj = sum.avg + appliedAdj;
+  const adj = sum.peak + appliedAdj;
   const dirOk = angDiff(sum.dir, spot.vc) <= spot.vt;
   const r = RANGES[skill]||RANGES.intermediate;
   const d = dirLabel(sum.dir);
-  const base = { raw:Math.round(sum.avg), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir), appliedAdj:Math.round(appliedAdj) };
+  const base = { raw:Math.round(sum.peak), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir), appliedAdj:Math.round(appliedAdj) };
   if (!dirOk)           return { ...base, st:'no-go',    reason:`Wind from ${d} — outside viable range` };
   if (adj>=r.goLo&&adj<=r.goHi) return { ...base, st:'go',       reason:`${d} at ${Math.round(adj)} kn` };
   if (adj>=r.mgLo&&adj<=r.mgHi) return { ...base, st:'marginal', reason: adj<r.goLo ? 'Light wind — marginal' : 'Strong wind — marginal' };

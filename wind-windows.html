@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wind Windows — FoilSpots Sydney</title>
+  <style>
+    :root {
+      --bg:#0d1b2a; --surf:#132130; --surf2:#1a2d40; --acc:#4ecdc4;
+      --txt:#dde8f0; --muted:#6b8fa6; --border:rgba(255,255,255,0.08);
+      --go:#4ade80; --go-bg:rgba(74,222,128,0.10); --go-bd:rgba(74,222,128,0.28);
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--txt); font-family:system-ui,-apple-system,sans-serif; font-size:13px; }
+
+    /* ── Header ──────────────────────────────────────────────── */
+    .hdr { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:var(--surf); border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px; }
+    .hdr-left h1 { font-size:18px; font-weight:700; color:var(--acc); }
+    .hdr-left p  { font-size:12px; color:var(--muted); margin-top:2px; }
+    .hdr-nav a   { color:var(--muted); text-decoration:none; font-size:12px; margin-left:16px; }
+    .hdr-nav a:hover { color:var(--acc); }
+
+    /* ── Instructions ────────────────────────────────────────── */
+    .instructions { background:var(--surf); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; gap:20px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
+    .instr-steps  { display:flex; flex-direction:column; gap:6px; flex:1; min-width:200px; }
+    .instr-step   { display:flex; align-items:flex-start; gap:8px; font-size:12px; color:var(--muted); line-height:1.45; }
+    .instr-step strong { color:var(--txt); }
+    .instr-icon   { color:var(--acc); font-weight:700; font-size:12px; flex:none; margin-top:1px; }
+    .instr-right  { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+    .legend-chips { display:flex; gap:6px; align-items:center; }
+    .lchip        { display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:5px; font-size:11px; font-weight:700; }
+    .lchip.on     { background:var(--go-bg); border:1px solid var(--go-bd); color:var(--go); }
+    .lchip.nogo   { background:var(--surf2); border:1px solid rgba(255,255,255,0.14); color:#8aacbe; }
+    .suggest-link { font-size:11px; color:var(--acc); cursor:pointer; background:none; border:none; font-family:inherit; padding:0; white-space:nowrap; }
+    .suggest-link:hover { text-decoration:underline; }
+    .suggest-inline { background:rgba(78,205,196,0.12); border:1px solid rgba(78,205,196,0.4); color:var(--acc); font-size:12px; font-weight:600; padding:3px 10px; border-radius:5px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+    .suggest-inline:hover { background:rgba(78,205,196,0.22); }
+
+    /* ── Main scroll area ────────────────────────────────────── */
+    #main { overflow:auto; -webkit-overflow-scrolling:touch; }
+
+    /* ── Table ───────────────────────────────────────────────── */
+    table { border-collapse:collapse; min-width:100%; }
+    thead th {
+      position:sticky; top:0; z-index:22;
+      background:var(--surf2); border-bottom:2px solid var(--border);
+      padding:9px 10px; text-align:center; white-space:nowrap;
+    }
+    thead th.dcol { text-align:left; left:0; z-index:24; min-width:80px; }
+    thead th.scol { min-width:100px; cursor:pointer; }
+    thead th.scol:hover .sth-name { text-decoration:underline; }
+
+    .sth { display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .sth-name { font-size:12px; font-weight:600; color:var(--acc); }
+    .sth-hint { font-size:9px; color:var(--muted); }
+    thead th.scol.commented .sth-name { color:#fff; }
+    thead th.scol.commented .sth-hint { color:var(--acc); }
+    thead th.scol.commented { background:rgba(78,205,196,0.10); border-bottom:2px solid var(--acc); }
+    .spip { display:inline-block; font-size:9px; font-weight:700; padding:1px 5px; border-radius:3px; text-transform:uppercase; letter-spacing:.04em; }
+    .spip.beginner     { background:rgba(74,222,128,.14);  color:#4ade80; }
+    .spip.intermediate { background:rgba(251,191,36,.14);  color:#fbbf24; }
+    .spip.advanced     { background:rgba(248,113,113,.14); color:#f87171; }
+
+    tbody tr { border-bottom:1px solid var(--border); }
+    tbody tr:hover { background:rgba(255,255,255,.02); }
+    tbody td { padding:5px 8px; text-align:center; vertical-align:middle; }
+    tbody td[data-sid] { cursor:pointer; }
+    tbody td[data-sid]:hover .wchip { filter:brightness(1.15); }
+    tbody td.dir-cell { text-align:left; position:sticky; left:0; z-index:10; background:var(--bg); padding:6px 12px; white-space:nowrap; cursor:default; }
+    .dir-lbl { font-size:12px; font-weight:600; color:var(--txt); display:inline-block; width:32px; }
+    .dir-arr { font-size:13px; color:var(--muted); }
+
+    /* ── Chips ───────────────────────────────────────────────── */
+    .wchip {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:6px 8px; border-radius:6px; width:80px;
+      font-size:11px; font-weight:700; line-height:1.3;
+      transition:filter .1s; position:relative;
+    }
+    .wchip.on   { background:var(--go-bg); border:1px solid var(--go-bd); color:var(--go); }
+    .wchip.nogo { background:var(--surf2); border:1px solid rgba(255,255,255,0.14); color:#8aacbe; }
+    .wchip.edited     { border-color:var(--acc) !important; border-width:2px !important; }
+    .wchip.edited::after { content:'✎'; position:absolute; top:2px; right:4px; font-size:8px; color:var(--acc); opacity:.8; }
+
+    /* ── Hover tooltip ───────────────────────────────────────── */
+    #tt {
+      display:none; position:fixed; z-index:200;
+      background:var(--surf2); border:1px solid rgba(255,255,255,0.15);
+      border-radius:10px; padding:12px 14px; max-width:240px;
+      font-size:12px; line-height:1.55; box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      pointer-events:none;
+    }
+    #tt .tt-main { color:var(--txt); margin-bottom:6px; }
+    #tt .tt-cta  { font-size:11px; color:var(--acc); border-top:1px solid var(--border); padding-top:6px; font-style:italic; }
+
+    /* ── Spot / suggest modal ────────────────────────────────── */
+    .sm-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:300; align-items:center; justify-content:center; padding:20px; }
+    .sm-backdrop.open { display:flex; }
+    .sm-box { background:var(--surf); border:1px solid var(--border); border-radius:12px; max-width:420px; width:100%; padding:22px; box-shadow:0 24px 64px rgba(0,0,0,.6); }
+    .sm-box h3 { font-size:15px; font-weight:700; color:var(--txt); margin-bottom:4px; }
+    .sm-sub { font-size:12px; color:var(--muted); margin-bottom:16px; }
+    .sm-field { margin-bottom:12px; }
+    .sm-field label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--acc); margin-bottom:5px; }
+    .sm-field input[type=text], .sm-field textarea {
+      width:100%; background:var(--surf2); border:1px solid var(--border);
+      border-radius:6px; color:var(--txt); font-size:13px; padding:8px 10px; font-family:inherit;
+    }
+    .sm-field textarea { resize:vertical; min-height:80px; }
+    .sm-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
+    .sm-cancel { background:none; border:1px solid var(--border); color:var(--muted); padding:7px 16px; border-radius:6px; cursor:pointer; font-size:12px; }
+    .sm-submit { background:var(--acc); color:#0d1b2a; border:none; padding:7px 18px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:700; }
+    .sm-added  { font-size:12px; color:var(--go); margin-top:10px; text-align:center; }
+
+    /* ── Send bar ────────────────────────────────────────────── */
+    #send-bar {
+      position:fixed; bottom:0; left:0; right:0; z-index:150;
+      background:var(--surf); border-top:2px solid var(--acc);
+      padding:11px 20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+      box-shadow:0 -4px 20px rgba(0,0,0,0.45);
+      transform:translateY(100%); transition:transform .25s ease;
+    }
+    #send-bar.visible { transform:translateY(0); }
+    #send-count { font-size:12px; color:var(--acc); font-weight:600; white-space:nowrap; }
+    #send-name  { background:var(--surf2); border:1px solid var(--border); border-radius:6px; color:var(--txt); font-size:12px; padding:6px 10px; font-family:inherit; width:160px; }
+    .send-clear { background:none; border:1px solid var(--border); color:var(--muted); padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; }
+    .send-clear:hover { color:var(--txt); }
+    .send-btn   { background:var(--acc); color:#0d1b2a; border:none; padding:8px 24px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:700; box-shadow:0 2px 12px rgba(78,205,196,0.35); }
+    .send-btn:disabled { opacity:.5; cursor:not-allowed; }
+    #send-msg   { width:100%; font-size:12px; margin-top:2px; }
+    #send-msg.ok  { color:var(--go); }
+    #send-msg.err { color:#f87171; }
+
+    footer { padding:14px 20px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); margin-top:20px; line-height:1.8; }
+  </style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-left">
+    <h1>FoilSpots Sydney — Spot Insights</h1>
+    <p>Help us improve — tell us which spots work in which wind directions</p>
+  </div>
+  <nav class="hdr-nav">
+    <a href="index.html">← Forecast</a>
+    <a href="sydney-wind-rose.html">Wind rose</a>
+  </nav>
+</header>
+
+<div class="instructions">
+  <div class="instr-steps">
+    <div class="instr-step"><span class="instr-icon">①</span><span>Tap any cell to suggest it should be <strong>On</strong> or <strong>No go</strong> for that wind direction. Tap again to reset.</span></div>
+    <div class="instr-step"><span class="instr-icon">②</span><span>Tap a <strong>spot heading</strong> to give more info about that spot.</span></div>
+    <div class="instr-step"><span class="instr-icon">③</span><span>Are we missing something? <button class="suggest-inline" onclick="openSuggest()">＋ Suggest a missing spot</button></span></div>
+    <div class="instr-step"><span class="instr-icon">④</span><span>When you're done, tap <strong>Send feedback</strong>.</span></div>
+  </div>
+  <div class="instr-right">
+    <div class="legend-chips">
+      <span class="lchip on">On</span>
+      <span class="lchip nogo">No go</span>
+    </div>
+  </div>
+</div>
+
+<div id="main"></div>
+
+<div id="tt">
+  <div class="tt-main" id="tt-main"></div>
+  <div class="tt-cta"  id="tt-cta"></div>
+</div>
+
+<!-- Spot feedback / suggest modal -->
+<div class="sm-backdrop" id="sm-backdrop" onclick="if(event.target===this)closeSpotModal()">
+  <div class="sm-box">
+    <h3 id="sm-title"></h3>
+    <p  class="sm-sub" id="sm-sub"></p>
+    <div id="sm-body"></div>
+    <p class="sm-added" id="sm-added" style="display:none"></p>
+    <div class="sm-actions">
+      <button class="sm-cancel" onclick="closeSpotModal()">Cancel</button>
+      <button class="sm-submit" id="sm-submit" onclick="commitSpotModal()"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky send bar -->
+<div id="send-bar">
+  <span id="send-count"></span>
+  <input type="text" id="send-name" placeholder="Your name (optional)">
+  <button class="send-clear" onclick="clearAll()">Clear all</button>
+  <button class="send-btn" id="send-btn" onclick="submitAll()">Send feedback ↑</button>
+  <div id="send-msg" style="display:none"></div>
+</div>
+
+<footer>
+  Wind windows are based on local knowledge — your on-the-water experience helps improve them.
+</footer>
+
+<script>
+const FORMSPREE_ID = 'maqvebwp';
+
+const SPOTS = [
+  { id:'mid-creek',  name:'Middle Creek',     skill:'beginner',     vc:56,  vt:45 },
+  { id:'bilarong',   name:'Bilarong',          skill:'beginner',     vc:225, vt:90 },
+  { id:'kyeemagh',   name:'Kyeemagh',          skill:'beginner',     vc:135, vt:50 },
+  { id:'brighton',   name:'Brighton LS',       skill:'beginner',     vc:157, vt:45 },
+  { id:'clontarf',   name:'Clontarf',          skill:'intermediate', vc:135, vt:50 },
+  { id:'balmoral',   name:'Balmoral',          skill:'intermediate', vc:45,  vt:45 },
+  { id:'pittwater',  name:'Pittwater',         skill:'intermediate', vc:292, vt:45 },
+  { id:'kurnell',    name:'Kurnell',           skill:'advanced',     vc:22,  vt:60 },
+  { id:'rose-bay',   name:'Rose Bay',          skill:'advanced',     vc:247, vt:45 },
+  { id:'manly',      name:'Manly',             skill:'advanced',     vc:22,  vt:45 },
+  { id:'fishermans', name:'Fishermans Beach',  skill:'advanced',     vc:45,  vt:45 },
+  { id:'long-reef',  name:'Long Reef Beach',   skill:'advanced',     vc:135, vt:45 },
+];
+
+const DIRS = [
+  {label:'N',   deg:0},    {label:'NNE', deg:22.5},  {label:'NE',  deg:45},   {label:'ENE', deg:67.5},
+  {label:'E',   deg:90},   {label:'ESE', deg:112.5}, {label:'SE',  deg:135},  {label:'SSE', deg:157.5},
+  {label:'S',   deg:180},  {label:'SSW', deg:202.5}, {label:'SW',  deg:225},  {label:'WSW', deg:247.5},
+  {label:'W',   deg:270},  {label:'WNW', deg:292.5}, {label:'NW',  deg:315},  {label:'NNW', deg:337.5},
+];
+
+function angDiff(a,b) { return Math.abs(((a-b+540)%360)-180); }
+function windowPhrase(sp) { return `${dirLbl(sp.vc)} ±${sp.vt}°`; }
+function dirLbl(deg) { return ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(deg/22.5)%16]; }
+function dirArrow(deg) { return `<span style="display:inline-block;transform:rotate(${deg}deg)">↑</span>`; }
+
+// ── Pending state ─────────────────────────────────────────────────────────────
+const pendingCells       = new Map();  // `${sid}__${dir}` → {sid, name, dir, origStatus, status}
+const pendingSpotComment = new Map();  // sid → {name, comment}
+const pendingNewSpots    = [];
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+function showTt(e, mainHtml, cta) {
+  document.getElementById('tt-main').innerHTML = mainHtml;
+  document.getElementById('tt-cta').textContent = cta;
+  const tt = document.getElementById('tt');
+  tt.style.display = 'block';
+  moveTt(e);
+}
+function moveTt(e) {
+  const tt=document.getElementById('tt'), pad=14, w=240, h=tt.offsetHeight;
+  let x=e.clientX+pad, y=e.clientY+pad;
+  if (x+w>window.innerWidth-pad)  x=e.clientX-w-pad;
+  if (y+h>window.innerHeight-pad) y=e.clientY-h-pad;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
+}
+function hideTt() { document.getElementById('tt').style.display='none'; }
+
+// ── Build table ───────────────────────────────────────────────────────────────
+function buildTable() {
+  let h = '<table><thead><tr><th class="dcol">Direction</th>';
+  SPOTS.forEach(sp => {
+    h += `<th class="scol" data-sid="${sp.id}">
+      <div class="sth">
+        <span class="sth-name">${sp.name}</span>
+        <span class="spip ${sp.skill}">${sp.skill}</span>
+        <span class="sth-hint" id="hint-${sp.id}">💬 tap to comment</span>
+      </div>
+    </th>`;
+  });
+  h += '</tr></thead><tbody>';
+
+  DIRS.forEach(dir => {
+    h += `<tr><td class="dir-cell"><span class="dir-lbl">${dir.label}</span><span class="dir-arr">${dirArrow(dir.deg)}</span></td>`;
+    SPOTS.forEach(sp => {
+      const inWindow = angDiff(dir.deg, sp.vc) <= sp.vt;
+      const origStatus = inWindow ? 'on' : 'nogo';
+      const win = windowPhrase(sp);
+      h += `<td data-sid="${sp.id}" data-dir="${dir.label}" data-orig="${origStatus}" data-window="${win}">
+        ${chipHtml(sp.id, dir.label, origStatus)}
+      </td>`;
+    });
+    h += '</tr>';
+  });
+
+  h += '</tbody></table>';
+  document.getElementById('main').innerHTML = h;
+  updateMainHeight();
+  attachListeners();
+}
+
+function chipHtml(sid, dir, origStatus) {
+  const key     = `${sid}__${dir}`;
+  const pending = pendingCells.get(key);
+  const status  = pending ? pending.status : origStatus;
+  const edited  = !!pending;
+  const label   = status === 'on' ? 'On' : 'No go';
+  return `<div class="wchip ${status==='on'?'on':'nogo'}${edited?' edited':''}">${label}</div>`;
+}
+
+function updateCellDisplay(sid, dir) {
+  const td = document.querySelector(`tbody td[data-sid="${sid}"][data-dir="${dir}"]`);
+  if (td) td.innerHTML = chipHtml(sid, dir, td.dataset.orig);
+}
+
+function attachListeners() {
+  // Column headers → spot general feedback
+  document.querySelectorAll('thead th.scol').forEach(th => {
+    th.addEventListener('click', () => openSpotFeedback(th.dataset.sid));
+  });
+
+  // Cells → tap to toggle
+  document.querySelectorAll('tbody td[data-sid]').forEach(td => {
+    td.addEventListener('mouseenter', e => {
+      const key     = `${td.dataset.sid}__${td.dataset.dir}`;
+      const pending = pendingCells.get(key);
+      const sp      = SPOTS.find(s => s.id===td.dataset.sid);
+      const status  = pending ? pending.status : td.dataset.orig;
+      const win     = td.dataset.window;
+      let mainHtml, cta;
+      if (status === 'on') {
+        mainHtml = `<strong>${sp.name}</strong> is <span style="color:var(--go)">On</span> in <strong>${td.dataset.dir}</strong> wind. Window: ${win}.`;
+        cta = pending ? '✎ Your edit — tap to reset.' : 'Disagree? Tap to mark Not on.';
+      } else {
+        mainHtml = `<strong>${sp.name}</strong> is not in its wind window for <strong>${td.dataset.dir}</strong>. Works in ${win}.`;
+        cta = pending ? '✎ Your edit — tap to reset.' : 'Think it works? Tap to mark On.';
+      }
+      showTt(e, mainHtml, cta);
+    });
+    td.addEventListener('mousemove', moveTt);
+    td.addEventListener('mouseleave', hideTt);
+    td.addEventListener('click', () => {
+      hideTt();
+      toggleCell(td.dataset.sid, td.dataset.dir, td.dataset.orig);
+    });
+  });
+}
+
+// ── Cell toggle ───────────────────────────────────────────────────────────────
+function toggleCell(sid, dir, origStatus) {
+  const key     = `${sid}__${dir}`;
+  const sp      = SPOTS.find(s => s.id===sid);
+  const pending = pendingCells.get(key);
+
+  if (pending) {
+    // Already edited — tap again resets to system
+    pendingCells.delete(key);
+  } else {
+    // First tap — flip from system
+    const newStatus = origStatus === 'on' ? 'nogo' : 'on';
+    pendingCells.set(key, {sid, name:sp.name, dir, origStatus, status:newStatus});
+  }
+  updateCellDisplay(sid, dir);
+  updateSendBar();
+}
+
+// ── Spot feedback / suggest modal ─────────────────────────────────────────────
+let smMode = null, smSid = null;
+
+function openSpotFeedback(sid) {
+  const sp = SPOTS.find(s=>s.id===sid);
+  smMode='feedback'; smSid=sid;
+  const existing = pendingSpotComment.get(sid);
+  document.getElementById('sm-title').textContent = `${sp.name} — general feedback`;
+  document.getElementById('sm-sub').textContent   = 'Comments about this spot (access, conditions, anything not direction-specific).';
+  document.getElementById('sm-body').innerHTML    = `
+    <div class="sm-field">
+      <label>Your comments</label>
+      <textarea id="sm-comment" rows="4" placeholder="e.g. gets gusty in strong NE, best to launch from the northern end…">${existing?existing.comment:''}</textarea>
+    </div>`;
+  document.getElementById('sm-submit').textContent = 'Save comment';
+  document.getElementById('sm-added').style.display = 'none';
+  document.getElementById('sm-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openSuggest() {
+  smMode='suggest'; smSid=null;
+  document.getElementById('sm-title').textContent = 'Suggest a missing spot';
+  document.getElementById('sm-sub').textContent   = "Know a spot that's not listed? Tell us about it.";
+  document.getElementById('sm-body').innerHTML    = `
+    <div class="sm-field">
+      <label>Spot name</label>
+      <input type="text" id="sm-spot-name" placeholder="e.g. Wanda Beach">
+    </div>
+    <div class="sm-field">
+      <label>Notes</label>
+      <textarea id="sm-spot-notes" rows="3" placeholder="Best wind direction, skill level, what makes it work…"></textarea>
+    </div>`;
+  document.getElementById('sm-submit').textContent = 'Add suggestion';
+  document.getElementById('sm-added').style.display = 'none';
+  document.getElementById('sm-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateSpotHeader(sid) {
+  const th   = document.querySelector(`thead th.scol[data-sid="${sid}"]`);
+  const hint = document.getElementById(`hint-${sid}`);
+  if (!th) return;
+  const hasComment = pendingSpotComment.has(sid);
+  th.classList.toggle('commented', hasComment);
+  if (hint) hint.textContent = hasComment ? '💬 comment added ✓' : '💬 tap to comment';
+}
+
+function commitSpotModal() {
+  if (smMode === 'feedback') {
+    const comment = (document.getElementById('sm-comment').value||'').trim();
+    if (!comment) return;
+    const sp = SPOTS.find(s=>s.id===smSid);
+    pendingSpotComment.set(smSid, {name:sp.name, comment});
+    updateSpotHeader(smSid);
+    updateSendBar();
+    closeSpotModal();
+  } else if (smMode === 'suggest') {
+    const name  = (document.getElementById('sm-spot-name').value||'').trim();
+    const notes = (document.getElementById('sm-spot-notes').value||'').trim();
+    if (!name) return;
+    pendingNewSpots.push({name, notes});
+    updateSendBar();
+    document.getElementById('sm-spot-name').value  = '';
+    document.getElementById('sm-spot-notes').value = '';
+    const added = document.getElementById('sm-added');
+    added.textContent = `✓ "${name}" added. Add another or cancel to close.`;
+    added.style.display = 'block';
+  }
+}
+
+function closeSpotModal() {
+  document.getElementById('sm-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+  smMode=null; smSid=null;
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeSpotModal(); });
+
+// ── Send bar ──────────────────────────────────────────────────────────────────
+function updateSendBar() {
+  const bar   = document.getElementById('send-bar');
+  const total = pendingCells.size + pendingSpotComment.size + pendingNewSpots.length;
+  const parts = [];
+  if (pendingCells.size)       parts.push(`${pendingCells.size} cell${pendingCells.size>1?'s':''}`);
+  if (pendingSpotComment.size) parts.push(`${pendingSpotComment.size} spot comment${pendingSpotComment.size>1?'s':''}`);
+  if (pendingNewSpots.length)  parts.push(`${pendingNewSpots.length} spot suggestion${pendingNewSpots.length>1?'s':''}`);
+  document.getElementById('send-count').textContent = total ? parts.join(' · ') + ' marked' : '';
+  bar.classList.toggle('visible', total > 0);
+  updateMainHeight();
+  const btn = document.getElementById('send-btn');
+  btn.disabled=false; btn.textContent='Send feedback';
+  document.getElementById('send-msg').style.display='none';
+}
+
+function clearAll() {
+  pendingCells.clear();
+  pendingSpotComment.clear();
+  pendingNewSpots.length = 0;
+  buildTable();
+  updateSendBar();
+}
+
+function buildYaml() {
+  const lines = [];
+  if (pendingCells.size) {
+    lines.push('wind_windows:');
+    for (const [,ch] of pendingCells) {
+      lines.push(`  - spot: "${ch.name}"`);
+      lines.push(`    direction: ${ch.dir}`);
+      lines.push(`    system: ${ch.origStatus==='on'?'On':'Not on'}`);
+      lines.push(`    feedback: ${ch.status==='on'?'On':'Not on'}`);
+    }
+  }
+  if (pendingSpotComment.size) {
+    if (lines.length) lines.push('');
+    lines.push('spot_comments:');
+    for (const [,sc] of pendingSpotComment) {
+      lines.push(`  - spot: "${sc.name}"`);
+      lines.push(`    comment: "${sc.comment.replace(/"/g,"'")}"`);
+    }
+  }
+  if (pendingNewSpots.length) {
+    if (lines.length) lines.push('');
+    lines.push('missing_spots:');
+    for (const ns of pendingNewSpots) {
+      lines.push(`  - name: "${ns.name}"`);
+      if (ns.notes) lines.push(`    notes: "${ns.notes.replace(/"/g,"'")}"`);
+    }
+  }
+  return lines.join('\n');
+}
+
+async function submitAll() {
+  const yaml  = buildYaml();
+  const name  = (document.getElementById('send-name').value||'').trim();
+  const total = pendingCells.size + pendingSpotComment.size + pendingNewSpots.length;
+  const body  = new FormData();
+  body.append('feedback', yaml);
+  body.append('total_items', total);
+  body.append('source', 'FoilSpots Wind Windows');
+  if (name) body.append('name', name);
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled=true; btn.textContent='Sending…';
+
+  try {
+    const resp = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method:'POST', body, headers:{Accept:'application/json'}
+    });
+    if (resp.ok) {
+      showSendMsg('Thanks — feedback sent!', true);
+      setTimeout(clearAll, 2000);
+    } else {
+      showSendMsg('Something went wrong. Try again.', false);
+      btn.disabled=false; btn.textContent='Send feedback';
+    }
+  } catch {
+    showSendMsg('Network error. Try again.', false);
+    btn.disabled=false; btn.textContent='Send feedback';
+  }
+}
+
+function showSendMsg(txt, ok) {
+  const el=document.getElementById('send-msg');
+  el.textContent=txt; el.className=ok?'ok':'err';
+  el.style.display='block';
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+function updateMainHeight() {
+  const hh = (document.querySelector('.hdr')||{offsetHeight:0}).offsetHeight;
+  const lh = (document.querySelector('.instructions')||{offsetHeight:0}).offsetHeight;
+  const bar = document.getElementById('send-bar');
+  const bh  = bar && bar.classList.contains('visible') ? bar.offsetHeight : 0;
+  const main = document.getElementById('main');
+  if (main) main.style.height = `calc(100vh - ${hh+lh+bh}px)`;
+}
+window.addEventListener('resize', updateMainHeight, {passive:true});
+
+buildTable();
+</script>
+</body>
+</html>
