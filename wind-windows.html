@@ -195,23 +195,11 @@
   Wind windows are based on local knowledge — your on-the-water experience helps improve them.
 </footer>
 
+<script src="spots-data.js"></script>
 <script>
 const FORMSPREE_ID = 'maqvebwp';
 
-const SPOTS = [
-  { id:'mid-creek',  name:'Middle Creek',     skill:'beginner',     vc:56,  vt:45 },
-  { id:'bilarong',   name:'Bilarong',          skill:'beginner',     vc:225, vt:90 },
-  { id:'kyeemagh',   name:'Kyeemagh',          skill:'beginner',     vc:135, vt:50 },
-  { id:'brighton',   name:'Brighton LS',       skill:'beginner',     vc:157, vt:45 },
-  { id:'clontarf',   name:'Clontarf',          skill:'intermediate', vc:135, vt:50 },
-  { id:'balmoral',   name:'Balmoral',          skill:'intermediate', vc:45,  vt:45 },
-  { id:'pittwater',  name:'Pittwater',         skill:'intermediate', vc:292, vt:45 },
-  { id:'kurnell',    name:'Kurnell',           skill:'advanced',     vc:22,  vt:60 },
-  { id:'rose-bay',   name:'Rose Bay',          skill:'advanced',     vc:247, vt:45 },
-  { id:'manly',      name:'Manly',             skill:'advanced',     vc:22,  vt:45 },
-  { id:'fishermans', name:'Fishermans Beach',  skill:'advanced',     vc:45,  vt:45 },
-  { id:'long-reef',  name:'Long Reef Beach',   skill:'advanced',     vc:135, vt:45 },
-];
+// SPOTS defined in spots-data.js
 
 const DIRS = [
   {label:'N',   deg:0},    {label:'NNE', deg:22.5},  {label:'NE',  deg:45},   {label:'ENE', deg:67.5},

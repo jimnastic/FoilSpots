@@ -726,7 +726,7 @@ const DIR_TO_8PT = ['N','NE','NE','E','E','SE','SE','S','S','SW','SW','W','W','N
 function onBarClick(e) {
   const i = +e.currentTarget.dataset.dir;
   const dir = DIR_TO_8PT[i];
-  window.open('spots-by-direction.html#' + dir, '_blank');
+  window.open('index.html', '_blank');
 }
 function positionTooltip(e) {
   const x = e.clientX + 14, y = e.clientY - 10;
