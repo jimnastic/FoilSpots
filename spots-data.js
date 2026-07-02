@@ -47,7 +47,7 @@ const SPOTS = [
     warnings:['⚠️ NEVER launch in a southerly — offshore wind blows directly toward Sydney Airport runways','NW wind is possible but gusty and unpredictable off the flat terrain','Advanced only — stronger and gustier than forecast; assess carefully before committing'],
     parking:{ type:'paid', notes:'$8/day national park entry fee, pay and display. Free parking on Polo St ~500m walk.' },
     notes:'Windiest Sydney spot. N and NE are best — peninsula accelerates wind. NW possible but gusty. ⚠️ NEVER in southerly — offshore wind toward Sydney Airport runways.' },
-  { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'advanced', lat:-33.869, lon:151.270, adj:0,    vc:337, vt:68, drive:'22 min',
+  { id:'rose-bay',   name:'Rose Bay',     area:'south', water:'flat', skill:'intermediate', lat:-33.869, lon:151.270, adj:0,    vc:337, vt:68, drive:'22 min',
     desc:'North-facing harbour bay off Lyne Park / Woollahra Sailing Club, between Point Piper and Vaucluse. The bay opens to the north so the sailable window is the northerly arc — NW/WNW is cleanest for advanced sailors, and the summer NE seabreeze (15–25 kn) is the workhorse wind. Broad open water but gusty, with seaplanes, ferries and moorings to watch. In a NW, launch from the north end of the beach or the boat ramps east of the sailing club.',
     warnings:['Active seaplane and ferry lanes — stay alert at all times','Moorings throughout — watch for submerged lines','Gusty — wind cleans up further out from the bay but stays patchy','Stingrays in the shallows — shuffle feet on launch and land'],
     parking:{ type:'paid', notes:'Metered on New South Head Rd. Lyne Park has 2hr free. Tight on weekends — arrive early.' },
