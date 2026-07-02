@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foilspots — Calibration Log</title>
+<style>
+  :root{--bg:#0f1720;--card:#182430;--txt:#e6edf3;--mut:#8aa0b4;--line:#243444;
+        --acc:#58a6ff;--go:#2ea043;--warn:#d29922;--neg:#e5534b}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:20px;max-width:760px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 2px}
+  p.sub{color:var(--mut);margin:0 0 18px;font-size:13.5px}
+  h2{font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:26px 0 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  label{display:block;font-size:12px;color:var(--mut);margin:0 0 4px;text-transform:uppercase;letter-spacing:.03em}
+  select,input{width:100%;background:#0b1118;color:var(--txt);border:1px solid var(--line);
+        border-radius:8px;padding:10px;font-size:15px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .field{margin-bottom:12px}
+  button{background:var(--acc);color:#04121f;border:0;border-radius:8px;
+         padding:11px 16px;font-weight:700;font-size:15px;cursor:pointer;width:100%}
+  button.ghost{background:transparent;color:var(--acc);border:1px solid var(--line);font-weight:600}
+  .btnrow{display:flex;gap:10px;margin-top:6px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  td.num{font-variant-numeric:tabular-nums;text-align:right}
+  .adj{font-weight:700}
+  .adj.pos{color:var(--go)} .adj.neg{color:var(--neg)} .adj.zero{color:var(--mut)}
+  .n{color:var(--mut);font-size:12px}
+  .lown{color:var(--warn)}
+  .snip{background:#0b1118;border:1px solid var(--line);border-radius:8px;padding:10px;
+        font:12px/1.5 ui-monospace,Menlo,monospace;color:var(--txt);white-space:pre-wrap;word-break:break-word;margin-top:8px}
+  .msg{color:var(--go);font-size:13px;min-height:18px;margin-top:8px}
+  .del{color:var(--neg);cursor:pointer;font-size:12px;background:none;border:0;width:auto;padding:2px 6px}
+  details{margin-top:8px} summary{cursor:pointer;color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+  <h1>Calibration Log</h1>
+  <p class="sub">Log forecast vs a nearby live-station actual each session. The tool averages <code>(actual − forecast)</code> per spot per direction band and gives you the <code>adj</code> to paste into <code>spots-data.js</code>. Data is saved on this device; export CSV to back it up.</p>
+
+  <div class="card">
+    <div class="field">
+      <label>Spot</label>
+      <select id="spot"></select>
+    </div>
+    <div class="grid3">
+      <div class="field">
+        <label>Forecast peak (kn)</label>
+        <input id="fc" type="number" inputmode="decimal" placeholder="e.g. 15">
+      </div>
+      <div class="field">
+        <label>Actual — station (kn)</label>
+        <input id="act" type="number" inputmode="decimal" placeholder="e.g. 20">
+      </div>
+      <div class="field">
+        <label>Wind dir (deg)</label>
+        <input id="dir" type="number" inputmode="numeric" placeholder="e.g. 45">
+      </div>
+    </div>
+    <div class="field">
+      <label>Date &amp; station (optional note)</label>
+      <input id="note" type="text" placeholder="2026-07-05 · Kurnell AWS">
+    </div>
+    <button id="add">Log session</button>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <h2>Recommended adj per spot</h2>
+  <div class="card">
+    <table id="summary">
+      <thead><tr><th>Spot</th><th class="num">Sessions</th><th class="num">Mean Δ</th><th class="num">adj →</th></tr></thead>
+      <tbody id="sumRows"></tbody>
+    </table>
+    <details>
+      <summary>Direction-band breakdown (for adjDir tuning)</summary>
+      <table id="dirTable"><thead><tr><th>Spot</th><th>Band</th><th class="num">n</th><th class="num">Mean Δ</th></tr></thead><tbody id="dirRows"></tbody></table>
+    </details>
+    <div class="btnrow">
+      <button class="ghost" id="export">Export CSV</button>
+      <button class="ghost" id="snipBtn">Show paste-ready snippet</button>
+    </div>
+    <div class="snip" id="snip" style="display:none"></div>
+  </div>
+
+  <h2>Raw log</h2>
+  <div class="card">
+    <table id="log"><thead><tr><th>Date/note</th><th>Spot</th><th class="num">Fc</th><th class="num">Act</th><th class="num">Δ</th><th class="num">Dir</th><th></th></tr></thead><tbody id="logRows"></tbody></table>
+  </div>
+
+<script>
+const SPOTS = [
+  {id:'mid-creek',name:'Middle Creek'},{id:'bilarong',name:'Bilarong'},
+  {id:'kyeemagh',name:'Kyeemagh'},{id:'brighton',name:'Brighton LS'},
+  {id:'clontarf',name:'Clontarf'},{id:'balmoral',name:'Balmoral'},
+  {id:'sandy-point',name:'Sandy Point'},{id:'manly-cove',name:'Manly Cove'},
+  {id:'kurnell',name:'Kurnell'},{id:'rose-bay',name:'Rose Bay'},
+  {id:'manly',name:'Shelly Beach'},{id:'fishermans',name:'Fishermans Beach'},
+  {id:'long-reef',name:'Long Reef Beach'},
+];
+const KEY='foilspots_calib_v1';
+const nameOf=id=>(SPOTS.find(s=>s.id===id)||{}).name||id;
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
+const round=(x,n=1)=>Math.round(x*10**n)/10**n;
+const DIRS=['N','NE','E','SE','S','SW','W','NW'];
+const band=deg=>deg==null||deg===''?'—':DIRS[Math.round((+deg%360)/45)%8];
+
+const spotSel=document.getElementById('spot');
+SPOTS.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;spotSel.appendChild(o)});
+
+function render(){
+  const data=load();
+  // summary per spot
+  const bySpot={};
+  data.forEach(r=>{(bySpot[r.spot]??=[]).push(r)});
+  const sumRows=document.getElementById('sumRows'); sumRows.innerHTML='';
+  const snips=[];
+  SPOTS.forEach(s=>{
+    const rs=bySpot[s.id]||[];
+    if(!rs.length)return;
+    const deltas=rs.map(r=>r.act-r.fc);
+    const mean=deltas.reduce((a,b)=>a+b,0)/deltas.length;
+    const adj=Math.round(mean);
+    const cls=adj>0?'pos':adj<0?'neg':'zero';
+    const nCls=rs.length<3?'lown':'';
+    sumRows.insertAdjacentHTML('beforeend',
+      `<tr><td>${s.name}</td><td class="num ${nCls}">${rs.length}${rs.length<3?' ⚠':''}</td>`+
+      `<td class="num">${round(mean)}</td><td class="num adj ${cls}">${adj>0?'+':''}${adj}</td></tr>`);
+    if(rs.length>=3&&adj!==0) snips.push(`  ${s.id}: adj:${adj}`);
+  });
+  if(!sumRows.innerHTML) sumRows.innerHTML='<tr><td colspan="4" class="n">No sessions logged yet.</td></tr>';
+
+  // direction bands
+  const dirRows=document.getElementById('dirRows'); dirRows.innerHTML='';
+  Object.keys(bySpot).sort().forEach(id=>{
+    const byBand={};
+    bySpot[id].forEach(r=>{(byBand[band(r.dir)]??=[]).push(r.act-r.fc)});
+    Object.keys(byBand).forEach(b=>{
+      const arr=byBand[b],m=arr.reduce((a,x)=>a+x,0)/arr.length;
+      dirRows.insertAdjacentHTML('beforeend',
+        `<tr><td>${nameOf(id)}</td><td>${b}</td><td class="num">${arr.length}</td><td class="num">${round(m)}</td></tr>`);
+    });
+  });
+
+  // raw log (newest first)
+  const logRows=document.getElementById('logRows'); logRows.innerHTML='';
+  [...data].reverse().forEach((r)=>{
+    const realIdx=data.indexOf(r);
+    const d=r.act-r.fc;
+    logRows.insertAdjacentHTML('beforeend',
+      `<tr><td>${r.note||'—'}</td><td>${nameOf(r.spot)}</td>`+
+      `<td class="num">${r.fc}</td><td class="num">${r.act}</td>`+
+      `<td class="num">${d>0?'+':''}${round(d)}</td><td class="num">${r.dir??'—'}</td>`+
+      `<td><button class="del" data-i="${realIdx}">✕</button></td></tr>`);
+  });
+  document.querySelectorAll('.del').forEach(b=>b.onclick=()=>{
+    const d=load();d.splice(+b.dataset.i,1);save(d);render();
+  });
+
+  // snippet
+  const snip=document.getElementById('snip');
+  snip.textContent = snips.length
+    ? '// paste each adj into the matching spot in spots-data.js\n'+snips.join('\n')
+    : 'Need ≥3 sessions per spot with a non-zero mean before suggesting an adj.';
+}
+
+document.getElementById('add').onclick=()=>{
+  const fc=parseFloat(document.getElementById('fc').value);
+  const act=parseFloat(document.getElementById('act').value);
+  const dir=document.getElementById('dir').value;
+  const msg=document.getElementById('msg');
+  if(isNaN(fc)||isNaN(act)){msg.style.color='var(--neg)';msg.textContent='Enter both forecast and actual.';return}
+  const data=load();
+  data.push({spot:spotSel.value,fc,act,dir:dir===''?null:+dir,note:document.getElementById('note').value.trim(),ts:Date.now()});
+  save(data);
+  document.getElementById('fc').value='';document.getElementById('act').value='';
+  document.getElementById('dir').value='';document.getElementById('note').value='';
+  msg.style.color='var(--go)';msg.textContent=`Logged ${nameOf(spotSel.value)}.`;
+  setTimeout(()=>msg.textContent='',2500);
+  render();
+};
+
+document.getElementById('export').onclick=()=>{
+  const data=load();
+  if(!data.length)return;
+  const rows=[['note','spot','forecast_kn','actual_kn','delta_kn','dir_deg','iso']];
+  data.forEach(r=>rows.push([r.note||'',r.spot,r.fc,r.act,round(r.act-r.fc),r.dir??'',new Date(r.ts).toISOString()]));
+  const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  const a=document.createElement('a');a.href=url;a.download='foilspots-calibration.csv';a.click();URL.revokeObjectURL(url);
+};
+
+document.getElementById('snipBtn').onclick=()=>{
+  const s=document.getElementById('snip');
+  s.style.display=s.style.display==='none'?'block':'none';
+};
+
+render();
+</script>
+</body>
+</html>

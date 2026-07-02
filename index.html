@@ -304,7 +304,7 @@
 </div>
 
 <footer>
-  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly).
+  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly, best-match model — ECMWF-based for Sydney).
   Spot adjustments are estimates based on local knowledge — hover any cell to see raw vs adjusted values.
   GO/NO-GO: wind direction within viable range + adjusted speed within skill-level range.
 </footer>
@@ -423,7 +423,7 @@ function spotChipHtml(sp, di, skill) {
 
 // ── Fetch ──────────────────────────────────────────────────────
 function fetchPt(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Australia%2FSydney`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Australia%2FSydney&models=best_match`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 9000);
   return fetch(url, { signal: ctrl.signal })
