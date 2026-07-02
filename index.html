@@ -335,11 +335,13 @@ function setBtn(gid, val) {
 }
 
 // ── GPS area detection ─────────────────────────────────────────
-// Sydney Harbour sits at ~-33.85°. North of that → 'north', south → 'south'.
+// Far North Queensland (lat > -20°) → 'cairns'. Otherwise Sydney:
+// Harbour sits at ~-33.85°, north of that → 'north', south → 'south'.
 function detectAreaFromGPS() {
   if (!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos => {
-    const area = pos.coords.latitude > -33.85 ? 'north' : 'south';
+    const lat = pos.coords.latitude;
+    const area = lat > -20 ? 'cairns' : (lat > -33.85 ? 'north' : 'south');
     prefs.area = area;
     setBtn('fa', area);
     try { localStorage.setItem('fs-prefs', JSON.stringify(prefs)); } catch(e){}
