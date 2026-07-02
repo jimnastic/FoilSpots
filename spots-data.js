@@ -66,6 +66,11 @@ const SPOTS = [
     desc:'South face of Long Reef headland, accessed via the Greenlink walking track. SE wind and swell produce excellent reef breaks: ButterBox works in NE and SE, Little Makaha gives a clean right in S wind. A step up from Fishermans in commitment. Advanced only.',
     warnings:['Walk-in required via Greenlink track — carry all gear from the car park','Reef throughout — booties essential','Advanced only — assess swell carefully before committing','Can be offshore in W/SW — check wind direction carefully'],
     parking:{ type:'paid', notes:'Same car park area as Fishermans Beach — paid off Anzac Ave, free on side streets.' },
-    notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' }
+    notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' },
+  { id:'yorkeys-knob', name:'Yorkeys Knob',   area:'cairns', water:'flat', skill:'intermediate', lat:-16.815, lon:145.720, adj:0, vc:135, vt:60, drive:'17 min from Cairns',
+    desc:'The go-to spot for Cairns locals — a wide sandy beach in tropical Far North Queensland with warm water year-round. SE trade winds blow side-shore (safer than onshore Palm Cove — if the wind builds you stay on the water rather than getting dumped on the beach). Choppy bump-and-jump conditions with a reasonable shore break. The mouth of the Barron River, ~15 min walk south, offers flatter water at mid-to-low tide. Trade winds most consistent May–November.',
+    warnings:['⚠️ Saltwater crocodiles are present in Far North Queensland waterways — especially near the Barron River mouth. Assess local advice before launching','Marine stingers (box jellyfish / Irukandji) Oct–May — wear a stinger suit in season','Choppy with a shore break — bump-and-jump, not flat water','Side-shore SE — assess before launching if wind is light or gusty'],
+    parking:{ type:'free', notes:'Free parking along the Esplanade / foreshore. Wide beach with plenty of room to rig and launch.' },
+    notes:'Far North Queensland. SSE–E side-shore trade winds, best May–Nov. Choppy bump-and-jump; Barron River mouth flatter at low tide. Warm water year-round. Croc and stinger awareness required.' }
 ];
 

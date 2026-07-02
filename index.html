@@ -159,7 +159,7 @@
     .badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:2px 8px; border-radius:20px; border:1px solid; }
     .badge-flat  { color:var(--acc);  border-color:var(--acc); }
     .badge-wave  { color:#a78bfa;     border-color:#a78bfa; }
-    .badge-north,.badge-south { color:var(--muted); border-color:var(--muted); }
+    .badge-north,.badge-south,.badge-cairns { color:var(--muted); border-color:var(--muted); }
     .badge-beginner     { color:var(--go);  border-color:var(--go); }
     .badge-intermediate { color:var(--mar); border-color:var(--mar); }
     .badge-advanced     { color:#f87171;    border-color:#f87171; }
@@ -221,8 +221,9 @@
   <div class="fg">
     <label>Area</label>
     <div class="brow" id="fa">
-      <button data-v="north">North</button>
-      <button data-v="south">South</button>
+      <button data-v="north">Sydney-North</button>
+      <button data-v="south">Sydney-South</button>
+      <button data-v="cairns">Cairns</button>
       <button data-v="all">All</button>
     </div>
   </div>
@@ -731,7 +732,7 @@ function openSpotModal(sid) {
 
   document.getElementById('modal-title').textContent = spot.name;
 
-  const areaLabel = spot.area === 'north' ? 'North Sydney' : 'South Sydney';
+  const areaLabel = spot.area === 'north' ? 'Sydney-North' : spot.area === 'south' ? 'Sydney-South' : 'Cairns';
   document.getElementById('modal-badges').innerHTML =
     `<span class="badge badge-${spot.water}">${spot.water} water</span>` +
     `<span class="badge badge-${spot.area}">${areaLabel}</span>` +
