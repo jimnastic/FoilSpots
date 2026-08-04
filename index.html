@@ -159,7 +159,7 @@
     .badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:2px 8px; border-radius:20px; border:1px solid; }
     .badge-flat  { color:var(--acc);  border-color:var(--acc); }
     .badge-wave  { color:#a78bfa;     border-color:#a78bfa; }
-    .badge-north,.badge-south,.badge-cairns { color:var(--muted); border-color:var(--muted); }
+    .badge-north,.badge-south { color:var(--muted); border-color:var(--muted); }
     .badge-beginner     { color:var(--go);  border-color:var(--go); }
     .badge-intermediate { color:var(--mar); border-color:var(--mar); }
     .badge-advanced     { color:#f87171;    border-color:#f87171; }
@@ -223,7 +223,6 @@
     <div class="brow" id="fa">
       <button data-v="north">Sydney-North</button>
       <button data-v="south">Sydney-South</button>
-      <button data-v="cairns">Cairns</button>
       <button data-v="all">All</button>
     </div>
   </div>
@@ -256,7 +255,7 @@
 <div id="main">
   <div class="loading" id="loading">
     <p style="font-size:15px;color:var(--txt);margin-bottom:10px">Fetching forecasts…</p>
-    <p>Open-Meteo · 16-day hourly · 12 spots</p>
+    <p>Open-Meteo · 16-day hourly · 13 spots</p>
   </div>
 </div>
 
@@ -335,13 +334,12 @@ function setBtn(gid, val) {
 }
 
 // ── GPS area detection ─────────────────────────────────────────
-// Far North Queensland (lat > -20°) → 'cairns'. Otherwise Sydney:
 // Harbour sits at ~-33.85°, north of that → 'north', south → 'south'.
 function detectAreaFromGPS() {
   if (!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude;
-    const area = lat > -20 ? 'cairns' : (lat > -33.85 ? 'north' : 'south');
+    const area = lat > -33.85 ? 'north' : 'south';
     prefs.area = area;
     setBtn('fa', area);
     try { localStorage.setItem('fs-prefs', JSON.stringify(prefs)); } catch(e){}
@@ -734,7 +732,7 @@ function openSpotModal(sid) {
 
   document.getElementById('modal-title').textContent = spot.name;
 
-  const areaLabel = spot.area === 'north' ? 'Sydney-North' : spot.area === 'south' ? 'Sydney-South' : 'Cairns';
+  const areaLabel = spot.area === 'north' ? 'Sydney-North' : 'Sydney-South';
   document.getElementById('modal-badges').innerHTML =
     `<span class="badge badge-${spot.water}">${spot.water} water</span>` +
     `<span class="badge badge-${spot.area}">${areaLabel}</span>` +
