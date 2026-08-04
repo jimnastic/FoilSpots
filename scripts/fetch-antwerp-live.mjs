@@ -119,7 +119,13 @@ async function main() {
         const obs = await postJson(LATEST_URL, {
           LocatieLijst: [{ Code: c.loc.Code }],
           AquoPlusWaarnemingMetadataLijst: [
-            { AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } } },
+            {
+              AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } },
+              // Without this filter the API can return the oldest/first matching series ever
+              // recorded (seen: readings from 1981, 2002, 2004) instead of the live feed.
+              // RIKZMON_TEMP is RWS's active surface-water-temperature monitoring network.
+              WaarnemingMetadata: { OpdrachtgevendeInstantieLijst: ['RIKZMON_TEMP'] },
+            },
           ],
         });
         if (!obsDebug[spot.id]) {
@@ -130,6 +136,11 @@ async function main() {
         const events = series && series.MetingenLijst;
         if (events && events.length) {
           const last = events[events.length - 1];
+          const ageHours = (Date.now() - new Date(last.Tijdstip).getTime()) / 3.6e6;
+          if (!(ageHours >= 0 && ageHours < 48)) {
+            console.log(`  ~ ${c.loc.Code} has a reading but it's stale (${last.Tijdstip}, ${ageHours.toFixed(0)}h old) — trying next candidate`);
+            continue;
+          }
           results[spot.id] = {
             waterTempC: Number(last.Meetwaarde?.Waarde_Numeriek),
             ts: last.Tijdstip,
