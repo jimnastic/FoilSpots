@@ -1,0 +1,119 @@
+{
+  "generatedAt": "2026-08-04T12:27:48.749Z",
+  "lookbackDays": 90,
+  "windMetaDiscovery": {
+    "speed": {
+      "Compartiment": {
+        "Code": "LT",
+        "Omschrijving": "Lucht"
+      },
+      "Grootheid": {
+        "Code": "WINDSHD",
+        "Omschrijving": "Windsnelheid"
+      }
+    },
+    "dir": {
+      "Compartiment": {
+        "Code": "LT",
+        "Omschrijving": "Lucht"
+      },
+      "Grootheid": {
+        "Code": "WINDRTG",
+        "Omschrijving": "Windrichting"
+      }
+    },
+    "speedSampleCount": 4,
+    "dirSampleCount": 3
+  },
+  "spots": {
+    "brouwersdam-lake": {
+      "error": "Non-JSON from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen: "
+    },
+    "veerse-meer": {
+      "error": "Non-JSON from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen: "
+    },
+    "oesterdam": {
+      "stationCode": "marollegat",
+      "speedObsCount": 12393,
+      "dirObsCount": 12391,
+      "speedSample": [
+        {
+          "Meetwaarde": {
+            "Waarde_Alfanumeriek": "1.19",
+            "Waarde_Numeriek": 1.19
+          },
+          "Tijdstip": "2026-05-06T22:50:00.000+01:00",
+          "WaarnemingMetadata": {
+            "Bemonsteringshoogte": "0",
+            "Kwaliteitswaardecode": "00",
+            "OpdrachtgevendeInstantie": "RIKZ_METEO",
+            "Referentievlak": "NVT",
+            "Statuswaarde": "Ongecontroleerd"
+          }
+        },
+        {
+          "Meetwaarde": {
+            "Waarde_Alfanumeriek": "4.62",
+            "Waarde_Numeriek": 4.62
+          },
+          "Tijdstip": "2026-05-08T22:50:00.000+01:00",
+          "WaarnemingMetadata": {
+            "Bemonsteringshoogte": "0",
+            "Kwaliteitswaardecode": "00",
+            "OpdrachtgevendeInstantie": "RIKZ_METEO",
+            "Referentievlak": "NVT",
+            "Statuswaarde": "Ongecontroleerd"
+          }
+        }
+      ],
+      "dirSample": [
+        {
+          "Meetwaarde": {
+            "Waarde_Alfanumeriek": "1.5",
+            "Waarde_Numeriek": 1.5
+          },
+          "Tijdstip": "2026-05-06T13:30:00.000+01:00",
+          "WaarnemingMetadata": {
+            "Bemonsteringshoogte": "0",
+            "Kwaliteitswaardecode": "00",
+            "OpdrachtgevendeInstantie": "RIKZ_METEO",
+            "Referentievlak": "NVT",
+            "Statuswaarde": "Ongecontroleerd"
+          }
+        },
+        {
+          "Meetwaarde": {
+            "Waarde_Alfanumeriek": "18.3",
+            "Waarde_Numeriek": 18.3
+          },
+          "Tijdstip": "2026-05-06T13:40:00.000+01:00",
+          "WaarnemingMetadata": {
+            "Bemonsteringshoogte": "0",
+            "Kwaliteitswaardecode": "00",
+            "OpdrachtgevendeInstantie": "RIKZ_METEO",
+            "Referentievlak": "NVT",
+            "Statuswaarde": "Ongecontroleerd"
+          }
+        }
+      ],
+      "archiveTopKeys": [
+        "latitude",
+        "longitude",
+        "generationtime_ms",
+        "utc_offset_seconds",
+        "timezone",
+        "timezone_abbreviation",
+        "elevation",
+        "hourly_units",
+        "hourly"
+      ],
+      "archiveHourlyKeys": [
+        "time",
+        "wind_speed_10m",
+        "wind_direction_10m"
+      ],
+      "archiveHourlyLength": 2184,
+      "pairedHourCount": 2075
+    }
+  }
+}

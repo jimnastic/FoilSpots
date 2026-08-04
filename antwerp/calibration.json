@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-08-04T12:28:10.896Z",
+  "lookbackDays": 90,
+  "spots": {
+    "oesterdam": {
+      "stationCode": "marollegat",
+      "pairedHourCount": 2075,
+      "bandAdj": {
+        "N": {
+          "adj": 1,
+          "sampleCount": 253
+        },
+        "NE": {
+          "adj": 0,
+          "sampleCount": 343
+        },
+        "E": {
+          "adj": 0,
+          "sampleCount": 133
+        },
+        "SE": {
+          "adj": 0,
+          "sampleCount": 94
+        },
+        "S": {
+          "adj": 0,
+          "sampleCount": 207
+        },
+        "SW": {
+          "adj": 0,
+          "sampleCount": 374
+        },
+        "W": {
+          "adj": 0,
+          "sampleCount": 272
+        },
+        "NW": {
+          "adj": 0,
+          "sampleCount": 399
+        }
+      }
+    }
+  }
+}
