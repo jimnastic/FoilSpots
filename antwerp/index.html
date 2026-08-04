@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FoilSpots Sydney</title>
+  <title>FoilSpots Antwerp</title>
   <style>
     :root {
       --bg: #0d1b2a;
@@ -159,7 +159,7 @@
     .badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:2px 8px; border-radius:20px; border:1px solid; }
     .badge-flat  { color:var(--acc);  border-color:var(--acc); }
     .badge-wave  { color:#a78bfa;     border-color:#a78bfa; }
-    .badge-north,.badge-south { color:var(--muted); border-color:var(--muted); }
+    .badge-nl,.badge-be,.badge-fr { color:var(--muted); border-color:var(--muted); }
     .badge-beginner     { color:var(--go);  border-color:var(--go); }
     .badge-intermediate { color:var(--mar); border-color:var(--mar); }
     .badge-advanced     { color:#f87171;    border-color:#f87171; }
@@ -200,13 +200,11 @@
 
 <header class="hdr">
   <div class="hdr-left">
-    <h1>FoilSpots Sydney</h1>
-    <p>16-day forecast — pick the best spot for your day</p>
+    <h1>FoilSpots Antwerp</h1>
+    <p>16-day forecast — pick the best spot for your day (BE / NL / FR, ≤2h from Berchem or Tervuren)</p>
   </div>
   <nav class="hdr-nav">
-    <a href="sydney-wind-rose.html">Wind rose</a>
-    <a href="wind-windows.html">Wind windows</a>
-    <a href="antwerp/">Antwerp spots</a>
+    <a href="../">Sydney spots</a>
   </nav>
 </header>
 
@@ -222,8 +220,9 @@
   <div class="fg">
     <label>Area</label>
     <div class="brow" id="fa">
-      <button data-v="north">Sydney-North</button>
-      <button data-v="south">Sydney-South</button>
+      <button data-v="nl">Netherlands</button>
+      <button data-v="be">Belgium</button>
+      <button data-v="fr">France</button>
       <button data-v="all">All</button>
     </div>
   </div>
@@ -256,7 +255,7 @@
 <div id="main">
   <div class="loading" id="loading">
     <p style="font-size:15px;color:var(--txt);margin-bottom:10px">Fetching forecasts…</p>
-    <p>Open-Meteo · 16-day hourly · 13 spots</p>
+    <p>Open-Meteo · 16-day hourly · 8 spots</p>
   </div>
 </div>
 
@@ -276,36 +275,9 @@
 </div>
 
 
-<div class="backlog-section">
-  <h3>Spots under investigation</h3>
-  <div class="backlog-grid">
-    <div class="backlog-item">
-      <div class="bi-badge">S / SSW · Manly</div>
-      <div class="bi-name">Little Manly Cove</div>
-      <div class="bi-note">Small harbour beach off Stuart St, Manly (~500m from Manly Cove). Faces south — S/SSW likely onshore. Concrete boat ramp on eastern end is useful. No evidence of wingfoil usage found. To verify: on-water conditions, local community presence, vessel exclusion zones.</div>
-    </div>
-
-    <div class="backlog-item">
-      <div class="bi-badge">NW / W · Pittwater</div>
-      <div class="bi-name">Church Point</div>
-      <div class="bi-note">Main commuter wharf on western Pittwater, off Pittwater Rd. NW blows onshore across full width of Pittwater. Fliteboard school operates here (electric foiling — not wingfoil). No confirmed wingfoil community presence found. To verify: local wingfoilers using this launch, parking feasibility (commuter car park fills fast).</div>
-    </div>
-    <div class="backlog-item">
-      <div class="bi-badge">W / NW · Pittwater</div>
-      <div class="bi-name">Palm Beach Golf Course</div>
-      <div class="bi-note">Northern end of Pittwater (~45 min). Foreshore beach between golf course and Pittwater — windsurfers confirmed using it alongside seaplanes. Possible hang-glider landing area on foreshore. To verify: exact public access point, wingfoil community presence, parking, seaplane exclusion zones.</div>
-    </div>
-
-    <div class="backlog-item">
-      <div class="bi-badge">N / NE / NW</div>
-      <div class="bi-name">Manly Cove</div>
-      <div class="bi-note">South-facing harbour beach on the Manly foreshore. N/NE/NW may be onshore or cross-onshore. Sheltered, flat water. To verify: usable wind directions, wingfoil tolerance, hazards, parking.</div>
-    </div>
-  </div>
-</div>
 
 <footer>
-  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly, best-match model — ECMWF-based for Sydney).
+  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly, best-match model), coordinates pinned to open water. Live on-water reading (where available): <a href="https://waterinfo.rws.nl" target="_blank">Rijkswaterstaat</a> / <a href="https://meetnetvlaamsebanken.be" target="_blank">Meetnet Vlaamse Banken</a>. Spot adjustments (adj) are calibrated automatically each month against those live readings.
   Spot adjustments are estimates based on local knowledge — hover any cell to see raw vs adjusted values.
   GO/NO-GO: wind direction within viable range + adjusted speed within skill-level range.
 </footer>
@@ -335,12 +307,12 @@ function setBtn(gid, val) {
 }
 
 // ── GPS area detection ─────────────────────────────────────────
-// Harbour sits at ~-33.85°, north of that → 'north', south → 'south'.
+// Rough split for this region: France (west of ~2.6°E), else Netherlands (north of ~51.45°N) or Belgium.
 function detectAreaFromGPS() {
   if (!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const area = lat > -33.85 ? 'north' : 'south';
+    const lat = pos.coords.latitude, lon = pos.coords.longitude;
+    const area = lon < 2.6 ? 'fr' : (lat > 51.45 ? 'nl' : 'be');
     prefs.area = area;
     setBtn('fa', area);
     try { localStorage.setItem('fs-prefs', JSON.stringify(prefs)); } catch(e){}
@@ -425,7 +397,7 @@ function spotChipHtml(sp, di, skill) {
 
 // ── Fetch ──────────────────────────────────────────────────────
 function fetchPt(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Australia%2FSydney&models=best_match`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Europe%2FBrussels&models=best_match`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 9000);
   return fetch(url, { signal: ctrl.signal })
@@ -733,7 +705,7 @@ function openSpotModal(sid) {
 
   document.getElementById('modal-title').textContent = spot.name;
 
-  const areaLabel = spot.area === 'north' ? 'Sydney-North' : 'Sydney-South';
+  const areaLabel = spot.area === 'nl' ? 'Netherlands' : spot.area === 'be' ? 'Belgium' : 'France';
   document.getElementById('modal-badges').innerHTML =
     `<span class="badge badge-${spot.water}">${spot.water} water</span>` +
     `<span class="badge badge-${spot.area}">${areaLabel}</span>` +
