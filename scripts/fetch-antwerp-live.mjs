@@ -105,7 +105,7 @@ async function main() {
       .sort((a, b) => (b.nameHit - a.nameHit) || (a.distKm - b.distKm));
 
     console.log(`\n${spot.id}: ${candidates.length} candidate location(s) within 25km`);
-    candidates.slice(0, 5).forEach(c =>
+    candidates.slice(0, 10).forEach(c =>
       console.log(`  - ${c.loc.Code} "${c.loc.Naam}" nameHit=${c.nameHit} dist=${c.distKm.toFixed(1)}km`));
 
     if (candidates.length === 0) {
@@ -114,19 +114,17 @@ async function main() {
     }
 
     // Try candidates in order until one returns a water-temperature reading.
-    for (const c of candidates.slice(0, 5)) {
+    for (const c of candidates.slice(0, 10)) {
       try {
         const obs = await postJson(LATEST_URL, {
           LocatieLijst: [{ Code: c.loc.Code }],
           AquoPlusWaarnemingMetadataLijst: [
-            {
-              AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } },
-              // Without this filter the API can return the oldest/first matching series ever
-              // recorded (seen: readings from 1981, 2002, 2004) instead of the live feed.
-              // RIKZMON_TEMP is RWS's active surface-water-temperature monitoring network.
-              WaarnemingMetadata: { OpdrachtgevendeInstantieLijst: ['RIKZMON_TEMP'] },
-            },
+            { AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } } },
           ],
+          // NOTE: tried filtering to WaarnemingMetadata.OpdrachtgevendeInstantieLijst:['RIKZMON_TEMP']
+          // (the docs' example instantie for Vlissingen) — it returned an empty 200 for every one
+          // of these stations, so that code isn't universal. Left unfiltered; the staleness check
+          // below plus trying multiple nearby candidates does the filtering instead.
         });
         if (!obsDebug[spot.id]) {
           // Keep a raw sample of the first response per spot for shape verification.
