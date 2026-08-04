@@ -70,8 +70,22 @@ async function main() {
 
   console.log(`Fetching RWS catalog...`);
   const catalog = await postJson(CATALOG_URL, { CatalogusFilter: { Compartimenten: true, Grootheden: true } });
+
+  // Diagnostic dump — publicly readable (no GitHub login needed) so shape/field-name
+  // assumptions can be checked from outside without needing repo access.
+  const debugInfo = {
+    generatedAt: new Date().toISOString(),
+    topLevelKeys: Object.keys(catalog),
+    locatieLijstLength: Array.isArray(catalog.LocatieLijst) ? catalog.LocatieLijst.length : null,
+    sampleLocations: (catalog.LocatieLijst || []).slice(0, 3),
+  };
+  fs.writeFileSync(path.join(SITE_DIR, 'debug.json'), JSON.stringify(debugInfo, null, 2));
+
   const locations = catalog.LocatieLijst || [];
   console.log(`Catalog returned ${locations.length} locations.`);
+  if (locations.length) {
+    console.log('Sample location object:', JSON.stringify(locations[0]));
+  }
 
   const results = {};
   for (const spot of nlSpots) {
