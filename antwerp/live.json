@@ -1,4 +1,11 @@
 {
-  "generatedAt": "2026-08-04T12:06:02.621Z",
-  "spots": {}
+  "generatedAt": "2026-08-04T12:08:39.474Z",
+  "spots": {
+    "oesterdam": {
+      "waterTempC": 23.7,
+      "ts": "2026-08-04T12:50:00.000+01:00",
+      "stationCode": "bruinisse.krammersluis.oosterschelde.1",
+      "stationName": "Bruinisse Krammersluis sluis, Oosterschelde"
+    }
+  }
 }
