@@ -28,8 +28,10 @@ const LATEST_URL = `${BASE}/ONLINEWAARNEMINGENSERVICES/OphalenLaatsteWaarneminge
 // locations to spots by nearest distance to the spot's lat/lon, then confirm the candidate
 // actually has a surface-water-temperature (Compartiment OW, Grootheid T) series.
 const NL_SPOT_KEYWORDS = {
-  'brouwersdam-lake': ['grevelingen', 'brouwersdam'],
-  'brouwersdam-sea':  ['brouwersdam', 'schouwen'],
+  // 'bommenede' / 'oude tonge' are the actual in-lake Grevelingenmeer water-temp stations —
+  // straight-line distance alone picks an open-sea buoy instead, since it crosses the dam.
+  'brouwersdam-lake': ['bommenede', 'oude tonge', 'grevelingen'],
+  'brouwersdam-sea':  ['brouwershavense', 'voordelta', 'schouwen'],
   'veerse-meer':      ['veerse', 'veere', 'vrouwenpolder'],
   'oesterdam':        ['oosterschelde', 'oesterdam', 'bergen op zoom'],
 };
@@ -106,7 +108,9 @@ async function main() {
         return { loc, nameHit, distKm };
       })
       .filter(c => c.distKm < SEARCH_RADIUS_KM)
-      .sort((a, b) => a.distKm - b.distKm)
+      // Prefer a name match over raw distance — straight-line distance can cross a dam/dune
+      // into a completely different, hydrologically unconnected body of water.
+      .sort((a, b) => (b.nameHit - a.nameHit) || (a.distKm - b.distKm))
       .slice(0, 25); // cap so the batched request stays reasonably sized
 
     console.log(`\n${spot.id}: ${candidates.length} candidate location(s) within ${SEARCH_RADIUS_KM}km`);
@@ -139,10 +143,19 @@ async function main() {
           if (!last) return null;
           const code = series.Locatie && series.Locatie.Code;
           const ageHours = (Date.now() - new Date(last.Tijdstip).getTime()) / 3.6e6;
-          return { code, last, ageHours, distKm: byCode[code] ? byCode[code].distKm : Infinity };
+          const nameHit = byCode[code] ? byCode[code].nameHit : false;
+          return { code, last, ageHours, nameHit, distKm: byCode[code] ? byCode[code].distKm : Infinity };
         })
         .filter(Boolean)
-        .sort((a, b) => a.ageHours - b.ageHours); // freshest first
+        // Among stations that are actually fresh (<48h), prefer a name match; only fall back
+        // to "whatever's freshest" if nothing name-matched is recent enough.
+        .sort((a, b) => {
+          const aOk = a.ageHours >= 0 && a.ageHours < MAX_AGE_HOURS;
+          const bOk = b.ageHours >= 0 && b.ageHours < MAX_AGE_HOURS;
+          if (aOk !== bOk) return aOk ? -1 : 1;
+          if (aOk && bOk && a.nameHit !== b.nameHit) return b.nameHit - a.nameHit;
+          return a.ageHours - b.ageHours;
+        });
 
       obsDebug[spot.id] = {
         candidatesTried: candidates.length,
