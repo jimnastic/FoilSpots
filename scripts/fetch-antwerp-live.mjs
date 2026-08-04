@@ -32,8 +32,8 @@ const NL_SPOT_KEYWORDS = {
   // straight-line distance alone picks an open-sea buoy instead, since it crosses the dam.
   'brouwersdam-lake': ['bommenede', 'oude tonge', 'grevelingen'],
   'brouwersdam-sea':  ['brouwershavense', 'voordelta', 'schouwen'],
-  'veerse-meer':      ['veerse', 'veere', 'vrouwenpolder'],
-  'oesterdam':        ['oosterschelde', 'oesterdam', 'bergen op zoom'],
+  'veerse-meer':      ['schotsman', 'veerse', 'veere', 'vrouwenpolder'],
+  'oesterdam':        ['marollegat', 'oesterdam', 'oosterschelde', 'bergen op zoom'],
 };
 
 function haversineKm(lat1, lon1, lat2, lon2) {
@@ -153,7 +153,10 @@ async function main() {
           const aOk = a.ageHours >= 0 && a.ageHours < MAX_AGE_HOURS;
           const bOk = b.ageHours >= 0 && b.ageHours < MAX_AGE_HOURS;
           if (aOk !== bOk) return aOk ? -1 : 1;
-          if (aOk && bOk && a.nameHit !== b.nameHit) return b.nameHit - a.nameHit;
+          // Among readings that are all fresh enough, closeness matters far more than which
+          // happens to be a few minutes more recent — a 38km-away buoy tied at "0h old" with
+          // a 3km-away one is not a coin flip, the 3km one is the right answer.
+          if (aOk && bOk) return a.distKm - b.distKm;
           return a.ageHours - b.ageHours;
         });
 
