@@ -89,9 +89,13 @@ async function main() {
 
   const results = {};
   const obsDebug = {};
+  const MAX_AGE_HOURS = 48;
+  const SEARCH_RADIUS_KM = 60; // widened — the nearest station by distance is often a defunct
+                                 // one-off sampling point (e.g. old swim-water-quality checks);
+                                 // the nearest *actively reporting* sensor can be further away.
+
   for (const spot of nlSpots) {
     const keywords = NL_SPOT_KEYWORDS[spot.id] || [];
-    // Rank candidates by (a) name containing a keyword, (b) proximity to the spot's coordinates.
     const candidates = locations
       .map(loc => {
         const name = (loc.Naam || loc.Code || '').toLowerCase();
@@ -101,60 +105,69 @@ async function main() {
           : Infinity;
         return { loc, nameHit, distKm };
       })
-      .filter(c => c.distKm < 25) // within 25km of the spot
-      .sort((a, b) => (b.nameHit - a.nameHit) || (a.distKm - b.distKm));
+      .filter(c => c.distKm < SEARCH_RADIUS_KM)
+      .sort((a, b) => a.distKm - b.distKm)
+      .slice(0, 25); // cap so the batched request stays reasonably sized
 
-    console.log(`\n${spot.id}: ${candidates.length} candidate location(s) within 25km`);
-    candidates.slice(0, 10).forEach(c =>
-      console.log(`  - ${c.loc.Code} "${c.loc.Naam}" nameHit=${c.nameHit} dist=${c.distKm.toFixed(1)}km`));
+    console.log(`\n${spot.id}: ${candidates.length} candidate location(s) within ${SEARCH_RADIUS_KM}km`);
+    candidates.slice(0, 8).forEach(c =>
+      console.log(`  - ${c.loc.Code} "${c.loc.Naam}" dist=${c.distKm.toFixed(1)}km`));
 
     if (candidates.length === 0) {
       console.log(`  No candidates found for ${spot.id} — skipping.`);
       continue;
     }
 
-    // Try candidates in order until one returns a water-temperature reading.
-    for (const c of candidates.slice(0, 10)) {
-      try {
-        const obs = await postJson(LATEST_URL, {
-          LocatieLijst: [{ Code: c.loc.Code }],
-          AquoPlusWaarnemingMetadataLijst: [
-            { AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } } },
-          ],
-          // NOTE: tried filtering to WaarnemingMetadata.OpdrachtgevendeInstantieLijst:['RIKZMON_TEMP']
-          // (the docs' example instantie for Vlissingen) — it returned an empty 200 for every one
-          // of these stations, so that code isn't universal. Left unfiltered; the staleness check
-          // below plus trying multiple nearby candidates does the filtering instead.
-        });
-        if (!obsDebug[spot.id]) {
-          // Keep a raw sample of the first response per spot for shape verification.
-          obsDebug[spot.id] = { stationTried: c.loc.Code, rawResponse: obs };
-        }
-        const series = (obs.WaarnemingenLijst || [])[0];
-        const events = series && series.MetingenLijst;
-        if (events && events.length) {
-          const last = events[events.length - 1];
+    // Batch: ask for all nearby candidates' latest water-temperature reading in one request,
+    // then pick whichever one is both present AND actually recent. This is both fewer HTTP
+    // calls and correctly finds the freshest sensor rather than just the nearest one.
+    try {
+      const obs = await postJson(LATEST_URL, {
+        LocatieLijst: candidates.map(c => ({ Code: c.loc.Code })),
+        AquoPlusWaarnemingMetadataLijst: [
+          { AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } } },
+        ],
+      });
+
+      const byCode = {};
+      for (const c of candidates) byCode[c.loc.Code] = c;
+
+      const scored = (obs.WaarnemingenLijst || [])
+        .map(series => {
+          const events = series.MetingenLijst;
+          const last = events && events.length ? events[events.length - 1] : null;
+          if (!last) return null;
+          const code = series.Locatie && series.Locatie.Code;
           const ageHours = (Date.now() - new Date(last.Tijdstip).getTime()) / 3.6e6;
-          if (!(ageHours >= 0 && ageHours < 48)) {
-            console.log(`  ~ ${c.loc.Code} has a reading but it's stale (${last.Tijdstip}, ${ageHours.toFixed(0)}h old) — trying next candidate`);
-            continue;
-          }
-          results[spot.id] = {
-            waterTempC: Number(last.Meetwaarde?.Waarde_Numeriek),
-            ts: last.Tijdstip,
-            stationCode: c.loc.Code,
-            stationName: c.loc.Naam,
-          };
-          console.log(`  -> matched ${c.loc.Code}: ${results[spot.id].waterTempC}°C at ${results[spot.id].ts}`);
-          break;
-        }
-      } catch (e) {
-        console.log(`  ! ${c.loc.Code} failed: ${e.message}`);
-        if (!obsDebug[spot.id]) obsDebug[spot.id] = { stationTried: c.loc.Code, error: e.message };
+          return { code, last, ageHours, distKm: byCode[code] ? byCode[code].distKm : Infinity };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.ageHours - b.ageHours); // freshest first
+
+      obsDebug[spot.id] = {
+        candidatesTried: candidates.length,
+        seriesReturned: scored.length,
+        top5ByFreshness: scored.slice(0, 5).map(s => ({ code: s.code, ts: s.last.Tijdstip, ageHours: Math.round(s.ageHours), distKm: Math.round(s.distKm) })),
+      };
+
+      const fresh = scored.find(s => s.ageHours >= 0 && s.ageHours < MAX_AGE_HOURS);
+      if (fresh) {
+        const stationName = byCode[fresh.code] ? byCode[fresh.code].loc.Naam : fresh.code;
+        results[spot.id] = {
+          waterTempC: Number(fresh.last.Meetwaarde?.Waarde_Numeriek),
+          ts: fresh.last.Tijdstip,
+          stationCode: fresh.code,
+          stationName,
+        };
+        console.log(`  -> matched ${fresh.code} (${fresh.distKm.toFixed(1)}km away): ${results[spot.id].waterTempC}°C at ${fresh.last.Tijdstip}`);
+      } else if (scored.length) {
+        console.log(`  No candidate within ${SEARCH_RADIUS_KM}km has a reading newer than ${MAX_AGE_HOURS}h. Freshest found: ${scored[0].code} at ${scored[0].last.Tijdstip} (${Math.round(scored[0].ageHours)}h old).`);
+      } else {
+        console.log(`  None of the ${candidates.length} nearby candidates returned any OW/T series at all.`);
       }
-    }
-    if (!results[spot.id]) {
-      console.log(`  No usable water-temperature reading found for ${spot.id} among top candidates.`);
+    } catch (e) {
+      console.log(`  ! Batched request failed for ${spot.id}: ${e.message}`);
+      obsDebug[spot.id] = { error: e.message };
     }
   }
 
