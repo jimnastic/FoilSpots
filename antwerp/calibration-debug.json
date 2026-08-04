@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T12:30:37.013Z",
+  "generatedAt": "2026-08-04T12:38:25.444Z",
   "lookbackDays": 90,
   "windMetaDiscovery": {
     "speed": {
@@ -34,8 +34,8 @@
     },
     "oesterdam": {
       "stationCode": "marollegat",
-      "speedObsCount": 12393,
-      "dirObsCount": 12391,
+      "speedObsCount": 12394,
+      "dirObsCount": 12392,
       "speedSample": [
         {
           "Meetwaarde": {
