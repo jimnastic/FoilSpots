@@ -1,0 +1,33 @@
+name: Antwerp wind calibration
+
+on:
+  workflow_dispatch: {}   # manual only for now — will switch to a monthly cron once verified
+
+permissions:
+  contents: write
+
+jobs:
+  compute-calibration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compute wind forecast-bias calibration
+        run: node scripts/fetch-antwerp-calibration.mjs
+
+      - name: Commit calibration.json / calibration-debug.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add antwerp/calibration.json antwerp/calibration-debug.json
+          if git diff --cached --quiet; then
+            echo "No change"
+          else
+            git commit -m "Update Antwerp wind calibration [skip ci]"
+            git pull --rebase
+            git push
+          fi
