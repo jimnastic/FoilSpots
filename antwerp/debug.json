@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-08-04T11:47:34.129Z",
+  "topLevelKeys": [
+    "Succesvol",
+    "AquoMetadataLijst",
+    "AquoMetadataLocatieLijst",
+    "BemonsteringshoogteLijst",
+    "LocatieLijst",
+    "OpdrachtgevendeInstantieLijst",
+    "ReferentievlakLijst",
+    "StatuswaardeLijst"
+  ],
+  "locatieLijstLength": 2635,
+  "sampleLocations": [
+    {
+      "Locatie_MessageID": 10603,
+      "Code": "4epetroleumhaven",
+      "Coordinatenstelsel": "ETRS89",
+      "Lat": 51.953524,
+      "Lon": 4.140491,
+      "Naam": "4e Petroleumhaven",
+      "Omschrijving": "4e Petroleumhaven"
+    },
+    {
+      "Locatie_MessageID": 17056,
+      "Code": "7epetroleumhaven",
+      "Coordinatenstelsel": "ETRS89",
+      "Lat": 51.915615,
+      "Lon": 4.21277,
+      "Naam": "7e Petroleumhaven",
+      "Omschrijving": "7e Petroleumhaven"
+    },
+    {
+      "Locatie_MessageID": 3627,
+      "Code": "a12",
+      "Coordinatenstelsel": "ETRS89",
+      "Lat": 55.383333,
+      "Lon": 3.8,
+      "Naam": "A12 platform",
+      "Omschrijving": "A12 platform"
+    }
+  ]
+}
