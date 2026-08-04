@@ -67,6 +67,8 @@
     .spip.beginner     { background: rgba(74,222,128,0.14); color: #4ade80; }
     .spip.intermediate { background: rgba(251,191,36,0.14); color: #fbbf24; }
     .spip.advanced     { background: rgba(248,113,113,0.14); color: #f87171; }
+    .wtemp { display:inline-block; font-size:9px; font-weight:600; color:var(--muted); padding:1px 5px; border-radius:3px; border:1px solid var(--border); white-space:nowrap; }
+    .wtemp.have { color:#7dd3fc; border-color:rgba(125,211,252,0.35); }
 
     tbody tr { border-bottom: 1px solid var(--border); }
     tbody tr.wkd   { background: rgba(78,205,196,0.05); }
@@ -300,6 +302,35 @@ try { savedPrefs = JSON.parse(localStorage.getItem('fs-prefs')||'{}'); } catch(e
 Object.assign(prefs, savedPrefs);
 
 let rawData = {};
+const waterTempCache = {}; // spot.id -> { c: number, ts: string } | null
+
+// ── Water temperature (live, from the nearest on-water station) ────
+// Each spot's `station` field (see spots-data.js) names the network (rws | mvb) and station
+// code for its nearest genuine water sensor. RWS (Dutch waters) is open, no login needed.
+// MVB (Belgian coast) requires an authenticated request — routed via a scheduled job, not
+// called directly from the browser, so credentials never ship in this file.
+// TODO: wire real fetches once station codes are confirmed (see antwerp-foilspots-plan.md)
+// and the MVB-backed spots have a snapshot endpoint from the calibration workflow.
+async function fetchWaterTemp(spot) {
+  if (waterTempCache[spot.id] !== undefined) return waterTempCache[spot.id];
+  waterTempCache[spot.id] = null; // not wired up yet — no station call made
+  return null;
+}
+
+async function updateWaterTemp(spot, elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const reading = await fetchWaterTemp(spot);
+  if (reading && typeof reading.c === 'number') {
+    el.textContent = `${reading.c.toFixed(1)}°C`;
+    el.classList.add('have');
+    el.title = `Water temp ${reading.c.toFixed(1)}°C — ${spot.station.label} (${reading.ts})`;
+  } else {
+    el.textContent = '--°C';
+    el.classList.remove('have');
+    el.title = `Water temp — no live reading yet (${spot.station ? spot.station.label : 'no station mapped'})`;
+  }
+}
 
 // ── Filter buttons ─────────────────────────────────────────────
 function setBtn(gid, val) {
@@ -456,6 +487,7 @@ function buildGrid() {
         <button class="star-btn ${starClass}" data-sid="${sp.id}" title="Star this spot">${isStarred(sp.id) ? '★' : '☆'}</button>
         <span class="sth-name">${sp.name} <span style="font-size:9px;opacity:0.55;font-weight:400">ⓘ</span></span>
         <span class="spip ${sp.skill}">${sp.skill}</span>
+        <span class="wtemp" id="wtemp-${sp.id}" title="Water temp — latest on-water reading">--°C</span>
       </div>
     </th>`;
   });
@@ -478,6 +510,7 @@ function buildGrid() {
 
   applyFilters();
   initTooltip();
+  displaySpots.forEach(sp => updateWaterTemp(sp, `wtemp-${sp.id}`));
   requestAnimationFrame(updateMainHeight);
 }
 
@@ -709,7 +742,9 @@ function openSpotModal(sid) {
   document.getElementById('modal-badges').innerHTML =
     `<span class="badge badge-${spot.water}">${spot.water} water</span>` +
     `<span class="badge badge-${spot.area}">${areaLabel}</span>` +
-    `<span class="badge badge-${spot.skill}">${spot.skill}</span>`;
+    `<span class="badge badge-${spot.skill}">${spot.skill}</span>` +
+    `<span class="wtemp" id="wtemp-modal">--°C</span>`;
+  updateWaterTemp(spot, 'wtemp-modal');
 
   document.getElementById('modal-body').innerHTML = buildModalContent(spot);
   document.getElementById('spotModal').classList.add('open');
