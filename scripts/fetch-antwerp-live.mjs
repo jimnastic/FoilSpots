@@ -88,6 +88,7 @@ async function main() {
   }
 
   const results = {};
+  const obsDebug = {};
   for (const spot of nlSpots) {
     const keywords = NL_SPOT_KEYWORDS[spot.id] || [];
     // Rank candidates by (a) name containing a keyword, (b) proximity to the spot's coordinates.
@@ -95,8 +96,8 @@ async function main() {
       .map(loc => {
         const name = (loc.Naam || loc.Code || '').toLowerCase();
         const nameHit = keywords.some(k => name.includes(k));
-        const distKm = (typeof loc.X === 'number' && typeof loc.Y === 'number')
-          ? haversineKm(spot.lat, spot.lon, loc.Y, loc.X)
+        const distKm = (typeof loc.Lat === 'number' && typeof loc.Lon === 'number')
+          ? haversineKm(spot.lat, spot.lon, loc.Lat, loc.Lon)
           : Infinity;
         return { loc, nameHit, distKm };
       })
@@ -121,6 +122,10 @@ async function main() {
             { AquoMetadata: { Compartiment: { Code: 'OW' }, Grootheid: { Code: 'T' } } },
           ],
         });
+        if (!obsDebug[spot.id]) {
+          // Keep a raw sample of the first response per spot for shape verification.
+          obsDebug[spot.id] = { stationTried: c.loc.Code, rawResponse: obs };
+        }
         const series = (obs.WaarnemingenLijst || [])[0];
         const events = series && series.MetingenLijst;
         if (events && events.length) {
@@ -147,6 +152,12 @@ async function main() {
   fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2));
   console.log(`\nWrote ${OUT_PATH}`);
   console.log(JSON.stringify(out, null, 2));
+
+  // Append observation-shape samples to debug.json for verification if matching still fails.
+  const debugPath = path.join(SITE_DIR, 'debug.json');
+  const existingDebug = JSON.parse(fs.readFileSync(debugPath, 'utf8'));
+  existingDebug.obsSamples = obsDebug;
+  fs.writeFileSync(debugPath, JSON.stringify(existingDebug, null, 2));
 }
 
 main().catch(err => {
