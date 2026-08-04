@@ -152,6 +152,7 @@ async function main() {
         }
       } catch (e) {
         console.log(`  ! ${c.loc.Code} failed: ${e.message}`);
+        if (!obsDebug[spot.id]) obsDebug[spot.id] = { stationTried: c.loc.Code, error: e.message };
       }
     }
     if (!results[spot.id]) {
