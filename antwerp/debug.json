@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T11:47:34.129Z",
+  "generatedAt": "2026-08-04T11:49:42.910Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -39,5 +39,1011 @@
       "Naam": "A12 platform",
       "Omschrijving": "A12 platform"
     }
-  ]
+  ],
+  "obsSamples": {
+    "brouwersdam-lake": {
+      "stationTried": "kabbelaarsbank.grevelingen",
+      "rawResponse": {
+        "Succesvol": true,
+        "WaarnemingenLijst": [
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10138",
+                "Omschrijving": "other:Temperatuursensor - type ME Meerestechnik"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "kabbelaarsbank.grevelingen",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.752415,
+              "Lon": 3.862772,
+              "Naam": "Kabbelaarsbank, Grevelingen",
+              "Omschrijving": "Kabbelaarsbank, Grevelingen"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.2278E+02",
+                  "Waarde_Numeriek": 22.78
+                },
+                "Tijdstip": "2002-07-31T09:59:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10138",
+                "Omschrijving": "other:Temperatuursensor - type ME Meerestechnik"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "kabbelaarsbank.grevelingen",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.752415,
+              "Lon": 3.862772,
+              "Naam": "Kabbelaarsbank, Grevelingen",
+              "Omschrijving": "Kabbelaarsbank, Grevelingen"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.1404E+02",
+                  "Waarde_Numeriek": 14.04
+                },
+                "Tijdstip": "2004-09-22T11:13:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10000",
+                "Omschrijving": "other:Datasonde"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "kabbelaarsbank.grevelingen",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.752415,
+              "Lon": 3.862772,
+              "Naam": "Kabbelaarsbank, Grevelingen",
+              "Omschrijving": "Kabbelaarsbank, Grevelingen"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.130E+02",
+                  "Waarde_Numeriek": 13
+                },
+                "Tijdstip": "2010-09-27T13:20:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10138",
+                "Omschrijving": "other:Temperatuursensor - type ME Meerestechnik"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "kabbelaarsbank.grevelingen",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.752415,
+              "Lon": 3.862772,
+              "Naam": "Kabbelaarsbank, Grevelingen",
+              "Omschrijving": "Kabbelaarsbank, Grevelingen"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.1464E+02",
+                  "Waarde_Numeriek": 14.64
+                },
+                "Tijdstip": "2008-09-18T10:16:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "veerse-meer": {
+      "stationTried": "veere.havenmond",
+      "rawResponse": {
+        "Succesvol": true,
+        "WaarnemingenLijst": [
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10089",
+                "Omschrijving": "other:Temperatuursensor - type Guildline"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "other:F081",
+                "Omschrijving": "Watertemperatuur bepaling"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "veere.havenmond",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.548295,
+              "Lon": 3.673062,
+              "Naam": "Veere, havenmond",
+              "Omschrijving": "Veere, havenmond"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.59E+01",
+                  "Waarde_Numeriek": 5.9
+                },
+                "Tijdstip": "1981-12-07T11:40:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-100",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "RIKZMON_CHEMIE",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Definitief"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "9034",
+                "Omschrijving": "other:Roset-sampler"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "other:F081",
+                "Omschrijving": "Watertemperatuur bepaling"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "veere.havenmond",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.548295,
+              "Lon": 3.673062,
+              "Naam": "Veere, havenmond",
+              "Omschrijving": "Veere, havenmond"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.59E+01",
+                  "Waarde_Numeriek": 5.9
+                },
+                "Tijdstip": "1981-12-07T11:40:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "100",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "RIKZMON_CHEMIE",
+                  "Referentievlak": "BODM",
+                  "Statuswaarde": "Ongecontroleerd"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "oesterdam": {
+      "stationTried": "oesterdam.speelmansplaten.badstrand",
+      "rawResponse": {
+        "Succesvol": true,
+        "WaarnemingenLijst": [
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10138",
+                "Omschrijving": "other:Temperatuursensor - type ME Meerestechnik"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "oesterdam.speelmansplaten.badstrand",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.501648,
+              "Lon": 4.18516,
+              "Naam": "Oesterdam, Speelmansplaten, badstrand",
+              "Omschrijving": "Oesterdam, Speelmansplaten, badstrand"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.1477E+02",
+                  "Waarde_Numeriek": 14.77
+                },
+                "Tijdstip": "2004-09-20T08:18:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10138",
+                "Omschrijving": "other:Temperatuursensor - type ME Meerestechnik"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "oesterdam.speelmansplaten.badstrand",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.501648,
+              "Lon": 4.18516,
+              "Naam": "Oesterdam, Speelmansplaten, badstrand",
+              "Omschrijving": "Oesterdam, Speelmansplaten, badstrand"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.1527E+02",
+                  "Waarde_Numeriek": 15.27
+                },
+                "Tijdstip": "2008-09-15T10:25:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10000",
+                "Omschrijving": "other:Datasonde"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "oesterdam.speelmansplaten.badstrand",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.501648,
+              "Lon": 4.18516,
+              "Naam": "Oesterdam, Speelmansplaten, badstrand",
+              "Omschrijving": "Oesterdam, Speelmansplaten, badstrand"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.130E+02",
+                  "Waarde_Numeriek": 13
+                },
+                "Tijdstip": "2010-09-27T07:00:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          },
+          {
+            "AquoMetadata": {
+              "BemonsteringsApparaat": {
+                "Code": "8000",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BemonsteringsSoort": {
+                "Code": "SB",
+                "Omschrijving": "Steekbemonstering"
+              },
+              "BioTaxon": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "BioTaxonType": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Compartiment": {
+                "Code": "OW",
+                "Omschrijving": "Oppervlaktewater"
+              },
+              "Eenheid": {
+                "Code": "oC",
+                "Omschrijving": "graad Celsius"
+              },
+              "Groepering": {
+                "Code": "",
+                "Omschrijving": ""
+              },
+              "Grootheid": {
+                "Code": "T",
+                "Omschrijving": "Temperatuur"
+              },
+              "Hoedanigheid": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "MeetApparaat": {
+                "Code": "10138",
+                "Omschrijving": "other:Temperatuursensor - type ME Meerestechnik"
+              },
+              "Orgaan": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "Parameter_Wat_Omschrijving": "Temperatuur in Oppervlaktewater in oC",
+              "ProcesType": "meting",
+              "Typering": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBepalingsMethode": {
+                "Code": "RWSV-W009",
+                "Omschrijving": "RWSV 913.00.W009"
+              },
+              "WaardeBepalingsTechniek": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              },
+              "WaardeBewerkingsMethode": {
+                "Code": "NVT",
+                "Omschrijving": "NVT"
+              }
+            },
+            "Locatie": {
+              "Code": "oesterdam.speelmansplaten.badstrand",
+              "Coordinatenstelsel": "ETRS89",
+              "Lat": 51.501648,
+              "Lon": 4.18516,
+              "Naam": "Oesterdam, Speelmansplaten, badstrand",
+              "Omschrijving": "Oesterdam, Speelmansplaten, badstrand"
+            },
+            "MetingenLijst": [
+              {
+                "Meetwaarde": {
+                  "Waarde_Alfanumeriek": "+.2252E+02",
+                  "Waarde_Numeriek": 22.52
+                },
+                "Tijdstip": "2002-07-31T13:16:00.000+01:00",
+                "WaarnemingMetadata": {
+                  "Bemonsteringshoogte": "-50",
+                  "Kwaliteitswaardecode": "00",
+                  "OpdrachtgevendeInstantie": "ZLXXREG_ZWEMW",
+                  "Referentievlak": "WATSGL",
+                  "Statuswaarde": "Gecontroleerd"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

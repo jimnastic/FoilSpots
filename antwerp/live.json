@@ -1,4 +1,23 @@
 {
-  "generatedAt": "2026-08-04T11:47:34.139Z",
-  "spots": {}
+  "generatedAt": "2026-08-04T11:49:45.390Z",
+  "spots": {
+    "brouwersdam-lake": {
+      "waterTempC": 22.78,
+      "ts": "2002-07-31T09:59:00.000+01:00",
+      "stationCode": "kabbelaarsbank.grevelingen",
+      "stationName": "Kabbelaarsbank, Grevelingen"
+    },
+    "veerse-meer": {
+      "waterTempC": 5.9,
+      "ts": "1981-12-07T11:40:00.000+01:00",
+      "stationCode": "veere.havenmond",
+      "stationName": "Veere, havenmond"
+    },
+    "oesterdam": {
+      "waterTempC": 14.77,
+      "ts": "2004-09-20T08:18:00.000+01:00",
+      "stationCode": "oesterdam.speelmansplaten.badstrand",
+      "stationName": "Oesterdam, Speelmansplaten, badstrand"
+    }
+  }
 }
