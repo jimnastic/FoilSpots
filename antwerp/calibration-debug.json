@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T12:27:48.749Z",
+  "generatedAt": "2026-08-04T12:30:37.013Z",
   "lookbackDays": 90,
   "windMetaDiscovery": {
     "speed": {
@@ -69,10 +69,10 @@
       "dirSample": [
         {
           "Meetwaarde": {
-            "Waarde_Alfanumeriek": "1.5",
-            "Waarde_Numeriek": 1.5
+            "Waarde_Alfanumeriek": "18.3",
+            "Waarde_Numeriek": 18.3
           },
-          "Tijdstip": "2026-05-06T13:30:00.000+01:00",
+          "Tijdstip": "2026-05-06T13:40:00.000+01:00",
           "WaarnemingMetadata": {
             "Bemonsteringshoogte": "0",
             "Kwaliteitswaardecode": "00",
@@ -83,10 +83,10 @@
         },
         {
           "Meetwaarde": {
-            "Waarde_Alfanumeriek": "18.3",
-            "Waarde_Numeriek": 18.3
+            "Waarde_Alfanumeriek": "24.5",
+            "Waarde_Numeriek": 24.5
           },
-          "Tijdstip": "2026-05-06T13:40:00.000+01:00",
+          "Tijdstip": "2026-05-06T13:50:00.000+01:00",
           "WaarnemingMetadata": {
             "Bemonsteringshoogte": "0",
             "Kwaliteitswaardecode": "00",
