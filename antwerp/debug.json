@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T12:03:47.343Z",
+  "generatedAt": "2026-08-04T12:05:59.040Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -40,5 +40,22 @@
       "Omschrijving": "A12 platform"
     }
   ],
-  "obsSamples": {}
+  "obsSamples": {
+    "brouwersdam-lake": {
+      "stationTried": "kabbelaarsbank.grevelingen",
+      "error": "Non-JSON response from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenLaatsteWaarnemingen: "
+    },
+    "brouwersdam-sea": {
+      "stationTried": "brouwersdam.spui.binnen.schuif6",
+      "error": "Non-JSON response from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenLaatsteWaarnemingen: "
+    },
+    "veerse-meer": {
+      "stationTried": "veere.havenmondzuid",
+      "error": "Non-JSON response from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenLaatsteWaarnemingen: "
+    },
+    "oesterdam": {
+      "stationTried": "oesterdam.speelmansplaten.badstrand",
+      "error": "Non-JSON response from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenLaatsteWaarnemingen: "
+    }
+  }
 }
