@@ -59,30 +59,72 @@ async function getJson(urlPath, token) {
   try { return JSON.parse(text); } catch { throw new Error(`Non-JSON from ${urlPath}: ${text.slice(0, 300)}`); }
 }
 
+// Our 3 Belgian coast spots (from spots-data.js) — kept here too so this discovery script
+// can independently report nearest-station candidates without depending on the site's schema.
+const BE_SPOTS = {
+  oostende: { lat: 51.2278, lon: 2.9166 },
+  'knokke-cadzand': { lat: 51.3700, lon: 3.3900 },
+  'de-panne': { lat: 51.0937, lon: 2.5836 },
+  'bray-dunes': { lat: 51.0765, lon: 2.5175 }, // FR, using nearest BE station as proxy
+};
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, toRad = d => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// PositionWKT looks like "POINT (lon lat)" (confirmed via ProjectionWKT: WGS84/EPSG:4326).
+function parseWktPoint(wkt) {
+  const m = /POINT \(([-\d.]+) ([-\d.]+)\)/.exec(wkt || '');
+  return m ? { lon: Number(m[1]), lat: Number(m[2]) } : null;
+}
+
+function nameOf(entry, culture = 'en-GB') {
+  const n = (entry.Name || []).find(x => x.Culture === culture) || (entry.Name || [])[0];
+  return n ? n.Message : entry.ID;
+}
+
 async function run(debug) {
   console.log('Logging in...');
   const token = await login(debug);
   console.log('Login OK, token acquired.');
 
-  console.log('Checking /V2/ping with token...');
-  const ping = await getJson('/V2/ping', token);
-  debug.ping = ping;
-  console.log('Ping:', JSON.stringify(ping));
-
   console.log('Fetching /V2/catalog...');
   const catalog = await getJson('/V2/catalog', token);
   debug.catalogTopLevelKeys = Object.keys(catalog);
 
-  // Try to find whatever the locations / parameters / available-data lists are called —
-  // field names are unconfirmed, so inspect broadly rather than assume.
-  for (const key of Object.keys(catalog)) {
-    const val = catalog[key];
-    if (Array.isArray(val)) {
-      debug[`${key}_length`] = val.length;
-      debug[`${key}_sample`] = val.slice(0, 3);
-    } else {
-      debug[`${key}_value`] = val;
-    }
+  const locations = catalog.Locations || [];
+  const parameters = catalog.Parameters || [];
+  const available = catalog.AvailableData || [];
+
+  // Full parameter list — this is what we actually need (only 22 total, cheap to keep all of).
+  debug.allParameters = parameters.map(p => ({ ID: p.ID, name: nameOf(p), unit: p.Unit, typeId: p.ParameterTypeID }));
+  const paramNameById = {};
+  for (const p of debug.allParameters) paramNameById[p.ID] = p.name;
+
+  // Full location list with parsed coordinates and which parameters each one publishes.
+  const availByLocation = {};
+  for (const a of available) {
+    (availByLocation[a.Location] ||= []).push(`${a.Parameter} (${paramNameById[a.Parameter] || '?'})`);
+  }
+  debug.allLocations = locations.map(loc => {
+    const pos = parseWktPoint(loc.PositionWKT);
+    return { ID: loc.ID, name: nameOf(loc), lat: pos?.lat, lon: pos?.lon, parameters: availByLocation[loc.ID] || [] };
+  });
+
+  // Nearest stations to each of our 3 (+1 proxy) Belgian spots.
+  debug.nearestPerSpot = {};
+  for (const [spotId, spot] of Object.entries(BE_SPOTS)) {
+    const ranked = debug.allLocations
+      .filter(l => l.lat != null && l.lon != null)
+      .map(l => ({ ...l, distKm: haversineKm(spot.lat, spot.lon, l.lat, l.lon) }))
+      .sort((a, b) => a.distKm - b.distKm)
+      .slice(0, 5)
+      .map(l => ({ ID: l.ID, name: l.name, distKm: Math.round(l.distKm * 10) / 10, parameters: l.parameters }));
+    debug.nearestPerSpot[spotId] = ranked;
+    console.log(`${spotId}: nearest = ${ranked[0]?.ID} (${ranked[0]?.name}, ${ranked[0]?.distKm}km) with params [${ranked[0]?.parameters.join(', ')}]`);
   }
 }
 
