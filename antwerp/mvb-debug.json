@@ -1,17 +1,10 @@
 {
-  "generatedAt": "2026-08-05T11:47:48.068Z",
+  "generatedAt": "2026-08-05T11:51:22.084Z",
   "hasUsername": true,
   "hasPassword": true,
   "usernameLength": 22,
   "loginStatus": 200,
-  "loginResponsePreview": "{\".expires\":\"Wed, 05 Aug 2026 12:47:49 GMT\",\".issued\":\"Wed, 05 Aug 2026 11:47:49 GMT\",\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCIsImtpZCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCJ9.eyJpc3MiOiJodHRwczovL3Nzby5tZWV0bmV0dmxhYW1zZWJhbmtlbi5iZS9pZGVud",
-  "ping": {
-    "Timestamp": "2026-08-05T11:47:50.7681702+00:00",
-    "Customer": {
-      "FullName": "Jim May",
-      "Login": "jim_nastic@hotmail.com"
-    }
-  },
+  "loginResponsePreview": "{\".expires\":\"Wed, 05 Aug 2026 12:51:22 GMT\",\".issued\":\"Wed, 05 Aug 2026 11:51:22 GMT\",\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCIsImtpZCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCJ9.eyJpc3MiOiJodHRwczovL3Nzby5tZWV0bmV0dmxhYW1zZWJhbmtlbi5iZS9pZGVud",
   "catalogTopLevelKeys": [
     "Customer",
     "Locations",
@@ -20,254 +13,930 @@
     "AvailableData",
     "ProjectionWKT"
   ],
-  "Customer_value": {
-    "FullName": "Jim May",
-    "Login": "jim_nastic@hotmail.com"
-  },
-  "Locations_length": 40,
-  "Locations_sample": [
-    {
-      "ID": "A2B",
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "A2 - Boei"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "A2 - Buoy"
-        }
-      ],
-      "Description": [
-        {
-          "Culture": "nl-BE",
-          "Message": "<b>Boei: </b> Datawell - Directionele waverider"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "<b>Buoy: </b> Datawell - Directional waverider"
-        }
-      ],
-      "PositionWKT": "POINT (3.11983333333333 51.3597222222222)"
-    },
-    {
-      "ID": "AKZ",
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "ZW-Akkaert - Boei"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Akkaert-Southwest - Buoy"
-        }
-      ],
-      "Description": [
-        {
-          "Culture": "nl-BE",
-          "Message": "<b> Boei: </b> Datawell - Directionele waverider"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "<b>Buoy: </b> Datawell - Directional waverider"
-        }
-      ],
-      "PositionWKT": "POINT (2.81861111111111 51.4161111111111)"
-    },
-    {
-      "ID": "BL7",
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Blankenberge - Windmeting"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Blankenberge - Wind measurement"
-        }
-      ],
-      "Description": [
-        {
-          "Culture": "nl-BE",
-          "Message": "<b>Wind: </b>Gill Instruments - WindSonic M Heated"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "<b>Wind: </b>Gill Instruments - WindSonic M Heated"
-        }
-      ],
-      "PositionWKT": "POINT (3.105556 51.315833)"
-    }
-  ],
-  "Parameters_length": 22,
-  "Parameters_sample": [
+  "allParameters": [
     {
       "ID": "GH1",
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "10% hoogste golven"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "10% highest waves"
-        }
-      ],
-      "Unit": "cm",
-      "ParameterTypeID": 1,
-      "MaxValue": 0,
-      "MinValue": 0
+      "name": "10% highest waves",
+      "unit": "cm",
+      "typeId": 1
     },
     {
       "ID": "GHA",
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Golfhoogte"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Wave height"
-        }
-      ],
-      "Unit": "cm",
-      "ParameterTypeID": 1,
-      "MaxValue": 0,
-      "MinValue": 0
+      "name": "Wave height",
+      "unit": "cm",
+      "typeId": 1
     },
     {
       "ID": "GTZ",
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Gemiddelde golfperiode"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Average wave period"
-        }
-      ],
-      "Unit": "s",
-      "ParameterTypeID": 1,
-      "MaxValue": 0,
-      "MinValue": 0
+      "name": "Average wave period",
+      "unit": "s",
+      "typeId": 1
+    },
+    {
+      "ID": "H01",
+      "name": "1% wave height",
+      "unit": "cm",
+      "typeId": 1
+    },
+    {
+      "ID": "HLF",
+      "name": "Height waves with period > 10 s",
+      "unit": "cm",
+      "typeId": 1
+    },
+    {
+      "ID": "HUM",
+      "name": "Relative humidity",
+      "unit": "%",
+      "typeId": 3
+    },
+    {
+      "ID": "LDR",
+      "name": "Air pressure",
+      "unit": "hPa",
+      "typeId": 3
+    },
+    {
+      "ID": "NSI",
+      "name": "Precipitation",
+      "unit": "mm",
+      "typeId": 3
+    },
+    {
+      "ID": "RHF",
+      "name": "High frequent wave direction",
+      "unit": "deg",
+      "typeId": 1
+    },
+    {
+      "ID": "RLF",
+      "name": "Low frequent wave direction",
+      "unit": "deg",
+      "typeId": 1
+    },
+    {
+      "ID": "SR3",
+      "name": "Flow direction cell 3",
+      "unit": "deg",
+      "typeId": 2
+    },
+    {
+      "ID": "SV3",
+      "name": "Flow rate cell 3",
+      "unit": "m/s",
+      "typeId": 2
+    },
+    {
+      "ID": "TGR",
+      "name": "Ground temperature",
+      "unit": "°C",
+      "typeId": 3
+    },
+    {
+      "ID": "TLU",
+      "name": "Air temperature",
+      "unit": "°C",
+      "typeId": 3
+    },
+    {
+      "ID": "TNB",
+      "name": "Wet bulb temperature",
+      "unit": "°C",
+      "typeId": 3
+    },
+    {
+      "ID": "TZW",
+      "name": "Sea water temperature",
+      "unit": "°C",
+      "typeId": 3
+    },
+    {
+      "ID": "WC1",
+      "name": "Max 1-second wind gust (at 10 m height)",
+      "unit": "m/s",
+      "typeId": 4
+    },
+    {
+      "ID": "WC3",
+      "name": "Max 3-seconds wind gust (at 10 m height)",
+      "unit": "m/s",
+      "typeId": 4
+    },
+    {
+      "ID": "WRS",
+      "name": "Average wind direction",
+      "unit": "deg",
+      "typeId": 4
+    },
+    {
+      "ID": "WS5",
+      "name": "Tide TAW",
+      "unit": "cm",
+      "typeId": 2
+    },
+    {
+      "ID": "WVC",
+      "name": "Average wind speed (at 10 m height)",
+      "unit": "m/s",
+      "typeId": 4
+    },
+    {
+      "ID": "ZON",
+      "name": "Solar radiation",
+      "unit": "W/m²",
+      "typeId": 3
     }
   ],
-  "ParameterTypes_value": {
-    "0": {
-      "ID": 0,
-      "SortOrder": 100,
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Varia"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Varia"
-        }
-      ]
-    },
-    "1": {
-      "ID": 1,
-      "SortOrder": 0,
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Golven"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Waves"
-        }
-      ]
-    },
-    "2": {
-      "ID": 2,
-      "SortOrder": 1,
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Getij en stroming"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Tide and current"
-        }
-      ]
-    },
-    "3": {
-      "ID": 3,
-      "SortOrder": 3,
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Meteo"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Meteo"
-        }
-      ]
-    },
-    "4": {
-      "ID": 4,
-      "SortOrder": 2,
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "Wind"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "Wind"
-        }
-      ]
-    },
-    "5": {
-      "ID": 5,
-      "SortOrder": 200,
-      "Name": [
-        {
-          "Culture": "nl-BE",
-          "Message": "'nl.$ParameterType.Name.5'"
-        },
-        {
-          "Culture": "en-GB",
-          "Message": "'en.$ParameterType.Name.5'"
-        }
-      ]
-    }
-  },
-  "AvailableData_length": 228,
-  "AvailableData_sample": [
+  "allLocations": [
     {
-      "ID": "A2BGH1",
-      "Location": "A2B",
-      "Parameter": "GH1",
-      "CurrentInterval": 30,
-      "Publications": [
-        "live_data_pub"
+      "ID": "A2B",
+      "name": "A2 - Buoy",
+      "lat": 51.3597222222222,
+      "lon": 3.11983333333333,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
       ]
     },
     {
-      "ID": "A2BGHA",
-      "Location": "A2B",
-      "Parameter": "GHA",
-      "CurrentInterval": 30,
-      "Publications": [
-        "live_data_pub"
+      "ID": "AKZ",
+      "name": "Akkaert-Southwest - Buoy",
+      "lat": 51.4161111111111,
+      "lon": 2.81861111111111,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
       ]
     },
     {
-      "ID": "A2BGTZ",
-      "Location": "A2B",
-      "Parameter": "GTZ",
-      "CurrentInterval": 30,
-      "Publications": [
-        "live_data_pub"
+      "ID": "BL7",
+      "name": "Blankenberge - Wind measurement",
+      "lat": 51.315833,
+      "lon": 3.105556,
+      "parameters": [
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "BLB",
+      "name": "Blankenberge - Buoy",
+      "lat": 51.3163722222222,
+      "lon": 3.10439444444444,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "BLK",
+      "name": "Blankenberge - Tide",
+      "lat": 51.3105555555556,
+      "lon": 3.11638888888889,
+      "parameters": [
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "BVH",
+      "name": "Bol van Heist - Buoy",
+      "lat": 51.3919444444444,
+      "lon": 3.20055555555556,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "KWI",
+      "name": "Kwintebank - Buoy",
+      "lat": 51.3491666666667,
+      "lon": 2.70722222222222,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "MP0",
+      "name": "Wandelaar - Measuring pile",
+      "lat": 51.3944444444444,
+      "lon": 3.04583333333333,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "SR3 (Flow direction cell 3)",
+        "SV3 (Flow rate cell 3)",
+        "TLU (Air temperature)",
+        "TZW (Sea water temperature)",
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WS5 (Tide TAW)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "MP1",
+      "name": "A2 -  Measuring pile",
+      "lat": 51.3605555555556,
+      "lon": 3.11833333333333,
+      "parameters": [
+        "LDR (Air pressure)",
+        "TZW (Sea water temperature)",
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "MP2",
+      "name": "Appelzak - Measuring pile",
+      "lat": 51.3627777777778,
+      "lon": 3.29,
+      "parameters": [
+        "LDR (Air pressure)",
+        "TZW (Sea water temperature)",
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "MP3",
+      "name": "Bol van Heist - Measuring pile",
+      "lat": 51.3897222222222,
+      "lon": 3.19861111111111,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "SR3 (Flow direction cell 3)",
+        "SV3 (Flow rate cell 3)",
+        "TLU (Air temperature)",
+        "TZW (Sea water temperature)",
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WS5 (Tide TAW)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "MP4",
+      "name": "Scheur Wielingen - Measuring pile",
+      "lat": 51.4183333333333,
+      "lon": 3.29861111111111,
+      "parameters": [
+        "LDR (Air pressure)",
+        "SR3 (Flow direction cell 3)",
+        "SV3 (Flow rate cell 3)",
+        "TLU (Air temperature)",
+        "TZW (Sea water temperature)",
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WS5 (Tide TAW)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "MP7",
+      "name": "Westhinder - Measuring pile",
+      "lat": 51.3886111111111,
+      "lon": 2.43777777777778,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "TLU (Air temperature)",
+        "TZW (Sea water temperature)",
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WS5 (Tide TAW)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "NP7",
+      "name": "Nieuwpoort - Wind measurement",
+      "lat": 51.1558333333333,
+      "lon": 2.71666666666667,
+      "parameters": [
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "NPB",
+      "name": "Nieuwpoort - Buoy",
+      "lat": 51.1613888888889,
+      "lon": 2.69083333333333,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "H01 (1% wave height)",
+        "HLF (Height waves with period > 10 s)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "NPT",
+      "name": "Nieuwpoort - Tide",
+      "lat": 51.1505555555556,
+      "lon": 2.72805555555556,
+      "parameters": [
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "ODK",
+      "name": "Oostdyckbank - Buoy",
+      "lat": 51.2747222222222,
+      "lon": 2.46416666666667,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)"
+      ]
+    },
+    {
+      "ID": "OHM",
+      "name": "Ostend harbour - Tide",
+      "lat": 51.2342861111111,
+      "lon": 2.92668055555556,
+      "parameters": [
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "OMP",
+      "name": "Ostend - Weather station",
+      "lat": 51.2376638888889,
+      "lon": 2.93014722222222,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "NSI (Precipitation)",
+        "TGR (Ground temperature)",
+        "TLU (Air temperature)",
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))",
+        "ZON (Solar radiation)"
+      ]
+    },
+    {
+      "ID": "ONS",
+      "name": "Ostend Noodstrand - Buoy",
+      "lat": 51.2380555555556,
+      "lon": 2.90833333333333,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "OPO",
+      "name": "Ostend Poortjes - Buoy",
+      "lat": 51.2891666666667,
+      "lon": 2.86333333333333,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "OS7",
+      "name": "Ostend - Wind measurement",
+      "lat": 51.2375,
+      "lon": 2.92416666666667,
+      "parameters": [
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "OSN",
+      "name": "Ostend North - Buoy",
+      "lat": 51.3516666666667,
+      "lon": 2.88333333333333,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "OST",
+      "name": "Ostend eastern palisade - Buoy",
+      "lat": 51.2468333333333,
+      "lon": 2.92766666666667,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "RA1",
+      "name": "Raversijde 1 - Buoy",
+      "lat": 51.2112222222222,
+      "lon": 2.84211111111111,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "RA2",
+      "name": "Raversijde 2 - Buoy",
+      "lat": 51.2366666666667,
+      "lon": 2.81277777777778,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "RAV",
+      "name": "Raversijde - Buoy",
+      "lat": 51.2202777777778,
+      "lon": 2.86916666666667,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "SWI",
+      "name": "Scheur Wielingen - Buoy",
+      "lat": 51.4013888888889,
+      "lon": 3.30222222222222,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "THZ",
+      "name": "Thorntonbank South - Buoy",
+      "lat": 51.565,
+      "lon": 2.98694444444444,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "TRG",
+      "name": "Trapegeer - Buoy",
+      "lat": 51.1375,
+      "lon": 2.58305555555556,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "WDL",
+      "name": "Wandelaar - Buoy",
+      "lat": 51.3922222222222,
+      "lon": 3.05055555555556,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "H01 (1% wave height)",
+        "HLF (Height waves with period > 10 s)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "WHI",
+      "name": "Westhinder - Buoy",
+      "lat": 51.3811111111111,
+      "lon": 2.43583333333333,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "ZDI",
+      "name": "Zeebrugge Dam instrumentation - Weather station",
+      "lat": 51.3541666666667,
+      "lon": 3.17222222222222,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "NSI (Precipitation)",
+        "TLU (Air temperature)",
+        "WC1 (Max 1-second wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))",
+        "ZON (Solar radiation)"
+      ]
+    },
+    {
+      "ID": "ZHG",
+      "name": "Zwin - Buoy",
+      "lat": 51.3719444444444,
+      "lon": 3.35861111111111,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "RHF (High frequent wave direction)",
+        "RLF (Low frequent wave direction)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "ZJK",
+      "name": "Zeebrugge Januskop - Wind measurement",
+      "lat": 51.3602777777778,
+      "lon": 3.1875,
+      "parameters": [
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))"
+      ]
+    },
+    {
+      "ID": "ZLD",
+      "name": "Zeebrugge Leopold II dam - Tide",
+      "lat": 51.3463888888889,
+      "lon": 3.20027777777778,
+      "parameters": [
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "ZMP",
+      "name": "Zeebrugge - Weather station",
+      "lat": 51.3344444444444,
+      "lon": 3.21861111111111,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "NSI (Precipitation)",
+        "TGR (Ground temperature)",
+        "TLU (Air temperature)",
+        "TNB (Wet bulb temperature)",
+        "WC1 (Max 1-second wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))",
+        "ZON (Solar radiation)"
+      ]
+    },
+    {
+      "ID": "ZOK",
+      "name": "Zeebrugge Zandopvangkade - Buoy",
+      "lat": 51.3505555555556,
+      "lon": 3.19638888888889,
+      "parameters": [
+        "GH1 (10% highest waves)",
+        "GHA (Wave height)",
+        "GTZ (Average wave period)",
+        "HLF (Height waves with period > 10 s)",
+        "TZW (Sea water temperature)"
+      ]
+    },
+    {
+      "ID": "ZWD",
+      "name": "Zeebrugge Wielingendok - Tide",
+      "lat": 51.3552777777778,
+      "lon": 3.17805555555556,
+      "parameters": [
+        "WS5 (Tide TAW)"
+      ]
+    },
+    {
+      "ID": "ZWN",
+      "name": "Zwin - Weather station",
+      "lat": 51.3402777777778,
+      "lon": 3.37166666666667,
+      "parameters": [
+        "HUM (Relative humidity)",
+        "LDR (Air pressure)",
+        "NSI (Precipitation)",
+        "TGR (Ground temperature)",
+        "TLU (Air temperature)",
+        "WC3 (Max 3-seconds wind gust (at 10 m height))",
+        "WRS (Average wind direction)",
+        "WVC (Average wind speed (at 10 m height))",
+        "ZON (Solar radiation)"
       ]
     }
   ],
-  "ProjectionWKT_value": "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]]"
+  "nearestPerSpot": {
+    "oostende": [
+      {
+        "ID": "OHM",
+        "name": "Ostend harbour - Tide",
+        "distKm": 1,
+        "parameters": [
+          "WS5 (Tide TAW)"
+        ]
+      },
+      {
+        "ID": "OS7",
+        "name": "Ostend - Wind measurement",
+        "distKm": 1.2,
+        "parameters": [
+          "WC3 (Max 3-seconds wind gust (at 10 m height))",
+          "WRS (Average wind direction)",
+          "WVC (Average wind speed (at 10 m height))"
+        ]
+      },
+      {
+        "ID": "ONS",
+        "name": "Ostend Noodstrand - Buoy",
+        "distKm": 1.3,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "HLF (Height waves with period > 10 s)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "OMP",
+        "name": "Ostend - Weather station",
+        "distKm": 1.4,
+        "parameters": [
+          "HUM (Relative humidity)",
+          "LDR (Air pressure)",
+          "NSI (Precipitation)",
+          "TGR (Ground temperature)",
+          "TLU (Air temperature)",
+          "WC3 (Max 3-seconds wind gust (at 10 m height))",
+          "WRS (Average wind direction)",
+          "WVC (Average wind speed (at 10 m height))",
+          "ZON (Solar radiation)"
+        ]
+      },
+      {
+        "ID": "OST",
+        "name": "Ostend eastern palisade - Buoy",
+        "distKm": 2.3,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "HLF (Height waves with period > 10 s)",
+          "RHF (High frequent wave direction)",
+          "RLF (Low frequent wave direction)",
+          "TZW (Sea water temperature)"
+        ]
+      }
+    ],
+    "knokke-cadzand": [
+      {
+        "ID": "ZHG",
+        "name": "Zwin - Buoy",
+        "distKm": 2.2,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "HLF (Height waves with period > 10 s)",
+          "RHF (High frequent wave direction)",
+          "RLF (Low frequent wave direction)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "ZWN",
+        "name": "Zwin - Weather station",
+        "distKm": 3.5,
+        "parameters": [
+          "HUM (Relative humidity)",
+          "LDR (Air pressure)",
+          "NSI (Precipitation)",
+          "TGR (Ground temperature)",
+          "TLU (Air temperature)",
+          "WC3 (Max 3-seconds wind gust (at 10 m height))",
+          "WRS (Average wind direction)",
+          "WVC (Average wind speed (at 10 m height))",
+          "ZON (Solar radiation)"
+        ]
+      },
+      {
+        "ID": "MP2",
+        "name": "Appelzak - Measuring pile",
+        "distKm": 7,
+        "parameters": [
+          "LDR (Air pressure)",
+          "TZW (Sea water temperature)",
+          "WS5 (Tide TAW)"
+        ]
+      },
+      {
+        "ID": "SWI",
+        "name": "Scheur Wielingen - Buoy",
+        "distKm": 7,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "HLF (Height waves with period > 10 s)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "MP4",
+        "name": "Scheur Wielingen - Measuring pile",
+        "distKm": 8.3,
+        "parameters": [
+          "LDR (Air pressure)",
+          "SR3 (Flow direction cell 3)",
+          "SV3 (Flow rate cell 3)",
+          "TLU (Air temperature)",
+          "TZW (Sea water temperature)",
+          "WC3 (Max 3-seconds wind gust (at 10 m height))",
+          "WRS (Average wind direction)",
+          "WS5 (Tide TAW)",
+          "WVC (Average wind speed (at 10 m height))"
+        ]
+      }
+    ],
+    "de-panne": [
+      {
+        "ID": "TRG",
+        "name": "Trapegeer - Buoy",
+        "distKm": 4.9,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "HLF (Height waves with period > 10 s)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "NPB",
+        "name": "Nieuwpoort - Buoy",
+        "distKm": 10.6,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "H01 (1% wave height)",
+          "HLF (Height waves with period > 10 s)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "NP7",
+        "name": "Nieuwpoort - Wind measurement",
+        "distKm": 11.6,
+        "parameters": [
+          "WC3 (Max 3-seconds wind gust (at 10 m height))",
+          "WRS (Average wind direction)",
+          "WVC (Average wind speed (at 10 m height))"
+        ]
+      },
+      {
+        "ID": "NPT",
+        "name": "Nieuwpoort - Tide",
+        "distKm": 11.9,
+        "parameters": [
+          "WS5 (Tide TAW)"
+        ]
+      },
+      {
+        "ID": "ODK",
+        "name": "Oostdyckbank - Buoy",
+        "distKm": 21.8,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)"
+        ]
+      }
+    ],
+    "bray-dunes": [
+      {
+        "ID": "TRG",
+        "name": "Trapegeer - Buoy",
+        "distKm": 8.2,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "HLF (Height waves with period > 10 s)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "NPB",
+        "name": "Nieuwpoort - Buoy",
+        "distKm": 15.3,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)",
+          "GTZ (Average wave period)",
+          "H01 (1% wave height)",
+          "HLF (Height waves with period > 10 s)",
+          "TZW (Sea water temperature)"
+        ]
+      },
+      {
+        "ID": "NP7",
+        "name": "Nieuwpoort - Wind measurement",
+        "distKm": 16.5,
+        "parameters": [
+          "WC3 (Max 3-seconds wind gust (at 10 m height))",
+          "WRS (Average wind direction)",
+          "WVC (Average wind speed (at 10 m height))"
+        ]
+      },
+      {
+        "ID": "NPT",
+        "name": "Nieuwpoort - Tide",
+        "distKm": 16.8,
+        "parameters": [
+          "WS5 (Tide TAW)"
+        ]
+      },
+      {
+        "ID": "ODK",
+        "name": "Oostdyckbank - Buoy",
+        "distKm": 22.4,
+        "parameters": [
+          "GH1 (10% highest waves)",
+          "GHA (Wave height)"
+        ]
+      }
+    ]
+  }
 }
