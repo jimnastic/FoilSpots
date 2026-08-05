@@ -32,7 +32,8 @@ async function login(debug) {
     throw new Error('MVB_USERNAME / MVB_PASSWORD environment variables are not set (add as GitHub repo secrets).');
   }
   const body = new URLSearchParams({ grant_type: 'password', username, password });
-  const resp = await fetch(`${BASE}/V2/Token`, {
+  // Login is NOT versioned — /Token, not /V2/Token (confirmed: the latter 404s).
+  const resp = await fetch(`${BASE}/Token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body.toString(),
