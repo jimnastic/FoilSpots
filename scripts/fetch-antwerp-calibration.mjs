@@ -195,7 +195,9 @@ async function main() {
       continue;
     }
     if (!stationCode) {
-      console.log(`  No wind-equipped station found within ${SEARCH_RADIUS_KM}km with a reading newer than ${MAX_AGE_HOURS}h.`);
+      const nearest = debug.spots[spotId].windStationSearch?.top5?.[0];
+      const nearestNote = nearest ? ` Nearest wind-equipped station (${nearest.code}) is ${Math.round(nearest.ageHours / 24)} days stale — looks decommissioned, not a search bug.` : '';
+      console.log(`  No wind-equipped station found within ${SEARCH_RADIUS_KM}km with a reading newer than ${MAX_AGE_HOURS}h.${nearestNote}`);
       continue;
     }
     console.log(`  -> using ${stationCode}`);
@@ -233,14 +235,23 @@ async function main() {
       continue;
     }
 
+    // RWS flags each reading with a quality code; "99" means gap/missing-value sentinel and
+    // can carry a garbage numeric value (this is what produced one absurd 63kn "adjustment"
+    // in an earlier run — a handful of sentinel values dragging a band's average). Per RWS's
+    // own docs, only these codes are considered trustworthy.
+    const OK_QUALITY = new Set(['00', '10', '20', '25', '30', '40']);
+    const isGoodReading = o => OK_QUALITY.has(o.WaarnemingMetadata?.Kwaliteitswaardecode);
+
     // Index actual dir readings by hour so we can pair with speed readings and archive.
     const dirByHour = new Map();
     for (const d of dirObs) {
+      if (!isGoodReading(d)) continue;
       const hourKey = d.Tijdstip.slice(0, 13);
       dirByHour.set(hourKey, Number(d.Meetwaarde?.Waarde_Numeriek));
     }
     const speedByHour = new Map();
     for (const sObs of speedObs) {
+      if (!isGoodReading(sObs)) continue;
       const hourKey = sObs.Tijdstip.slice(0, 13);
       // Multiple 10-min readings per hour — keep the last one seen for that hour.
       speedByHour.set(hourKey, Number(sObs.Meetwaarde?.Waarde_Numeriek));
@@ -258,23 +269,41 @@ async function main() {
     DIR_BANDS.forEach(b => bandDeltas[b] = []);
     let pairedCount = 0;
 
+    let droppedImplausible = 0;
     for (const [hourKey, actualSpeed] of speedByHour) {
       const actualDir = dirByHour.get(hourKey);
       const fc = forecastByHour.get(hourKey);
       if (actualDir == null || !fc || fc.speed == null) continue;
+      // A real siting bias is a few knots, not tens — anything wilder than this per-hour is a
+      // data problem (unit mismatch, bad timestamp alignment, etc.), not a genuine forecast
+      // error. Drop it rather than let it distort the band average.
+      if (!(actualSpeed >= 0 && actualSpeed < 80) || Math.abs(actualSpeed - fc.speed) > 40) {
+        droppedImplausible++;
+        continue;
+      }
       const band = bandFor(actualDir);
       bandDeltas[band].push(actualSpeed - fc.speed);
       pairedCount++;
     }
+    if (droppedImplausible) console.log(`  Dropped ${droppedImplausible} implausible hour(s) as likely data errors.`);
 
     debug.spots[spotId].pairedHourCount = pairedCount;
+    debug.spots[spotId].droppedImplausible = droppedImplausible;
     console.log(`  Paired ${pairedCount} hours of actual-vs-forecast.`);
+
+    function median(arr) {
+      const s = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    }
 
     const bandAdj = {};
     for (const band of DIR_BANDS) {
       const deltas = bandDeltas[band];
       if (deltas.length >= 5) {
-        bandAdj[band] = { adj: Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length), sampleCount: deltas.length };
+        // Median rather than mean — robust to the occasional bad reading that slips past the
+        // quality-code and plausibility filters above.
+        bandAdj[band] = { adj: Math.round(median(deltas)), sampleCount: deltas.length };
       } else {
         bandAdj[band] = { adj: null, sampleCount: deltas.length, note: 'fewer than 5 samples, not enough to trust yet' };
       }
