@@ -88,11 +88,13 @@ function isoNow() { return new Date().toISOString(); }
 function isoDaysAgo(n) { return new Date(Date.now() - n * 86400000).toISOString(); }
 
 async function fetchMvbSeries(token, id) {
-  const body = { From: isoDaysAgo(LOOKBACK_DAYS), Till: isoNow(), IDs: [id] };
+  // Confirmed via MVB's published JSON schema (GetData_Request.json): the field names are
+  // StartTime/EndTime, NOT From/Till (my first guess) — that mistake silently returned an
+  // empty Values array rather than an error, which is why the first run came back empty.
+  const body = { StartTime: isoDaysAgo(LOOKBACK_DAYS), EndTime: isoNow(), IDs: [id] };
   const resp = await postJson('/V2/getData', token, body);
-  // Response shape unconfirmed until this runs — inspect defensively, same pattern as the
-  // live-data script. Expecting something like { Values: [{ID, Values:[{Timestamp,Value}]}] }
-  // or a flat array; handle both.
+  // Response shape confirmed via GetDataModel.json: { StartTime, EndTime, Intervals,
+  // Values: [ { ID, StartTime, EndTime, MinValue, MaxValue, Values: [{Timestamp, Value}] } ] }
   return resp;
 }
 
