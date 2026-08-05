@@ -22,9 +22,12 @@ const DEBUG_PATH = path.join(SITE_DIR, 'mvb-debug.json');
 
 const BASE = 'https://api.meetnetvlaamsebanken.be';
 
-async function login() {
+async function login(debug) {
   const username = process.env.MVB_USERNAME;
   const password = process.env.MVB_PASSWORD;
+  debug.hasUsername = !!username;
+  debug.hasPassword = !!password;
+  debug.usernameLength = username ? username.length : 0; // length only, never the value
   if (!username || !password) {
     throw new Error('MVB_USERNAME / MVB_PASSWORD environment variables are not set (add as GitHub repo secrets).');
   }
@@ -35,6 +38,10 @@ async function login() {
     body: body.toString(),
   });
   const text = await resp.text();
+  debug.loginStatus = resp.status;
+  // Never log the response body verbatim in case it ever echoes anything sensitive — but MVB's
+  // error shape so far has just been {"Message": "..."}, safe to keep for diagnosis.
+  debug.loginResponsePreview = text.slice(0, 300);
   if (!resp.ok) throw new Error(`Login failed: HTTP ${resp.status}: ${text.slice(0, 300)}`);
   let json;
   try { json = JSON.parse(text); } catch { throw new Error(`Login response not JSON: ${text.slice(0, 300)}`); }
@@ -51,11 +58,9 @@ async function getJson(urlPath, token) {
   try { return JSON.parse(text); } catch { throw new Error(`Non-JSON from ${urlPath}: ${text.slice(0, 300)}`); }
 }
 
-async function main() {
-  const debug = { generatedAt: new Date().toISOString() };
-
+async function run(debug) {
   console.log('Logging in...');
-  const token = await login();
+  const token = await login(debug);
   console.log('Login OK, token acquired.');
 
   console.log('Checking /V2/ping with token...');
@@ -78,12 +83,22 @@ async function main() {
       debug[`${key}_value`] = val;
     }
   }
-
-  fs.writeFileSync(DEBUG_PATH, JSON.stringify(debug, null, 2));
-  console.log(`Wrote ${DEBUG_PATH}`);
 }
 
-main().catch(err => {
-  console.error('FATAL:', err);
-  process.exitCode = 1;
-});
+async function main() {
+  const debug = { generatedAt: new Date().toISOString() };
+  try {
+    await run(debug);
+  } catch (err) {
+    debug.error = String(err && err.message || err);
+    console.error('FATAL:', err);
+    process.exitCode = 1;
+  } finally {
+    // Always write whatever we learned, success or failure — this is a discovery script,
+    // the partial state IS the useful output when something goes wrong.
+    fs.writeFileSync(DEBUG_PATH, JSON.stringify(debug, null, 2));
+    console.log(`Wrote ${DEBUG_PATH}`);
+  }
+}
+
+main();
