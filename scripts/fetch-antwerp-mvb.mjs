@@ -10,7 +10,7 @@
 // of the closest-on-paper stations (OS7, ONS, ZHG) turned out to have no live series and were
 // swapped for the nearest station that IS live:
 //   Oostende:        wind OMP "Ostend - Weather station" (1.4km, live), water temp OST "Ostend eastern palisade - Buoy" (2.3km, live)
-//   Knokke/Cadzand:  wind ZWN "Zwin - Weather station" (3.5km, live), water temp SWI "Scheur Wielingen - Buoy" (7.0km, live — nearest live temp buoy; ZHG on-paper closer but not currently publishing)
+//   Knokke/Cadzand:  wind MP4 "Scheur Wielingen - Measuring pile" (8.3km, live, genuinely offshore — swapped from ZWN "Zwin - Weather station" which is land-sited near the Zwin nature reserve), water temp SWI "Scheur Wielingen - Buoy" (7.0km, live, same offshore area as MP4)
 //   De Panne:        wind NP7 (11.6km, live), water temp TRG (4.9km, live)
 //   Bray-Dunes (FR):  wind NP7 (16.5km, proxy), water temp TRG (8.2km, proxy)
 // Parameter WVC (wind speed) and WC3 (gust) are in m/s — MVB does not offer knots directly.
@@ -32,7 +32,7 @@ const MS_TO_KN = 1.943844;
 
 const SPOT_STATIONS = {
   oostende:          { windStation: 'OMP', tempStation: 'OST' },
-  'knokke-cadzand':  { windStation: 'ZWN', tempStation: 'SWI' },
+  'knokke-cadzand':  { windStation: 'MP4', tempStation: 'SWI' },
   'de-panne':        { windStation: 'NP7', tempStation: 'TRG' },
   'bray-dunes':      { windStation: 'NP7', tempStation: 'TRG' },
 };

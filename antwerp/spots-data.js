@@ -42,7 +42,7 @@ const SPOTS = [
     notes:'Roze Villa (western end) is the safest launch, works even in slightly cross-offshore wind.' },
   { id:'knokke-cadzand', name:'Knokke-Heist / Cadzand-Bad', area:'be', water:'wave', skill:'intermediate',
     lat:51.3700, lon:3.3900, adj:0, vc:270, vt:45, drive:'55 min from Berchem',
-    station:{ network:'mvb', code:'SWI', label:'Scheur Wielingen Buoy — water temp (MVB); wind via ZWN Zwin weather station' },
+    station:{ network:'mvb', code:'SWI', label:'Scheur Wielingen Buoy — water temp (MVB); wind via MP4 Scheur Wielingen measuring pile (offshore)' },
     desc:'Closest open-coast spot from Antwerp. Beach faces roughly NW, so NW is side-shore (ideal). Choppy in light wind, building to 1–2m waves once it’s really blowing.',
     warnings:['Groynes — same hazard as Oostende','Tide-dependent sandbanks can create strong currents'],
     parking:{ type:'paid', notes:'Knokke: near Zwinlaan. Cadzand: paid, in the village.' },

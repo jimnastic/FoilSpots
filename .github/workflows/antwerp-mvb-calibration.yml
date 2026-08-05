@@ -1,0 +1,38 @@
+name: Antwerp MVB (Belgian coast) wind calibration
+
+on:
+  workflow_dispatch: {}   # manual only for now — will switch to a monthly cron once verified
+
+permissions:
+  contents: write
+
+jobs:
+  compute-calibration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compute MVB wind forecast-bias calibration
+        env:
+          MVB_USERNAME: ${{ secrets.MVB_USERNAME }}
+          MVB_PASSWORD: ${{ secrets.MVB_PASSWORD }}
+        run: node scripts/fetch-antwerp-mvb-calibration.mjs
+
+      - name: Commit mvb-calibration.json / mvb-calibration-debug.json if changed
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add antwerp/mvb-calibration.json antwerp/mvb-calibration-debug.json
+          if git diff --cached --quiet; then
+            echo "No change"
+          else
+            git commit -m "Update MVB wind calibration [skip ci]"
+            # Fully regenerated every run — on conflict, keep OUR freshly-computed data.
+            git pull --rebase -X theirs
+            git push
+          fi
