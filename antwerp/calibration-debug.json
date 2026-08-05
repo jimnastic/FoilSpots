@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T11:11:17.681Z",
+  "generatedAt": "2026-08-05T11:14:48.239Z",
   "lookbackDays": 90,
   "windMetaDiscovery": {
     "speed": {
@@ -237,7 +237,8 @@
         "wind_direction_10m"
       ],
       "archiveHourlyLength": 2184,
-      "pairedHourCount": 2161
+      "pairedHourCount": 2134,
+      "droppedImplausible": 0
     }
   }
 }

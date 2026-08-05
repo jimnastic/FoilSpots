@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-08-05T11:11:37.092Z",
+  "generatedAt": "2026-08-05T11:15:11.369Z",
   "lookbackDays": 90,
   "spots": {
     "oesterdam": {
       "stationCode": "tholen.bergsediepsluis",
-      "pairedHourCount": 2161,
+      "pairedHourCount": 2134,
       "bandAdj": {
         "N": {
           "adj": 0,
@@ -31,8 +31,8 @@
           "sampleCount": 371
         },
         "W": {
-          "adj": 63,
-          "sampleCount": 427
+          "adj": 0,
+          "sampleCount": 400
         },
         "NW": {
           "adj": 0,
