@@ -1,0 +1,9 @@
+{
+  "generatedAt": "2026-08-05T11:45:29.595Z",
+  "hasUsername": true,
+  "hasPassword": true,
+  "usernameLength": 22,
+  "loginStatus": 404,
+  "loginResponsePreview": "{\"Message\":\"No HTTP resource was found that matches the request URI 'https://api.meetnetvlaamsebanken.be/V2/Token'.\"}",
+  "error": "Login failed: HTTP 404: {\"Message\":\"No HTTP resource was found that matches the request URI 'https://api.meetnetvlaamsebanken.be/V2/Token'.\"}"
+}
