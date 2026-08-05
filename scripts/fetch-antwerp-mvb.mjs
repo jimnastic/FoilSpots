@@ -4,13 +4,19 @@
 // pipeline's antwerp/live.json so the two workflows (different secrets, different schedules)
 // never touch the same file and can't collide. The site merges both client-side.
 //
-// Station/parameter codes below were confirmed via a discovery pass (see git history of this
-// file) against the real MVB catalog — not guessed. Confirmed nearest genuine station per spot:
-//   Oostende:        wind OS7 (1.2km), water temp ONS (1.3km)
-//   Knokke/Cadzand:  wind ZWN (3.5km), water temp ZHG (2.2km)
-//   De Panne:        wind NP7 (11.6km), water temp TRG (4.9km)
+// Station/parameter codes below were confirmed via a discovery pass against the real MVB
+// catalog, THEN cross-checked against a live /V2/currentData response (2026-08-05) — the
+// catalog lists more AvailableData combos than are actually publishing right now, so a few
+// of the closest-on-paper stations (OS7, ONS, ZHG) turned out to have no live series and were
+// swapped for the nearest station that IS live:
+//   Oostende:        wind OMP "Ostend - Weather station" (1.4km, live), water temp OST "Ostend eastern palisade - Buoy" (2.3km, live)
+//   Knokke/Cadzand:  wind ZWN "Zwin - Weather station" (3.5km, live), water temp SWI "Scheur Wielingen - Buoy" (7.0km, live — nearest live temp buoy; ZHG on-paper closer but not currently publishing)
+//   De Panne:        wind NP7 (11.6km, live), water temp TRG (4.9km, live)
 //   Bray-Dunes (FR):  wind NP7 (16.5km, proxy), water temp TRG (8.2km, proxy)
 // Parameter WVC (wind speed) and WC3 (gust) are in m/s — MVB does not offer knots directly.
+// NOTE: /V2/currentData?ids=... does NOT filter server-side — it returns ALL ~176 live series
+// regardless of the ids= param. This script requests the narrower list anyway (harmless, and
+// documents intent) but filters client-side against SPOT_STATIONS after the fact.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,8 +31,8 @@ const BASE = 'https://api.meetnetvlaamsebanken.be';
 const MS_TO_KN = 1.943844;
 
 const SPOT_STATIONS = {
-  oostende:          { windStation: 'OS7', tempStation: 'ONS' },
-  'knokke-cadzand':  { windStation: 'ZWN', tempStation: 'ZHG' },
+  oostende:          { windStation: 'OMP', tempStation: 'OST' },
+  'knokke-cadzand':  { windStation: 'ZWN', tempStation: 'SWI' },
   'de-panne':        { windStation: 'NP7', tempStation: 'TRG' },
   'bray-dunes':      { windStation: 'NP7', tempStation: 'TRG' },
 };
