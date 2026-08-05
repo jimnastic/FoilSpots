@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-08-05T11:58:26.615Z",
+  "spots": {
+    "knokke-cadzand": {
+      "windSpeedKn": 13.8012924,
+      "windDir": 233,
+      "windStationCode": "ZWN"
+    },
+    "de-panne": {
+      "waterTempC": 22.2,
+      "ts": "2026-08-05T11:30:00+00:00",
+      "stationCode": "TRG",
+      "windSpeedKn": 22.9373592,
+      "windDir": 246,
+      "windStationCode": "NP7"
+    },
+    "bray-dunes": {
+      "waterTempC": 22.2,
+      "ts": "2026-08-05T11:30:00+00:00",
+      "stationCode": "TRG",
+      "windSpeedKn": 22.9373592,
+      "windDir": 246,
+      "windStationCode": "NP7"
+    }
+  }
+}

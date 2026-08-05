@@ -1,942 +1,1075 @@
 {
-  "generatedAt": "2026-08-05T11:51:22.084Z",
-  "hasUsername": true,
-  "hasPassword": true,
-  "usernameLength": 22,
-  "loginStatus": 200,
-  "loginResponsePreview": "{\".expires\":\"Wed, 05 Aug 2026 12:51:22 GMT\",\".issued\":\"Wed, 05 Aug 2026 11:51:22 GMT\",\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCIsImtpZCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCJ9.eyJpc3MiOiJodHRwczovL3Nzby5tZWV0bmV0dmxhYW1zZWJhbmtlbi5iZS9pZGVud",
-  "catalogTopLevelKeys": [
-    "Customer",
-    "Locations",
-    "Parameters",
-    "ParameterTypes",
-    "AvailableData",
-    "ProjectionWKT"
+  "generatedAt": "2026-08-05T11:58:24.387Z",
+  "requestedIds": [
+    "OS7WVC",
+    "OS7WRS",
+    "ONSTZW",
+    "ZWNWVC",
+    "ZWNWRS",
+    "ZHGTZW",
+    "NP7WVC",
+    "NP7WRS",
+    "TRGTZW"
   ],
-  "allParameters": [
+  "currentDataRaw": [
     {
-      "ID": "GH1",
-      "name": "10% highest waves",
-      "unit": "cm",
-      "typeId": 1
+      "ID": "A2BGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 112
     },
     {
-      "ID": "GHA",
-      "name": "Wave height",
-      "unit": "cm",
-      "typeId": 1
+      "ID": "A2BGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 87
     },
     {
-      "ID": "GTZ",
-      "name": "Average wave period",
-      "unit": "s",
-      "typeId": 1
+      "ID": "A2BGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.98
     },
     {
-      "ID": "H01",
-      "name": "1% wave height",
-      "unit": "cm",
-      "typeId": 1
+      "ID": "A2BHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 5
     },
     {
-      "ID": "HLF",
-      "name": "Height waves with period > 10 s",
-      "unit": "cm",
-      "typeId": 1
+      "ID": "A2BRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 260
     },
     {
-      "ID": "HUM",
-      "name": "Relative humidity",
-      "unit": "%",
-      "typeId": 3
+      "ID": "A2BRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 289
     },
     {
-      "ID": "LDR",
-      "name": "Air pressure",
-      "unit": "hPa",
-      "typeId": 3
+      "ID": "A2BTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.4
     },
     {
-      "ID": "NSI",
-      "name": "Precipitation",
-      "unit": "mm",
-      "typeId": 3
+      "ID": "AKZGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 148
     },
     {
-      "ID": "RHF",
-      "name": "High frequent wave direction",
-      "unit": "deg",
-      "typeId": 1
+      "ID": "AKZGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 116
     },
     {
-      "ID": "RLF",
-      "name": "Low frequent wave direction",
-      "unit": "deg",
-      "typeId": 1
+      "ID": "AKZGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.43
     },
     {
-      "ID": "SR3",
-      "name": "Flow direction cell 3",
-      "unit": "deg",
-      "typeId": 2
+      "ID": "AKZHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 6
     },
     {
-      "ID": "SV3",
-      "name": "Flow rate cell 3",
-      "unit": "m/s",
-      "typeId": 2
+      "ID": "AKZRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 252
     },
     {
-      "ID": "TGR",
-      "name": "Ground temperature",
-      "unit": "°C",
-      "typeId": 3
+      "ID": "AKZRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 281
     },
     {
-      "ID": "TLU",
-      "name": "Air temperature",
-      "unit": "°C",
-      "typeId": 3
+      "ID": "AKZTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 21.7
     },
     {
-      "ID": "TNB",
-      "name": "Wet bulb temperature",
-      "unit": "°C",
-      "typeId": 3
+      "ID": "BL7WC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 15.8
     },
     {
-      "ID": "TZW",
-      "name": "Sea water temperature",
-      "unit": "°C",
-      "typeId": 3
+      "ID": "BL7WRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 249
     },
     {
-      "ID": "WC1",
-      "name": "Max 1-second wind gust (at 10 m height)",
-      "unit": "m/s",
-      "typeId": 4
+      "ID": "BL7WVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 11.9
     },
     {
-      "ID": "WC3",
-      "name": "Max 3-seconds wind gust (at 10 m height)",
-      "unit": "m/s",
-      "typeId": 4
+      "ID": "BLKWS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 114
     },
     {
-      "ID": "WRS",
-      "name": "Average wind direction",
-      "unit": "deg",
-      "typeId": 4
+      "ID": "BVHGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 108
     },
     {
-      "ID": "WS5",
-      "name": "Tide TAW",
-      "unit": "cm",
-      "typeId": 2
+      "ID": "BVHGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 85
     },
     {
-      "ID": "WVC",
-      "name": "Average wind speed (at 10 m height)",
-      "unit": "m/s",
-      "typeId": 4
+      "ID": "BVHGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.88
     },
     {
-      "ID": "ZON",
-      "name": "Solar radiation",
-      "unit": "W/m²",
-      "typeId": 3
+      "ID": "BVHHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4
+    },
+    {
+      "ID": "BVHRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 262
+    },
+    {
+      "ID": "BVHRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 272
+    },
+    {
+      "ID": "BVHTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.2
+    },
+    {
+      "ID": "KWIGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 140
+    },
+    {
+      "ID": "KWIGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 110
+    },
+    {
+      "ID": "KWIGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.25
+    },
+    {
+      "ID": "KWIHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 5
+    },
+    {
+      "ID": "KWIRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 254
+    },
+    {
+      "ID": "KWIRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 268
+    },
+    {
+      "ID": "KWITZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22
+    },
+    {
+      "ID": "MP0HUM",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 76
+    },
+    {
+      "ID": "MP0LDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1013.2
+    },
+    {
+      "ID": "MP0TLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 20.9
+    },
+    {
+      "ID": "MP0WC3",
+      "Timestamp": "2026-08-05T11:40:00+00:00",
+      "Value": 11
+    },
+    {
+      "ID": "MP0WRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 253
+    },
+    {
+      "ID": "MP0WS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 121
+    },
+    {
+      "ID": "MP0WVC",
+      "Timestamp": "2026-08-05T11:40:00+00:00",
+      "Value": 9.6
+    },
+    {
+      "ID": "MP1LDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1013.2
+    },
+    {
+      "ID": "MP1WS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 111
+    },
+    {
+      "ID": "MP2LDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1013
+    },
+    {
+      "ID": "MP3HUM",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 74
+    },
+    {
+      "ID": "MP3LDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1012.9
+    },
+    {
+      "ID": "MP3TLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 21.5
+    },
+    {
+      "ID": "MP3WC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 10.2
+    },
+    {
+      "ID": "MP3WRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 258
+    },
+    {
+      "ID": "MP3WVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 8.6
+    },
+    {
+      "ID": "MP4LDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1013
+    },
+    {
+      "ID": "MP4TLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 21.5
+    },
+    {
+      "ID": "MP4WC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 9.3
+    },
+    {
+      "ID": "MP4WRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 261
+    },
+    {
+      "ID": "MP4WS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 115
+    },
+    {
+      "ID": "MP4WVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 7.9
+    },
+    {
+      "ID": "MP7HUM",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 79
+    },
+    {
+      "ID": "MP7LDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1012.7
+    },
+    {
+      "ID": "MP7TLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 20.1
+    },
+    {
+      "ID": "MP7TZW",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 21
+    },
+    {
+      "ID": "MP7WC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 15.5
+    },
+    {
+      "ID": "MP7WRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 217
+    },
+    {
+      "ID": "MP7WS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 117
+    },
+    {
+      "ID": "MP7WVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 13.4
+    },
+    {
+      "ID": "NP7WC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 12.9
+    },
+    {
+      "ID": "NP7WRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 246
+    },
+    {
+      "ID": "NP7WVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 11.8
+    },
+    {
+      "ID": "NPBGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 83
+    },
+    {
+      "ID": "NPBGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 65
+    },
+    {
+      "ID": "NPBGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.4
+    },
+    {
+      "ID": "NPBHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3
+    },
+    {
+      "ID": "NPBTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.5
+    },
+    {
+      "ID": "NPTWS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 99
+    },
+    {
+      "ID": "OHMWS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 110
+    },
+    {
+      "ID": "OMPHUM",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 58
+    },
+    {
+      "ID": "OMPLDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1013.9
+    },
+    {
+      "ID": "OMPNSI",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 0
+    },
+    {
+      "ID": "OMPTGR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 32.6
+    },
+    {
+      "ID": "OMPTLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 23.7
+    },
+    {
+      "ID": "OMPWC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 11.4
+    },
+    {
+      "ID": "OMPWRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 249
+    },
+    {
+      "ID": "OMPWVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 8.3
+    },
+    {
+      "ID": "OMPZON",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 661
+    },
+    {
+      "ID": "OPOGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 98
+    },
+    {
+      "ID": "OPOGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 77
+    },
+    {
+      "ID": "OPOGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.79
+    },
+    {
+      "ID": "OPOHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 5
+    },
+    {
+      "ID": "OPORHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 259
+    },
+    {
+      "ID": "OPORLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 299
+    },
+    {
+      "ID": "OPOTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.4
+    },
+    {
+      "ID": "OSNGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 125
+    },
+    {
+      "ID": "OSNGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 98
+    },
+    {
+      "ID": "OSNGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.25
+    },
+    {
+      "ID": "OSNHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 5
+    },
+    {
+      "ID": "OSNRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 260
+    },
+    {
+      "ID": "OSNRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 273
+    },
+    {
+      "ID": "OSNTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.5
+    },
+    {
+      "ID": "OSTGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 96
+    },
+    {
+      "ID": "OSTGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 75
+    },
+    {
+      "ID": "OSTGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.64
+    },
+    {
+      "ID": "OSTHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4
+    },
+    {
+      "ID": "OSTRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 269
+    },
+    {
+      "ID": "OSTRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 283
+    },
+    {
+      "ID": "OSTTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.6
+    },
+    {
+      "ID": "RA1GH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 96
+    },
+    {
+      "ID": "RA1GHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 75
+    },
+    {
+      "ID": "RA1GTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.67
+    },
+    {
+      "ID": "RA1HLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4
+    },
+    {
+      "ID": "RA1RHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 259
+    },
+    {
+      "ID": "RA1RLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 277
+    },
+    {
+      "ID": "RA1TZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.6
+    },
+    {
+      "ID": "RA2GH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 115
+    },
+    {
+      "ID": "RA2GHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 91
+    },
+    {
+      "ID": "RA2GTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.98
+    },
+    {
+      "ID": "RA2HLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4
+    },
+    {
+      "ID": "RA2RHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 260
+    },
+    {
+      "ID": "RA2RLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 274
+    },
+    {
+      "ID": "RA2TZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.2
+    },
+    {
+      "ID": "SWIGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 122
+    },
+    {
+      "ID": "SWIGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 96
+    },
+    {
+      "ID": "SWIGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.21
+    },
+    {
+      "ID": "SWIHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 5
+    },
+    {
+      "ID": "SWITZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.4
+    },
+    {
+      "ID": "THZGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 160
+    },
+    {
+      "ID": "THZGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 126
+    },
+    {
+      "ID": "THZGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.46
+    },
+    {
+      "ID": "THZHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 6
+    },
+    {
+      "ID": "THZRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 237
+    },
+    {
+      "ID": "THZRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 252
+    },
+    {
+      "ID": "THZTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 21.7
+    },
+    {
+      "ID": "TRGGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 88
+    },
+    {
+      "ID": "TRGGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 69
+    },
+    {
+      "ID": "TRGGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3.38
+    },
+    {
+      "ID": "TRGHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 3
+    },
+    {
+      "ID": "TRGTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.2
+    },
+    {
+      "ID": "WDLGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 119
+    },
+    {
+      "ID": "WDLGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 94
+    },
+    {
+      "ID": "WDLGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.1
+    },
+    {
+      "ID": "WDLH01",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 140.4
+    },
+    {
+      "ID": "WDLHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 5
+    },
+    {
+      "ID": "WDLTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.4
+    },
+    {
+      "ID": "WHIGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 181
+    },
+    {
+      "ID": "WHIGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 142
+    },
+    {
+      "ID": "WHIGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 4.66
+    },
+    {
+      "ID": "WHIHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 7
+    },
+    {
+      "ID": "WHIRHF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 226
+    },
+    {
+      "ID": "WHIRLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 246
+    },
+    {
+      "ID": "WHITZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 21.4
+    },
+    {
+      "ID": "ZDIHUM",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 74
+    },
+    {
+      "ID": "ZDILDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1012.6
+    },
+    {
+      "ID": "ZDINSI",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 0
+    },
+    {
+      "ID": "ZDITLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 22
+    },
+    {
+      "ID": "ZDIWC1",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 10.9
+    },
+    {
+      "ID": "ZDIWRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 259
+    },
+    {
+      "ID": "ZDIWVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 7.6
+    },
+    {
+      "ID": "ZDIZON",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 209
+    },
+    {
+      "ID": "ZJKWC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 10.9
+    },
+    {
+      "ID": "ZJKWRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 251
+    },
+    {
+      "ID": "ZJKWVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 8.7
+    },
+    {
+      "ID": "ZLDWS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 117
+    },
+    {
+      "ID": "ZMPWC1",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 13.4
+    },
+    {
+      "ID": "ZMPWRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 249
+    },
+    {
+      "ID": "ZMPWVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 8.3
+    },
+    {
+      "ID": "ZOKGH1",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 11
+    },
+    {
+      "ID": "ZOKGHA",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 9
+    },
+    {
+      "ID": "ZOKGTZ",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 2.82
+    },
+    {
+      "ID": "ZOKHLF",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 1
+    },
+    {
+      "ID": "ZOKTZW",
+      "Timestamp": "2026-08-05T11:30:00+00:00",
+      "Value": 22.2
+    },
+    {
+      "ID": "ZWDWS5",
+      "Timestamp": "2026-08-05T11:55:00+00:00",
+      "Value": 118
+    },
+    {
+      "ID": "ZWNHUM",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 49
+    },
+    {
+      "ID": "ZWNLDR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 1014.2
+    },
+    {
+      "ID": "ZWNNSI",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 0
+    },
+    {
+      "ID": "ZWNTGR",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 34.1
+    },
+    {
+      "ID": "ZWNTLU",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 25.1
+    },
+    {
+      "ID": "ZWNWC3",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 9.5
+    },
+    {
+      "ID": "ZWNWRS",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 233
+    },
+    {
+      "ID": "ZWNWVC",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 7.1
+    },
+    {
+      "ID": "ZWNZON",
+      "Timestamp": "2026-08-05T11:50:00+00:00",
+      "Value": 544
     }
   ],
-  "allLocations": [
-    {
-      "ID": "A2B",
-      "name": "A2 - Buoy",
-      "lat": 51.3597222222222,
-      "lon": 3.11983333333333,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "AKZ",
-      "name": "Akkaert-Southwest - Buoy",
-      "lat": 51.4161111111111,
-      "lon": 2.81861111111111,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "BL7",
-      "name": "Blankenberge - Wind measurement",
-      "lat": 51.315833,
-      "lon": 3.105556,
-      "parameters": [
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "BLB",
-      "name": "Blankenberge - Buoy",
-      "lat": 51.3163722222222,
-      "lon": 3.10439444444444,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "BLK",
-      "name": "Blankenberge - Tide",
-      "lat": 51.3105555555556,
-      "lon": 3.11638888888889,
-      "parameters": [
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "BVH",
-      "name": "Bol van Heist - Buoy",
-      "lat": 51.3919444444444,
-      "lon": 3.20055555555556,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "KWI",
-      "name": "Kwintebank - Buoy",
-      "lat": 51.3491666666667,
-      "lon": 2.70722222222222,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "MP0",
-      "name": "Wandelaar - Measuring pile",
-      "lat": 51.3944444444444,
-      "lon": 3.04583333333333,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "SR3 (Flow direction cell 3)",
-        "SV3 (Flow rate cell 3)",
-        "TLU (Air temperature)",
-        "TZW (Sea water temperature)",
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WS5 (Tide TAW)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "MP1",
-      "name": "A2 -  Measuring pile",
-      "lat": 51.3605555555556,
-      "lon": 3.11833333333333,
-      "parameters": [
-        "LDR (Air pressure)",
-        "TZW (Sea water temperature)",
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "MP2",
-      "name": "Appelzak - Measuring pile",
-      "lat": 51.3627777777778,
-      "lon": 3.29,
-      "parameters": [
-        "LDR (Air pressure)",
-        "TZW (Sea water temperature)",
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "MP3",
-      "name": "Bol van Heist - Measuring pile",
-      "lat": 51.3897222222222,
-      "lon": 3.19861111111111,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "SR3 (Flow direction cell 3)",
-        "SV3 (Flow rate cell 3)",
-        "TLU (Air temperature)",
-        "TZW (Sea water temperature)",
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WS5 (Tide TAW)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "MP4",
-      "name": "Scheur Wielingen - Measuring pile",
-      "lat": 51.4183333333333,
-      "lon": 3.29861111111111,
-      "parameters": [
-        "LDR (Air pressure)",
-        "SR3 (Flow direction cell 3)",
-        "SV3 (Flow rate cell 3)",
-        "TLU (Air temperature)",
-        "TZW (Sea water temperature)",
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WS5 (Tide TAW)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "MP7",
-      "name": "Westhinder - Measuring pile",
-      "lat": 51.3886111111111,
-      "lon": 2.43777777777778,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "TLU (Air temperature)",
-        "TZW (Sea water temperature)",
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WS5 (Tide TAW)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "NP7",
-      "name": "Nieuwpoort - Wind measurement",
-      "lat": 51.1558333333333,
-      "lon": 2.71666666666667,
-      "parameters": [
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "NPB",
-      "name": "Nieuwpoort - Buoy",
-      "lat": 51.1613888888889,
-      "lon": 2.69083333333333,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "H01 (1% wave height)",
-        "HLF (Height waves with period > 10 s)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "NPT",
-      "name": "Nieuwpoort - Tide",
-      "lat": 51.1505555555556,
-      "lon": 2.72805555555556,
-      "parameters": [
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "ODK",
-      "name": "Oostdyckbank - Buoy",
-      "lat": 51.2747222222222,
-      "lon": 2.46416666666667,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)"
-      ]
-    },
-    {
-      "ID": "OHM",
-      "name": "Ostend harbour - Tide",
-      "lat": 51.2342861111111,
-      "lon": 2.92668055555556,
-      "parameters": [
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "OMP",
-      "name": "Ostend - Weather station",
-      "lat": 51.2376638888889,
-      "lon": 2.93014722222222,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "NSI (Precipitation)",
-        "TGR (Ground temperature)",
-        "TLU (Air temperature)",
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))",
-        "ZON (Solar radiation)"
-      ]
-    },
-    {
-      "ID": "ONS",
-      "name": "Ostend Noodstrand - Buoy",
-      "lat": 51.2380555555556,
-      "lon": 2.90833333333333,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "OPO",
-      "name": "Ostend Poortjes - Buoy",
-      "lat": 51.2891666666667,
-      "lon": 2.86333333333333,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "OS7",
-      "name": "Ostend - Wind measurement",
-      "lat": 51.2375,
-      "lon": 2.92416666666667,
-      "parameters": [
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "OSN",
-      "name": "Ostend North - Buoy",
-      "lat": 51.3516666666667,
-      "lon": 2.88333333333333,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "OST",
-      "name": "Ostend eastern palisade - Buoy",
-      "lat": 51.2468333333333,
-      "lon": 2.92766666666667,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "RA1",
-      "name": "Raversijde 1 - Buoy",
-      "lat": 51.2112222222222,
-      "lon": 2.84211111111111,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "RA2",
-      "name": "Raversijde 2 - Buoy",
-      "lat": 51.2366666666667,
-      "lon": 2.81277777777778,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "RAV",
-      "name": "Raversijde - Buoy",
-      "lat": 51.2202777777778,
-      "lon": 2.86916666666667,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "SWI",
-      "name": "Scheur Wielingen - Buoy",
-      "lat": 51.4013888888889,
-      "lon": 3.30222222222222,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "THZ",
-      "name": "Thorntonbank South - Buoy",
-      "lat": 51.565,
-      "lon": 2.98694444444444,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "TRG",
-      "name": "Trapegeer - Buoy",
-      "lat": 51.1375,
-      "lon": 2.58305555555556,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "WDL",
-      "name": "Wandelaar - Buoy",
-      "lat": 51.3922222222222,
-      "lon": 3.05055555555556,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "H01 (1% wave height)",
-        "HLF (Height waves with period > 10 s)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "WHI",
-      "name": "Westhinder - Buoy",
-      "lat": 51.3811111111111,
-      "lon": 2.43583333333333,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "ZDI",
-      "name": "Zeebrugge Dam instrumentation - Weather station",
-      "lat": 51.3541666666667,
-      "lon": 3.17222222222222,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "NSI (Precipitation)",
-        "TLU (Air temperature)",
-        "WC1 (Max 1-second wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))",
-        "ZON (Solar radiation)"
-      ]
-    },
-    {
-      "ID": "ZHG",
-      "name": "Zwin - Buoy",
-      "lat": 51.3719444444444,
-      "lon": 3.35861111111111,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "RHF (High frequent wave direction)",
-        "RLF (Low frequent wave direction)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "ZJK",
-      "name": "Zeebrugge Januskop - Wind measurement",
-      "lat": 51.3602777777778,
-      "lon": 3.1875,
-      "parameters": [
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))"
-      ]
-    },
-    {
-      "ID": "ZLD",
-      "name": "Zeebrugge Leopold II dam - Tide",
-      "lat": 51.3463888888889,
-      "lon": 3.20027777777778,
-      "parameters": [
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "ZMP",
-      "name": "Zeebrugge - Weather station",
-      "lat": 51.3344444444444,
-      "lon": 3.21861111111111,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "NSI (Precipitation)",
-        "TGR (Ground temperature)",
-        "TLU (Air temperature)",
-        "TNB (Wet bulb temperature)",
-        "WC1 (Max 1-second wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))",
-        "ZON (Solar radiation)"
-      ]
-    },
-    {
-      "ID": "ZOK",
-      "name": "Zeebrugge Zandopvangkade - Buoy",
-      "lat": 51.3505555555556,
-      "lon": 3.19638888888889,
-      "parameters": [
-        "GH1 (10% highest waves)",
-        "GHA (Wave height)",
-        "GTZ (Average wave period)",
-        "HLF (Height waves with period > 10 s)",
-        "TZW (Sea water temperature)"
-      ]
-    },
-    {
-      "ID": "ZWD",
-      "name": "Zeebrugge Wielingendok - Tide",
-      "lat": 51.3552777777778,
-      "lon": 3.17805555555556,
-      "parameters": [
-        "WS5 (Tide TAW)"
-      ]
-    },
-    {
-      "ID": "ZWN",
-      "name": "Zwin - Weather station",
-      "lat": 51.3402777777778,
-      "lon": 3.37166666666667,
-      "parameters": [
-        "HUM (Relative humidity)",
-        "LDR (Air pressure)",
-        "NSI (Precipitation)",
-        "TGR (Ground temperature)",
-        "TLU (Air temperature)",
-        "WC3 (Max 3-seconds wind gust (at 10 m height))",
-        "WRS (Average wind direction)",
-        "WVC (Average wind speed (at 10 m height))",
-        "ZON (Solar radiation)"
-      ]
-    }
-  ],
-  "nearestPerSpot": {
-    "oostende": [
-      {
-        "ID": "OHM",
-        "name": "Ostend harbour - Tide",
-        "distKm": 1,
-        "parameters": [
-          "WS5 (Tide TAW)"
-        ]
-      },
-      {
-        "ID": "OS7",
-        "name": "Ostend - Wind measurement",
-        "distKm": 1.2,
-        "parameters": [
-          "WC3 (Max 3-seconds wind gust (at 10 m height))",
-          "WRS (Average wind direction)",
-          "WVC (Average wind speed (at 10 m height))"
-        ]
-      },
-      {
-        "ID": "ONS",
-        "name": "Ostend Noodstrand - Buoy",
-        "distKm": 1.3,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "HLF (Height waves with period > 10 s)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "OMP",
-        "name": "Ostend - Weather station",
-        "distKm": 1.4,
-        "parameters": [
-          "HUM (Relative humidity)",
-          "LDR (Air pressure)",
-          "NSI (Precipitation)",
-          "TGR (Ground temperature)",
-          "TLU (Air temperature)",
-          "WC3 (Max 3-seconds wind gust (at 10 m height))",
-          "WRS (Average wind direction)",
-          "WVC (Average wind speed (at 10 m height))",
-          "ZON (Solar radiation)"
-        ]
-      },
-      {
-        "ID": "OST",
-        "name": "Ostend eastern palisade - Buoy",
-        "distKm": 2.3,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "HLF (Height waves with period > 10 s)",
-          "RHF (High frequent wave direction)",
-          "RLF (Low frequent wave direction)",
-          "TZW (Sea water temperature)"
-        ]
-      }
-    ],
-    "knokke-cadzand": [
-      {
-        "ID": "ZHG",
-        "name": "Zwin - Buoy",
-        "distKm": 2.2,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "HLF (Height waves with period > 10 s)",
-          "RHF (High frequent wave direction)",
-          "RLF (Low frequent wave direction)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "ZWN",
-        "name": "Zwin - Weather station",
-        "distKm": 3.5,
-        "parameters": [
-          "HUM (Relative humidity)",
-          "LDR (Air pressure)",
-          "NSI (Precipitation)",
-          "TGR (Ground temperature)",
-          "TLU (Air temperature)",
-          "WC3 (Max 3-seconds wind gust (at 10 m height))",
-          "WRS (Average wind direction)",
-          "WVC (Average wind speed (at 10 m height))",
-          "ZON (Solar radiation)"
-        ]
-      },
-      {
-        "ID": "MP2",
-        "name": "Appelzak - Measuring pile",
-        "distKm": 7,
-        "parameters": [
-          "LDR (Air pressure)",
-          "TZW (Sea water temperature)",
-          "WS5 (Tide TAW)"
-        ]
-      },
-      {
-        "ID": "SWI",
-        "name": "Scheur Wielingen - Buoy",
-        "distKm": 7,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "HLF (Height waves with period > 10 s)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "MP4",
-        "name": "Scheur Wielingen - Measuring pile",
-        "distKm": 8.3,
-        "parameters": [
-          "LDR (Air pressure)",
-          "SR3 (Flow direction cell 3)",
-          "SV3 (Flow rate cell 3)",
-          "TLU (Air temperature)",
-          "TZW (Sea water temperature)",
-          "WC3 (Max 3-seconds wind gust (at 10 m height))",
-          "WRS (Average wind direction)",
-          "WS5 (Tide TAW)",
-          "WVC (Average wind speed (at 10 m height))"
-        ]
-      }
-    ],
-    "de-panne": [
-      {
-        "ID": "TRG",
-        "name": "Trapegeer - Buoy",
-        "distKm": 4.9,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "HLF (Height waves with period > 10 s)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "NPB",
-        "name": "Nieuwpoort - Buoy",
-        "distKm": 10.6,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "H01 (1% wave height)",
-          "HLF (Height waves with period > 10 s)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "NP7",
-        "name": "Nieuwpoort - Wind measurement",
-        "distKm": 11.6,
-        "parameters": [
-          "WC3 (Max 3-seconds wind gust (at 10 m height))",
-          "WRS (Average wind direction)",
-          "WVC (Average wind speed (at 10 m height))"
-        ]
-      },
-      {
-        "ID": "NPT",
-        "name": "Nieuwpoort - Tide",
-        "distKm": 11.9,
-        "parameters": [
-          "WS5 (Tide TAW)"
-        ]
-      },
-      {
-        "ID": "ODK",
-        "name": "Oostdyckbank - Buoy",
-        "distKm": 21.8,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)"
-        ]
-      }
-    ],
-    "bray-dunes": [
-      {
-        "ID": "TRG",
-        "name": "Trapegeer - Buoy",
-        "distKm": 8.2,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "HLF (Height waves with period > 10 s)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "NPB",
-        "name": "Nieuwpoort - Buoy",
-        "distKm": 15.3,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)",
-          "GTZ (Average wave period)",
-          "H01 (1% wave height)",
-          "HLF (Height waves with period > 10 s)",
-          "TZW (Sea water temperature)"
-        ]
-      },
-      {
-        "ID": "NP7",
-        "name": "Nieuwpoort - Wind measurement",
-        "distKm": 16.5,
-        "parameters": [
-          "WC3 (Max 3-seconds wind gust (at 10 m height))",
-          "WRS (Average wind direction)",
-          "WVC (Average wind speed (at 10 m height))"
-        ]
-      },
-      {
-        "ID": "NPT",
-        "name": "Nieuwpoort - Tide",
-        "distKm": 16.8,
-        "parameters": [
-          "WS5 (Tide TAW)"
-        ]
-      },
-      {
-        "ID": "ODK",
-        "name": "Oostdyckbank - Buoy",
-        "distKm": 22.4,
-        "parameters": [
-          "GH1 (10% highest waves)",
-          "GHA (Wave height)"
-        ]
-      }
-    ]
-  }
+  "currentDataListLength": 176,
+  "byIdKeys": [
+    "A2BGH1",
+    "A2BGHA",
+    "A2BGTZ",
+    "A2BHLF",
+    "A2BRHF",
+    "A2BRLF",
+    "A2BTZW",
+    "AKZGH1",
+    "AKZGHA",
+    "AKZGTZ",
+    "AKZHLF",
+    "AKZRHF",
+    "AKZRLF",
+    "AKZTZW",
+    "BL7WC3",
+    "BL7WRS",
+    "BL7WVC",
+    "BLKWS5",
+    "BVHGH1",
+    "BVHGHA",
+    "BVHGTZ",
+    "BVHHLF",
+    "BVHRHF",
+    "BVHRLF",
+    "BVHTZW",
+    "KWIGH1",
+    "KWIGHA",
+    "KWIGTZ",
+    "KWIHLF",
+    "KWIRHF",
+    "KWIRLF",
+    "KWITZW",
+    "MP0HUM",
+    "MP0LDR",
+    "MP0TLU",
+    "MP0WC3",
+    "MP0WRS",
+    "MP0WS5",
+    "MP0WVC",
+    "MP1LDR",
+    "MP1WS5",
+    "MP2LDR",
+    "MP3HUM",
+    "MP3LDR",
+    "MP3TLU",
+    "MP3WC3",
+    "MP3WRS",
+    "MP3WVC",
+    "MP4LDR",
+    "MP4TLU",
+    "MP4WC3",
+    "MP4WRS",
+    "MP4WS5",
+    "MP4WVC",
+    "MP7HUM",
+    "MP7LDR",
+    "MP7TLU",
+    "MP7TZW",
+    "MP7WC3",
+    "MP7WRS",
+    "MP7WS5",
+    "MP7WVC",
+    "NP7WC3",
+    "NP7WRS",
+    "NP7WVC",
+    "NPBGH1",
+    "NPBGHA",
+    "NPBGTZ",
+    "NPBHLF",
+    "NPBTZW",
+    "NPTWS5",
+    "OHMWS5",
+    "OMPHUM",
+    "OMPLDR",
+    "OMPNSI",
+    "OMPTGR",
+    "OMPTLU",
+    "OMPWC3",
+    "OMPWRS",
+    "OMPWVC",
+    "OMPZON",
+    "OPOGH1",
+    "OPOGHA",
+    "OPOGTZ",
+    "OPOHLF",
+    "OPORHF",
+    "OPORLF",
+    "OPOTZW",
+    "OSNGH1",
+    "OSNGHA",
+    "OSNGTZ",
+    "OSNHLF",
+    "OSNRHF",
+    "OSNRLF",
+    "OSNTZW",
+    "OSTGH1",
+    "OSTGHA",
+    "OSTGTZ",
+    "OSTHLF",
+    "OSTRHF",
+    "OSTRLF",
+    "OSTTZW",
+    "RA1GH1",
+    "RA1GHA",
+    "RA1GTZ",
+    "RA1HLF",
+    "RA1RHF",
+    "RA1RLF",
+    "RA1TZW",
+    "RA2GH1",
+    "RA2GHA",
+    "RA2GTZ",
+    "RA2HLF",
+    "RA2RHF",
+    "RA2RLF",
+    "RA2TZW",
+    "SWIGH1",
+    "SWIGHA",
+    "SWIGTZ",
+    "SWIHLF",
+    "SWITZW",
+    "THZGH1",
+    "THZGHA",
+    "THZGTZ",
+    "THZHLF",
+    "THZRHF",
+    "THZRLF",
+    "THZTZW",
+    "TRGGH1",
+    "TRGGHA",
+    "TRGGTZ",
+    "TRGHLF",
+    "TRGTZW",
+    "WDLGH1",
+    "WDLGHA",
+    "WDLGTZ",
+    "WDLH01",
+    "WDLHLF",
+    "WDLTZW",
+    "WHIGH1",
+    "WHIGHA",
+    "WHIGTZ",
+    "WHIHLF",
+    "WHIRHF",
+    "WHIRLF",
+    "WHITZW",
+    "ZDIHUM",
+    "ZDILDR",
+    "ZDINSI",
+    "ZDITLU",
+    "ZDIWC1",
+    "ZDIWRS",
+    "ZDIWVC",
+    "ZDIZON",
+    "ZJKWC3",
+    "ZJKWRS",
+    "ZJKWVC",
+    "ZLDWS5",
+    "ZMPWC1",
+    "ZMPWRS",
+    "ZMPWVC",
+    "ZOKGH1",
+    "ZOKGHA",
+    "ZOKGTZ",
+    "ZOKHLF",
+    "ZOKTZW",
+    "ZWDWS5",
+    "ZWNHUM",
+    "ZWNLDR",
+    "ZWNNSI",
+    "ZWNTGR",
+    "ZWNTLU",
+    "ZWNWC3",
+    "ZWNWRS",
+    "ZWNWVC",
+    "ZWNZON"
+  ]
 }
