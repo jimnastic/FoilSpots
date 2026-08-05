@@ -27,19 +27,77 @@ const DEBUG_PATH = path.join(SITE_DIR, 'calibration-debug.json');
 const RWS_BASE = 'https://ddapi20-waterwebservices.rijkswaterstaat.nl';
 const CATALOG_URL = `${RWS_BASE}/METADATASERVICES/OphalenCatalogus`;
 const OBS_URL = `${RWS_BASE}/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen`;
+const LATEST_URL = `${RWS_BASE}/ONLINEWAARNEMINGENSERVICES/OphalenLaatsteWaarnemingen`;
 const OPEN_METEO_ARCHIVE = 'https://archive-api.open-meteo.com/v1/archive';
 
 const LOOKBACK_DAYS = 90;
+const MAX_AGE_HOURS = 48;
+const SEARCH_RADIUS_KM = 60;
 
-// Known-good stations confirmed via the water-temp pipeline (see antwerp/live.json history).
-// If a spot's station changes there, update here too — kept separate so a bad wind fetch
-// can't accidentally break the working water-temp station selection.
-const STATIONS = {
-  'brouwersdam-lake': 'bommenede',
-  'brouwersdam-sea':  null, // confirm against live.json once the sea-side fix has run
-  'veerse-meer':      'kamperland.schotsman',
-  'oesterdam':        'marollegat',
-};
+// The water-temp station for a spot isn't necessarily wind-equipped (confirmed: Bommenede and
+// Kamperland/Schotsman are temperature-only — only Marollegat happens to carry a full sensor
+// suite). So wind stations are discovered independently per spot, same "batch nearby
+// candidates, keep the nearest one that's actually reporting" approach proven in
+// fetch-antwerp-live.mjs, just against the WINDSHD/LT metadata instead of OW/T.
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, toRad = d => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+async function findWindStation(catalog, spot, speedMeta, debugOut) {
+  const locations = catalog.LocatieLijst || [];
+  const candidates = locations
+    .map(loc => ({
+      loc,
+      distKm: (typeof loc.Lat === 'number' && typeof loc.Lon === 'number')
+        ? haversineKm(spot.lat, spot.lon, loc.Lat, loc.Lon) : Infinity,
+    }))
+    .filter(c => c.distKm < SEARCH_RADIUS_KM)
+    .sort((a, b) => a.distKm - b.distKm)
+    .slice(0, 25);
+
+  if (!candidates.length) {
+    debugOut.windStationSearch = { candidateCount: 0 };
+    return null;
+  }
+
+  const byCode = {};
+  for (const c of candidates) byCode[c.loc.Code] = c;
+
+  const obs = await postJson(LATEST_URL, {
+    LocatieLijst: candidates.map(c => ({ Code: c.loc.Code })),
+    AquoPlusWaarnemingMetadataLijst: [{ AquoMetadata: { Compartiment: speedMeta.Compartiment, Grootheid: speedMeta.Grootheid } }],
+  });
+
+  const scored = (obs.WaarnemingenLijst || [])
+    .map(series => {
+      const events = series.MetingenLijst;
+      const last = events && events.length ? events[events.length - 1] : null;
+      if (!last) return null;
+      const code = series.Locatie && series.Locatie.Code;
+      const ageHours = (Date.now() - new Date(last.Tijdstip).getTime()) / 3.6e6;
+      return { code, ageHours, distKm: byCode[code] ? byCode[code].distKm : Infinity };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      const aOk = a.ageHours >= 0 && a.ageHours < MAX_AGE_HOURS;
+      const bOk = b.ageHours >= 0 && b.ageHours < MAX_AGE_HOURS;
+      if (aOk !== bOk) return aOk ? -1 : 1;
+      if (aOk && bOk) return a.distKm - b.distKm;
+      return a.ageHours - b.ageHours;
+    });
+
+  debugOut.windStationSearch = {
+    candidateCount: candidates.length,
+    windEquippedCount: scored.length,
+    top5: scored.slice(0, 5).map(s => ({ code: s.code, ageHours: Math.round(s.ageHours), distKm: Math.round(s.distKm) })),
+  };
+
+  const best = scored.find(s => s.ageHours >= 0 && s.ageHours < MAX_AGE_HOURS);
+  return best ? best.code : null;
+}
 
 const DIR_BANDS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 function bandFor(deg) {
@@ -119,14 +177,28 @@ async function main() {
 
   const results = {};
   debug.spots = {};
+  // Only the 4 Dutch spots have an RWS-network station at all (Belgian coast is MVB, separate).
+  const nlSpotIds = ['brouwersdam-lake', 'brouwersdam-sea', 'veerse-meer', 'oesterdam'];
 
-  for (const [spotId, stationCode] of Object.entries(STATIONS)) {
+  for (const spotId of nlSpotIds) {
     const spot = allSpots.find(s => s.id === spotId);
-    if (!spot || !stationCode) {
-      console.log(`\n${spotId}: no confirmed station yet — skipping`);
+    if (!spot) { console.log(`\n${spotId}: not found in spots-data.js — skipping`); continue; }
+
+    debug.spots[spotId] = {};
+    console.log(`\n${spotId}: searching for a wind-equipped station nearby...`);
+    let stationCode;
+    try {
+      stationCode = await findWindStation(catalog, spot, windMeta.speed, debug.spots[spotId]);
+    } catch (e) {
+      console.log(`  ! station search failed: ${e.message}`);
+      debug.spots[spotId] = { error: e.message };
       continue;
     }
-    console.log(`\n${spotId} (station ${stationCode}):`);
+    if (!stationCode) {
+      console.log(`  No wind-equipped station found within ${SEARCH_RADIUS_KM}km with a reading newer than ${MAX_AGE_HOURS}h.`);
+      continue;
+    }
+    console.log(`  -> using ${stationCode}`);
 
     let speedObs, dirObs, archive;
     try {
@@ -137,11 +209,12 @@ async function main() {
       ]);
     } catch (e) {
       console.log(`  ! fetch failed: ${e.message}`);
-      debug.spots[spotId] = { error: e.message };
+      debug.spots[spotId] = { ...debug.spots[spotId], error: e.message };
       continue;
     }
 
     debug.spots[spotId] = {
+      ...debug.spots[spotId],
       stationCode,
       speedObsCount: speedObs.length,
       dirObsCount: dirObs.length,
