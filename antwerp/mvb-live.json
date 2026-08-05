@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T12:15:24.819Z",
+  "generatedAt": "2026-08-05T12:18:07.029Z",
   "spots": {
     "oostende": {
       "waterTempC": 22.6,
@@ -13,9 +13,9 @@
       "waterTempC": 22.4,
       "ts": "2026-08-05T12:00:00+00:00",
       "stationCode": "SWI",
-      "windSpeedKn": 16.522674,
-      "windDir": 244,
-      "windStationCode": "ZWN"
+      "windSpeedKn": 16.7170584,
+      "windDir": 252,
+      "windStationCode": "MP4"
     },
     "de-panne": {
       "waterTempC": 22,

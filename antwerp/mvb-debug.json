@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-08-05T12:15:22.953Z",
+  "generatedAt": "2026-08-05T12:18:05.689Z",
   "requestedIds": [
     "OMPWVC",
     "OMPWRS",
     "OSTTZW",
-    "ZWNWVC",
-    "ZWNWRS",
+    "MP4WVC",
+    "MP4WRS",
     "SWITZW",
     "NP7WVC",
     "NP7WRS",
@@ -99,8 +99,8 @@
     },
     {
       "ID": "BLKWS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 133
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 130
     },
     {
       "ID": "BVHGH1",
@@ -199,8 +199,8 @@
     },
     {
       "ID": "MP0WS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 128
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 133
     },
     {
       "ID": "MP0WVC",
@@ -214,8 +214,8 @@
     },
     {
       "ID": "MP1WS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 123
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 124
     },
     {
       "ID": "MP2LDR",
@@ -258,31 +258,6 @@
       "Value": 1013.2
     },
     {
-      "ID": "MP3TLU",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 21.4
-    },
-    {
-      "ID": "MP3WC3",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 13.7
-    },
-    {
-      "ID": "MP3WRS",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 250
-    },
-    {
-      "ID": "MP3WVC",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 10.3
-    },
-    {
-      "ID": "MP4LDR",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 1013.1
-    },
-    {
       "ID": "MP4TLU",
       "Timestamp": "2026-08-05T12:10:00+00:00",
       "Value": 21.4
@@ -299,8 +274,8 @@
     },
     {
       "ID": "MP4WS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 124
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 129
     },
     {
       "ID": "MP4WVC",
@@ -339,8 +314,8 @@
     },
     {
       "ID": "MP7WS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 130
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 135
     },
     {
       "ID": "MP7WVC",
@@ -389,13 +364,13 @@
     },
     {
       "ID": "NPTWS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 113
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 116
     },
     {
       "ID": "OHMWS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 117
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 124
     },
     {
       "ID": "OMPHUM",
@@ -824,8 +799,8 @@
     },
     {
       "ID": "ZLDWS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 134
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 140
     },
     {
       "ID": "ZMPWC1",
@@ -838,39 +813,9 @@
       "Value": 249
     },
     {
-      "ID": "ZJKWVC",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 9.7
-    },
-    {
-      "ID": "ZLDWS5",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 120
-    },
-    {
-      "ID": "ZMPWC1",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 12.6
-    },
-    {
-      "ID": "ZMPWRS",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 257
-    },
-    {
       "ID": "ZMPWVC",
       "Timestamp": "2026-08-05T12:10:00+00:00",
       "Value": 10
-    },
-    {
-      "ID": "ZOKGH1",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 17
-    },
-    {
-      "ID": "ZOKGHA",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 14
     },
     {
       "ID": "ZOKGH1",
@@ -899,18 +844,18 @@
     },
     {
       "ID": "ZWDWS5",
-      "Timestamp": "2026-08-05T12:10:00+00:00",
-      "Value": 132
+      "Timestamp": "2026-08-05T12:15:00+00:00",
+      "Value": 138
     },
     {
       "ID": "ZWNHUM",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
+      "Timestamp": "2026-08-05T12:10:00+00:00",
       "Value": 48
     },
     {
       "ID": "ZWNLDR",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 1014.2
+      "Timestamp": "2026-08-05T12:10:00+00:00",
+      "Value": 1014.3
     },
     {
       "ID": "ZWNNSI",
@@ -919,13 +864,13 @@
     },
     {
       "ID": "ZWNTGR",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
+      "Timestamp": "2026-08-05T12:10:00+00:00",
       "Value": 33.4
     },
     {
       "ID": "ZWNTLU",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 24.8
+      "Timestamp": "2026-08-05T12:10:00+00:00",
+      "Value": 25.4
     },
     {
       "ID": "ZWNWC3",
@@ -944,8 +889,8 @@
     },
     {
       "ID": "ZWNZON",
-      "Timestamp": "2026-08-05T12:00:00+00:00",
-      "Value": 435
+      "Timestamp": "2026-08-05T12:10:00+00:00",
+      "Value": 864
     }
   ],
   "currentDataListLength": 176,
