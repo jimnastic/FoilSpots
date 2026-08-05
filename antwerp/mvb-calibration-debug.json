@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T12:17:42.824Z",
+  "generatedAt": "2026-08-05T12:20:15.012Z",
   "lookbackDays": 90,
   "spots": {
     "oostende": {
@@ -11,7 +11,20 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 5.5
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 5.1
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 5.5
+          }
+        ]
       },
       "dirExtractDebug": {
         "rawTopLevelKeys": [
@@ -20,11 +33,26 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 39
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 39
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 41
+          }
+        ]
       },
-      "speedHourCount": 0,
-      "dirHourCount": 0,
-      "archiveHourlyLength": 2184
+      "speedHourCount": 2161,
+      "dirHourCount": 2161,
+      "archiveHourlyLength": 2184,
+      "pairedHourCount": 2161,
+      "droppedImplausible": 0
     },
     "knokke-cadzand": {
       "windStation": "MP4",
@@ -35,7 +63,20 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 6.5
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 6.6
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 6.7
+          }
+        ]
       },
       "dirExtractDebug": {
         "rawTopLevelKeys": [
@@ -44,11 +85,26 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 13
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 15
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 14
+          }
+        ]
       },
-      "speedHourCount": 0,
-      "dirHourCount": 0,
-      "archiveHourlyLength": 2184
+      "speedHourCount": 2159,
+      "dirHourCount": 2159,
+      "archiveHourlyLength": 2184,
+      "pairedHourCount": 2159,
+      "droppedImplausible": 0
     },
     "de-panne": {
       "windStation": "NP7",
@@ -59,7 +115,20 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 6.1
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 6.4
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 6.7
+          }
+        ]
       },
       "dirExtractDebug": {
         "rawTopLevelKeys": [
@@ -68,11 +137,26 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 33
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 39
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 43
+          }
+        ]
       },
-      "speedHourCount": 0,
-      "dirHourCount": 0,
-      "archiveHourlyLength": 2184
+      "speedHourCount": 2161,
+      "dirHourCount": 2160,
+      "archiveHourlyLength": 2184,
+      "pairedHourCount": 2160,
+      "droppedImplausible": 0
     },
     "bray-dunes": {
       "windStation": "NP7",
@@ -83,7 +167,20 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 6.1
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 6.4
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 6.7
+          }
+        ]
       },
       "dirExtractDebug": {
         "rawTopLevelKeys": [
@@ -92,11 +189,26 @@
           "Intervals",
           "Values"
         ],
-        "pointSample": []
+        "pointSample": [
+          {
+            "Timestamp": "2026-05-07T12:30:00+00:00",
+            "Value": 33
+          },
+          {
+            "Timestamp": "2026-05-07T12:40:00+00:00",
+            "Value": 39
+          },
+          {
+            "Timestamp": "2026-05-07T12:50:00+00:00",
+            "Value": 43
+          }
+        ]
       },
-      "speedHourCount": 0,
-      "dirHourCount": 0,
-      "archiveHourlyLength": 2184
+      "speedHourCount": 2161,
+      "dirHourCount": 2160,
+      "archiveHourlyLength": 2184,
+      "pairedHourCount": 2160,
+      "droppedImplausible": 0
     }
   }
 }

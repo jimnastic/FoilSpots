@@ -1,5 +1,158 @@
 {
-  "generatedAt": "2026-08-05T12:17:46.524Z",
+  "generatedAt": "2026-08-05T12:20:28.491Z",
   "lookbackDays": 90,
-  "spots": {}
+  "spots": {
+    "oostende": {
+      "windStation": "OMP",
+      "pairedHourCount": 2161,
+      "bandAdj": {
+        "N": {
+          "adj": 3,
+          "sampleCount": 284
+        },
+        "NE": {
+          "adj": 4,
+          "sampleCount": 457
+        },
+        "E": {
+          "adj": 0,
+          "sampleCount": 113
+        },
+        "SE": {
+          "adj": 0,
+          "sampleCount": 149
+        },
+        "S": {
+          "adj": 0,
+          "sampleCount": 192
+        },
+        "SW": {
+          "adj": -1,
+          "sampleCount": 336
+        },
+        "W": {
+          "adj": 2,
+          "sampleCount": 415
+        },
+        "NW": {
+          "adj": 3,
+          "sampleCount": 215
+        }
+      }
+    },
+    "knokke-cadzand": {
+      "windStation": "MP4",
+      "pairedHourCount": 2159,
+      "bandAdj": {
+        "N": {
+          "adj": 4,
+          "sampleCount": 419
+        },
+        "NE": {
+          "adj": 5,
+          "sampleCount": 342
+        },
+        "E": {
+          "adj": 4,
+          "sampleCount": 162
+        },
+        "SE": {
+          "adj": 2,
+          "sampleCount": 102
+        },
+        "S": {
+          "adj": 4,
+          "sampleCount": 112
+        },
+        "SW": {
+          "adj": 6,
+          "sampleCount": 364
+        },
+        "W": {
+          "adj": 5,
+          "sampleCount": 448
+        },
+        "NW": {
+          "adj": 3,
+          "sampleCount": 210
+        }
+      }
+    },
+    "de-panne": {
+      "windStation": "NP7",
+      "pairedHourCount": 2160,
+      "bandAdj": {
+        "N": {
+          "adj": 5,
+          "sampleCount": 274
+        },
+        "NE": {
+          "adj": 7,
+          "sampleCount": 494
+        },
+        "E": {
+          "adj": 1,
+          "sampleCount": 129
+        },
+        "SE": {
+          "adj": 2,
+          "sampleCount": 138
+        },
+        "S": {
+          "adj": 3,
+          "sampleCount": 147
+        },
+        "SW": {
+          "adj": 5,
+          "sampleCount": 453
+        },
+        "W": {
+          "adj": 5,
+          "sampleCount": 366
+        },
+        "NW": {
+          "adj": 4,
+          "sampleCount": 159
+        }
+      }
+    },
+    "bray-dunes": {
+      "windStation": "NP7",
+      "pairedHourCount": 2160,
+      "bandAdj": {
+        "N": {
+          "adj": 5,
+          "sampleCount": 274
+        },
+        "NE": {
+          "adj": 7,
+          "sampleCount": 494
+        },
+        "E": {
+          "adj": 1,
+          "sampleCount": 129
+        },
+        "SE": {
+          "adj": 2,
+          "sampleCount": 138
+        },
+        "S": {
+          "adj": 3,
+          "sampleCount": 147
+        },
+        "SW": {
+          "adj": 5,
+          "sampleCount": 453
+        },
+        "W": {
+          "adj": 5,
+          "sampleCount": 366
+        },
+        "NW": {
+          "adj": 4,
+          "sampleCount": 159
+        }
+      }
+    }
+  }
 }
