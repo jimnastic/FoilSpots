@@ -1,13 +1,13 @@
-name: Antwerp MVB (Belgian coast) discovery
+name: Antwerp MVB (Belgian coast) live data
 
 on:
-  workflow_dispatch: {}   # manual only — this is a discovery run, not scheduled yet
+  workflow_dispatch: {}   # manual only for now — switch to a schedule once verified working
 
 permissions:
   contents: write
 
 jobs:
-  discover:
+  fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,22 +16,22 @@ jobs:
         with:
           node-version: 20
 
-      - name: Discover MVB catalog shape
+      - name: Fetch MVB live water temp / wind
         env:
           MVB_USERNAME: ${{ secrets.MVB_USERNAME }}
           MVB_PASSWORD: ${{ secrets.MVB_PASSWORD }}
         run: node scripts/fetch-antwerp-mvb.mjs
 
-      - name: Commit mvb-debug.json if changed
+      - name: Commit mvb-live.json / mvb-debug.json if changed
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add antwerp/mvb-debug.json
+          git add antwerp/mvb-live.json antwerp/mvb-debug.json
           if git diff --cached --quiet; then
             echo "No change"
           else
-            git commit -m "Update MVB discovery debug [skip ci]"
+            git commit -m "Update MVB live data [skip ci]"
             git pull --rebase
             git push
           fi

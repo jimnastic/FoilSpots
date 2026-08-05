@@ -1,16 +1,16 @@
-// Belgian coast (Meetnet Vlaamse Banken) live data for Oostende, Knokke-Heist/Cadzand, and
-// De Panne, plus Bray-Dunes (FR) as a proxy since no BE/NL network reaches French waters.
+// Belgian coast (Meetnet Vlaamse Banken) live water temperature for Oostende, Knokke-Heist/
+// Cadzand, De Panne, and Bray-Dunes (FR — no BE/NL network reaches French waters, using the
+// nearest BE station as a proxy). Writes antwerp/mvb-live.json — kept SEPARATE from the RWS
+// pipeline's antwerp/live.json so the two workflows (different secrets, different schedules)
+// never touch the same file and can't collide. The site merges both client-side.
 //
-// MVB requires an authenticated login for any real data (confirmed earlier: /V2/ping works
-// anonymously, /V2/catalog returns 401 without a token). Credentials come from
-// MVB_USERNAME / MVB_PASSWORD environment variables (GitHub Actions repo secrets) — never
-// written to any committed file. This script only runs server-side (GitHub Actions), same
-// reasoning as the RWS pipeline, so the token never has to reach the browser.
-//
-// FIRST PASS: this is a discovery run. We don't yet know MVB's exact catalog field names,
-// units, or ID scheme for requesting data, so rather than guess (which cost a lot of
-// back-and-forth on the RWS side), this dumps the real catalog shape to antwerp/mvb-debug.json
-// so the actual fetch logic can be written against facts, not assumptions.
+// Station/parameter codes below were confirmed via a discovery pass (see git history of this
+// file) against the real MVB catalog — not guessed. Confirmed nearest genuine station per spot:
+//   Oostende:        wind OS7 (1.2km), water temp ONS (1.3km)
+//   Knokke/Cadzand:  wind ZWN (3.5km), water temp ZHG (2.2km)
+//   De Panne:        wind NP7 (11.6km), water temp TRG (4.9km)
+//   Bray-Dunes (FR):  wind NP7 (16.5km, proxy), water temp TRG (8.2km, proxy)
+// Parameter WVC (wind speed) and WC3 (gust) are in m/s — MVB does not offer knots directly.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -18,129 +18,106 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SITE_DIR = path.join(__dirname, '..', 'antwerp');
+const OUT_PATH = path.join(SITE_DIR, 'mvb-live.json');
 const DEBUG_PATH = path.join(SITE_DIR, 'mvb-debug.json');
 
 const BASE = 'https://api.meetnetvlaamsebanken.be';
+const MS_TO_KN = 1.943844;
 
-async function login(debug) {
+const SPOT_STATIONS = {
+  oostende:          { windStation: 'OS7', tempStation: 'ONS' },
+  'knokke-cadzand':  { windStation: 'ZWN', tempStation: 'ZHG' },
+  'de-panne':        { windStation: 'NP7', tempStation: 'TRG' },
+  'bray-dunes':      { windStation: 'NP7', tempStation: 'TRG' },
+};
+
+async function login() {
   const username = process.env.MVB_USERNAME;
   const password = process.env.MVB_PASSWORD;
-  debug.hasUsername = !!username;
-  debug.hasPassword = !!password;
-  debug.usernameLength = username ? username.length : 0; // length only, never the value
-  if (!username || !password) {
-    throw new Error('MVB_USERNAME / MVB_PASSWORD environment variables are not set (add as GitHub repo secrets).');
-  }
+  if (!username || !password) throw new Error('MVB_USERNAME / MVB_PASSWORD not set.');
   const body = new URLSearchParams({ grant_type: 'password', username, password });
-  // Login is NOT versioned — /Token, not /V2/Token (confirmed: the latter 404s).
   const resp = await fetch(`${BASE}/Token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body.toString(),
   });
   const text = await resp.text();
-  debug.loginStatus = resp.status;
-  // Never log the response body verbatim in case it ever echoes anything sensitive — but MVB's
-  // error shape so far has just been {"Message": "..."}, safe to keep for diagnosis.
-  debug.loginResponsePreview = text.slice(0, 300);
   if (!resp.ok) throw new Error(`Login failed: HTTP ${resp.status}: ${text.slice(0, 300)}`);
-  let json;
-  try { json = JSON.parse(text); } catch { throw new Error(`Login response not JSON: ${text.slice(0, 300)}`); }
-  if (!json.access_token) throw new Error(`Login response missing access_token: ${text.slice(0, 300)}`);
+  const json = JSON.parse(text);
+  if (!json.access_token) throw new Error(`Login response missing access_token`);
   return json.access_token;
 }
 
 async function getJson(urlPath, token) {
-  const resp = await fetch(`${BASE}${urlPath}`, {
-    headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
-  });
+  const resp = await fetch(`${BASE}${urlPath}`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } });
   const text = await resp.text();
   if (!resp.ok) throw new Error(`HTTP ${resp.status} from ${urlPath}: ${text.slice(0, 300)}`);
-  try { return JSON.parse(text); } catch { throw new Error(`Non-JSON from ${urlPath}: ${text.slice(0, 300)}`); }
-}
-
-// Our 3 Belgian coast spots (from spots-data.js) — kept here too so this discovery script
-// can independently report nearest-station candidates without depending on the site's schema.
-const BE_SPOTS = {
-  oostende: { lat: 51.2278, lon: 2.9166 },
-  'knokke-cadzand': { lat: 51.3700, lon: 3.3900 },
-  'de-panne': { lat: 51.0937, lon: 2.5836 },
-  'bray-dunes': { lat: 51.0765, lon: 2.5175 }, // FR, using nearest BE station as proxy
-};
-
-function haversineKm(lat1, lon1, lat2, lon2) {
-  const R = 6371, toRad = d => (d * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(a));
-}
-
-// PositionWKT looks like "POINT (lon lat)" (confirmed via ProjectionWKT: WGS84/EPSG:4326).
-function parseWktPoint(wkt) {
-  const m = /POINT \(([-\d.]+) ([-\d.]+)\)/.exec(wkt || '');
-  return m ? { lon: Number(m[1]), lat: Number(m[2]) } : null;
-}
-
-function nameOf(entry, culture = 'en-GB') {
-  const n = (entry.Name || []).find(x => x.Culture === culture) || (entry.Name || [])[0];
-  return n ? n.Message : entry.ID;
-}
-
-async function run(debug) {
-  console.log('Logging in...');
-  const token = await login(debug);
-  console.log('Login OK, token acquired.');
-
-  console.log('Fetching /V2/catalog...');
-  const catalog = await getJson('/V2/catalog', token);
-  debug.catalogTopLevelKeys = Object.keys(catalog);
-
-  const locations = catalog.Locations || [];
-  const parameters = catalog.Parameters || [];
-  const available = catalog.AvailableData || [];
-
-  // Full parameter list — this is what we actually need (only 22 total, cheap to keep all of).
-  debug.allParameters = parameters.map(p => ({ ID: p.ID, name: nameOf(p), unit: p.Unit, typeId: p.ParameterTypeID }));
-  const paramNameById = {};
-  for (const p of debug.allParameters) paramNameById[p.ID] = p.name;
-
-  // Full location list with parsed coordinates and which parameters each one publishes.
-  const availByLocation = {};
-  for (const a of available) {
-    (availByLocation[a.Location] ||= []).push(`${a.Parameter} (${paramNameById[a.Parameter] || '?'})`);
-  }
-  debug.allLocations = locations.map(loc => {
-    const pos = parseWktPoint(loc.PositionWKT);
-    return { ID: loc.ID, name: nameOf(loc), lat: pos?.lat, lon: pos?.lon, parameters: availByLocation[loc.ID] || [] };
-  });
-
-  // Nearest stations to each of our 3 (+1 proxy) Belgian spots.
-  debug.nearestPerSpot = {};
-  for (const [spotId, spot] of Object.entries(BE_SPOTS)) {
-    const ranked = debug.allLocations
-      .filter(l => l.lat != null && l.lon != null)
-      .map(l => ({ ...l, distKm: haversineKm(spot.lat, spot.lon, l.lat, l.lon) }))
-      .sort((a, b) => a.distKm - b.distKm)
-      .slice(0, 5)
-      .map(l => ({ ID: l.ID, name: l.name, distKm: Math.round(l.distKm * 10) / 10, parameters: l.parameters }));
-    debug.nearestPerSpot[spotId] = ranked;
-    console.log(`${spotId}: nearest = ${ranked[0]?.ID} (${ranked[0]?.name}, ${ranked[0]?.distKm}km) with params [${ranked[0]?.parameters.join(', ')}]`);
-  }
+  return JSON.parse(text);
 }
 
 async function main() {
   const debug = { generatedAt: new Date().toISOString() };
+  const results = {};
   try {
-    await run(debug);
-  } catch (err) {
-    debug.error = String(err && err.message || err);
-    console.error('FATAL:', err);
+    console.log('Logging in...');
+    const token = await login();
+
+    // AvailableData IDs are Location+Parameter concatenated, e.g. "OS7WVC".
+    const ids = new Set();
+    for (const s of Object.values(SPOT_STATIONS)) {
+      ids.add(`${s.windStation}WVC`);
+      ids.add(`${s.windStation}WRS`);
+      ids.add(`${s.tempStation}TZW`);
+    }
+    const idList = [...ids];
+    debug.requestedIds = idList;
+
+    console.log(`Fetching current data for ${idList.length} series...`);
+    const current = await getJson(`/V2/currentData?ids=${idList.join(',')}`, token);
+    debug.currentDataRaw = current;
+
+    // Response shape unconfirmed until this runs — inspect defensively.
+    const list = Array.isArray(current) ? current : (current.Values || current.Data || []);
+    debug.currentDataListLength = Array.isArray(list) ? list.length : null;
+
+    const byId = {};
+    for (const entry of list) {
+      const id = entry.ID || entry.Id || entry.AvailableDataID;
+      if (id) byId[id] = entry;
+    }
+    debug.byIdKeys = Object.keys(byId);
+
+    for (const [spotId, s] of Object.entries(SPOT_STATIONS)) {
+      const tempEntry = byId[`${s.tempStation}TZW`];
+      const windSpeedEntry = byId[`${s.windStation}WVC`];
+      const windDirEntry = byId[`${s.windStation}WRS`];
+
+      const tempVal = tempEntry && (tempEntry.Value ?? tempEntry.Value1 ?? tempEntry.value);
+      const tempTs = tempEntry && (tempEntry.Timestamp ?? tempEntry.Datum ?? tempEntry.timestamp);
+
+      if (tempVal != null) {
+        results[spotId] = {
+          waterTempC: Number(tempVal),
+          ts: tempTs,
+          stationCode: s.tempStation,
+        };
+      }
+      if (windSpeedEntry && windSpeedEntry.Value != null) {
+        results[spotId] = results[spotId] || {};
+        results[spotId].windSpeedKn = Number(windSpeedEntry.Value) * MS_TO_KN;
+        results[spotId].windDir = windDirEntry ? Number(windDirEntry.Value) : null;
+        results[spotId].windStationCode = s.windStation;
+      }
+      console.log(`${spotId}: ${JSON.stringify(results[spotId] || 'no data')}`);
+    }
+  } catch (e) {
+    debug.error = String(e && e.message || e);
+    console.error('FATAL:', e);
     process.exitCode = 1;
   } finally {
-    // Always write whatever we learned, success or failure — this is a discovery script,
-    // the partial state IS the useful output when something goes wrong.
     fs.writeFileSync(DEBUG_PATH, JSON.stringify(debug, null, 2));
-    console.log(`Wrote ${DEBUG_PATH}`);
+    fs.writeFileSync(OUT_PATH, JSON.stringify({ generatedAt: new Date().toISOString(), spots: results }, null, 2));
+    console.log(`Wrote ${OUT_PATH} and ${DEBUG_PATH}`);
   }
 }
 

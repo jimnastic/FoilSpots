@@ -311,13 +311,16 @@ let liveDataPromise = null;
 // browser calls (tested — no CORS access from any origin), so a GitHub Action fetches them
 // server-side on a schedule and commits live.json into this folder. We just read that file,
 // same-origin, no CORS involved.
-// Currently only the Dutch (RWS) spots are populated — Belgian coast (MVB) spots are added
-// once the login-based fetch is wired up (needs a repo secret, not embedded here).
+// Two separate snapshot files, one per network/credential set (RWS needs none, MVB needs a
+// login) so the two GitHub Actions never touch the same file. Both are merged here.
 function loadLiveData() {
   if (!liveDataPromise) {
-    liveDataPromise = fetch('./live.json', { cache: 'no-store' })
-      .then(r => r.ok ? r.json() : null)
-      .catch(() => null);
+    liveDataPromise = Promise.all([
+      fetch('./live.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('./mvb-live.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([rws, mvb]) => ({
+      spots: { ...(rws && rws.spots), ...(mvb && mvb.spots) },
+    }));
   }
   return liveDataPromise;
 }
