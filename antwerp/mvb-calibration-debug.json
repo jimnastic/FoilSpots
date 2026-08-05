@@ -1,0 +1,102 @@
+{
+  "generatedAt": "2026-08-05T12:17:42.824Z",
+  "lookbackDays": 90,
+  "spots": {
+    "oostende": {
+      "windStation": "OMP",
+      "speedExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "dirExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "speedHourCount": 0,
+      "dirHourCount": 0,
+      "archiveHourlyLength": 2184
+    },
+    "knokke-cadzand": {
+      "windStation": "MP4",
+      "speedExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "dirExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "speedHourCount": 0,
+      "dirHourCount": 0,
+      "archiveHourlyLength": 2184
+    },
+    "de-panne": {
+      "windStation": "NP7",
+      "speedExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "dirExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "speedHourCount": 0,
+      "dirHourCount": 0,
+      "archiveHourlyLength": 2184
+    },
+    "bray-dunes": {
+      "windStation": "NP7",
+      "speedExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "dirExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": []
+      },
+      "speedHourCount": 0,
+      "dirHourCount": 0,
+      "archiveHourlyLength": 2184
+    }
+  }
+}
