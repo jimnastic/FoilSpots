@@ -28,6 +28,8 @@ jobs:
             echo "No change"
           else
             git commit -m "Update Antwerp wind calibration [skip ci]"
-            git pull --rebase
+            # This file is fully regenerated every run — on conflict, keep OUR
+            # freshly-fetched data rather than trying to line-merge two snapshots.
+            git pull --rebase -X theirs
             git push
           fi

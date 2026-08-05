@@ -30,6 +30,8 @@ jobs:
             echo "No change to live.json/debug.json"
           else
             git commit -m "Update Antwerp live water data [skip ci]"
-            git pull --rebase
+            # This file is fully regenerated every run — on conflict, keep OUR
+            # freshly-fetched data rather than trying to line-merge two snapshots.
+            git pull --rebase -X theirs
             git push
           fi

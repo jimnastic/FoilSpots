@@ -32,6 +32,9 @@ jobs:
             echo "No change"
           else
             git commit -m "Update MVB live data [skip ci]"
-            git pull --rebase
+            # These files are fully regenerated every run, so on conflict always keep OUR
+            # freshly-fetched content rather than trying to line-merge two snapshots.
+            # (During `rebase`, "theirs" = the commit being replayed, i.e. this run's data.)
+            git pull --rebase -X theirs
             git push
           fi
