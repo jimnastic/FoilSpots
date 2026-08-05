@@ -55,13 +55,13 @@
     thead th {
       position: sticky; top: 0; z-index: 22;  /* sticks within #main */
       background: var(--surf2); border-bottom: 2px solid var(--border);
-      padding: 9px 10px; text-align: center; white-space: nowrap;
+      padding: 7px 4px; text-align: center; white-space: nowrap;
     }
-    thead th.dcol { text-align: left; left: 0; z-index: 24; min-width: 108px; }
-    thead th.scol  { min-width: 92px; }
+    thead th.dcol { text-align: left; left: 0; z-index: 24; min-width: 96px; }
+    thead th.scol  { min-width: 64px; }
 
-    .sth { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .sth-name { font-size: 12px; font-weight: 600; color: var(--acc); }
+    .sth { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .sth-name { font-size: 10.5px; font-weight: 600; color: var(--acc); white-space: normal; line-height: 1.2; max-width: 76px; }
     .sth-sub  { font-size: 10px; color: var(--muted); }
     .spip { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
     .spip.beginner     { background: rgba(74,222,128,0.14); color: #4ade80; }
@@ -74,7 +74,7 @@
     tbody tr.wkd   { background: rgba(78,205,196,0.05); }
     tbody tr.today { background: rgba(78,205,196,0.07); }
     tbody tr:hover { background: rgba(255,255,255,0.025); }
-    tbody td { padding: 7px 8px; text-align: center; vertical-align: middle; }
+    tbody td { padding: 5px 4px; text-align: center; vertical-align: middle; }
     tbody td.dtd {
       text-align: left; position: sticky; left: 0; z-index: 10;
       background: var(--bg); padding-left: 16px; border-right: 1px solid var(--border);
@@ -91,7 +91,7 @@
     /* Chips */
     .chip {
       display: inline-flex; flex-direction: column; align-items: center;
-      padding: 5px 7px; border-radius: 6px; min-width: 68px;
+      padding: 4px 4px; border-radius: 6px; min-width: 52px;
       cursor: default; user-select: none;
     }
     .arr { font-size: 13px; display: inline-block; line-height: 1; }
