@@ -1,9 +1,273 @@
 {
-  "generatedAt": "2026-08-05T11:45:29.595Z",
+  "generatedAt": "2026-08-05T11:47:48.068Z",
   "hasUsername": true,
   "hasPassword": true,
   "usernameLength": 22,
-  "loginStatus": 404,
-  "loginResponsePreview": "{\"Message\":\"No HTTP resource was found that matches the request URI 'https://api.meetnetvlaamsebanken.be/V2/Token'.\"}",
-  "error": "Login failed: HTTP 404: {\"Message\":\"No HTTP resource was found that matches the request URI 'https://api.meetnetvlaamsebanken.be/V2/Token'.\"}"
+  "loginStatus": 200,
+  "loginResponsePreview": "{\".expires\":\"Wed, 05 Aug 2026 12:47:49 GMT\",\".issued\":\"Wed, 05 Aug 2026 11:47:49 GMT\",\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCIsImtpZCI6ImlwZDdwZU80OXAwN1V6WjBxenUwY2h4Vk9lOCJ9.eyJpc3MiOiJodHRwczovL3Nzby5tZWV0bmV0dmxhYW1zZWJhbmtlbi5iZS9pZGVud",
+  "ping": {
+    "Timestamp": "2026-08-05T11:47:50.7681702+00:00",
+    "Customer": {
+      "FullName": "Jim May",
+      "Login": "jim_nastic@hotmail.com"
+    }
+  },
+  "catalogTopLevelKeys": [
+    "Customer",
+    "Locations",
+    "Parameters",
+    "ParameterTypes",
+    "AvailableData",
+    "ProjectionWKT"
+  ],
+  "Customer_value": {
+    "FullName": "Jim May",
+    "Login": "jim_nastic@hotmail.com"
+  },
+  "Locations_length": 40,
+  "Locations_sample": [
+    {
+      "ID": "A2B",
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "A2 - Boei"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "A2 - Buoy"
+        }
+      ],
+      "Description": [
+        {
+          "Culture": "nl-BE",
+          "Message": "<b>Boei: </b> Datawell - Directionele waverider"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "<b>Buoy: </b> Datawell - Directional waverider"
+        }
+      ],
+      "PositionWKT": "POINT (3.11983333333333 51.3597222222222)"
+    },
+    {
+      "ID": "AKZ",
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "ZW-Akkaert - Boei"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Akkaert-Southwest - Buoy"
+        }
+      ],
+      "Description": [
+        {
+          "Culture": "nl-BE",
+          "Message": "<b> Boei: </b> Datawell - Directionele waverider"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "<b>Buoy: </b> Datawell - Directional waverider"
+        }
+      ],
+      "PositionWKT": "POINT (2.81861111111111 51.4161111111111)"
+    },
+    {
+      "ID": "BL7",
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Blankenberge - Windmeting"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Blankenberge - Wind measurement"
+        }
+      ],
+      "Description": [
+        {
+          "Culture": "nl-BE",
+          "Message": "<b>Wind: </b>Gill Instruments - WindSonic M Heated"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "<b>Wind: </b>Gill Instruments - WindSonic M Heated"
+        }
+      ],
+      "PositionWKT": "POINT (3.105556 51.315833)"
+    }
+  ],
+  "Parameters_length": 22,
+  "Parameters_sample": [
+    {
+      "ID": "GH1",
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "10% hoogste golven"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "10% highest waves"
+        }
+      ],
+      "Unit": "cm",
+      "ParameterTypeID": 1,
+      "MaxValue": 0,
+      "MinValue": 0
+    },
+    {
+      "ID": "GHA",
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Golfhoogte"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Wave height"
+        }
+      ],
+      "Unit": "cm",
+      "ParameterTypeID": 1,
+      "MaxValue": 0,
+      "MinValue": 0
+    },
+    {
+      "ID": "GTZ",
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Gemiddelde golfperiode"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Average wave period"
+        }
+      ],
+      "Unit": "s",
+      "ParameterTypeID": 1,
+      "MaxValue": 0,
+      "MinValue": 0
+    }
+  ],
+  "ParameterTypes_value": {
+    "0": {
+      "ID": 0,
+      "SortOrder": 100,
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Varia"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Varia"
+        }
+      ]
+    },
+    "1": {
+      "ID": 1,
+      "SortOrder": 0,
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Golven"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Waves"
+        }
+      ]
+    },
+    "2": {
+      "ID": 2,
+      "SortOrder": 1,
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Getij en stroming"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Tide and current"
+        }
+      ]
+    },
+    "3": {
+      "ID": 3,
+      "SortOrder": 3,
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Meteo"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Meteo"
+        }
+      ]
+    },
+    "4": {
+      "ID": 4,
+      "SortOrder": 2,
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "Wind"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "Wind"
+        }
+      ]
+    },
+    "5": {
+      "ID": 5,
+      "SortOrder": 200,
+      "Name": [
+        {
+          "Culture": "nl-BE",
+          "Message": "'nl.$ParameterType.Name.5'"
+        },
+        {
+          "Culture": "en-GB",
+          "Message": "'en.$ParameterType.Name.5'"
+        }
+      ]
+    }
+  },
+  "AvailableData_length": 228,
+  "AvailableData_sample": [
+    {
+      "ID": "A2BGH1",
+      "Location": "A2B",
+      "Parameter": "GH1",
+      "CurrentInterval": 30,
+      "Publications": [
+        "live_data_pub"
+      ]
+    },
+    {
+      "ID": "A2BGHA",
+      "Location": "A2B",
+      "Parameter": "GHA",
+      "CurrentInterval": 30,
+      "Publications": [
+        "live_data_pub"
+      ]
+    },
+    {
+      "ID": "A2BGTZ",
+      "Location": "A2B",
+      "Parameter": "GTZ",
+      "CurrentInterval": 30,
+      "Publications": [
+        "live_data_pub"
+      ]
+    }
+  ],
+  "ProjectionWKT_value": "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]]"
 }
