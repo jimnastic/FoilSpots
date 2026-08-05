@@ -186,6 +186,11 @@
     .adj-label        { color:var(--muted); flex-shrink:0; }
     .rose-loading     { font-size:12px; color:var(--muted); font-style:italic; }
     .modal-hdr-spot   { cursor:pointer; }
+    .calmark          { color:#fbbf24; font-size:9px; margin-left:1px; }
+    .cal-status        { font-size:12px; line-height:1.55; margin:0 0 6px; }
+    .cal-status.on      { color:#4ecdc4; }
+    .cal-status.off     { color:#fbbf24; }
+    .cal-meta          { color:var(--muted); font-size:11px; margin:0 0 9px; }
     thead th[data-sid] { cursor:pointer; transition: background 0.12s; }
     thead th[data-sid]:hover { background: rgba(78,205,196,0.08); }
     .sth-name { text-decoration: underline dotted rgba(78,205,196,0.4); text-underline-offset: 3px; }
@@ -333,6 +338,51 @@ async function fetchWaterTemp(spot) {
   return waterTempCache[spot.id];
 }
 
+// ── Forecast calibration (per-direction adj from live station data) ────────
+// Computed monthly by fetch-antwerp-calibration.mjs / fetch-antwerp-mvb-calibration.mjs by
+// comparing real station wind against Open-Meteo's model at the same hours (see those scripts
+// for method). Only auto-applied to the displayed forecast for spots where spot.windCal.autoApply
+// is true in spots-data.js — that flag is set by hand after checking the station is close to and
+// similarly sited as the spot (see project notes). For other spots the calibration is still
+// computed and shown in the spot modal for transparency, but NOT applied to the numbers: a big
+// gap between a distant/offshore station and the model at the spot can just as easily be a real
+// regional wind difference as a correctable model bias, and applying it uncritically would risk
+// making the forecast worse, not better.
+const DIR_BANDS = ['N','NE','E','SE','S','SW','W','NW'];
+function bandFor(deg) { return DIR_BANDS[Math.round(((deg % 360) + 360) % 360 / 45) % 8]; }
+
+let calibrationData = {}; // spotId -> { source, stationCode/windStation, generatedAt, lookbackDays, pairedHourCount, bandAdj }
+let calibrationPromise = null;
+function loadCalibration() {
+  if (!calibrationPromise) {
+    calibrationPromise = Promise.all([
+      fetch('./calibration.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('./mvb-calibration.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([rws, mvb]) => {
+      const out = {};
+      if (rws && rws.spots) for (const [id, v] of Object.entries(rws.spots)) out[id] = { source:'rws', generatedAt: rws.generatedAt, lookbackDays: rws.lookbackDays, ...v };
+      if (mvb && mvb.spots) for (const [id, v] of Object.entries(mvb.spots)) out[id] = { source:'mvb', generatedAt: mvb.generatedAt, lookbackDays: mvb.lookbackDays, ...v };
+      calibrationData = out;
+      return out;
+    });
+  }
+  return calibrationPromise;
+}
+
+// Per-direction calibrated adjustment (knots) for a spot at a given wind direction.
+// Falls back to the legacy flat/boost-zone model (spot.adj + optional spot.adjDir/adjDirTol)
+// for any spot without auto-apply calibration — kept for compatibility, unused by current
+// Antwerp spots (all have adj:0, no adjDir).
+function calAdjFor(spot, dirDeg) {
+  if (spot.windCal && spot.windCal.autoApply) {
+    const cal = calibrationData[spot.id];
+    const band = cal && cal.bandAdj && cal.bandAdj[bandFor(dirDeg)];
+    if (band && band.adj != null) return band.adj;
+  }
+  const adjApplies = (spot.adjDir != null) ? angDiff(dirDeg, spot.adjDir) <= spot.adjDirTol : true;
+  return adjApplies ? (spot.adj || 0) : 0;
+}
+
 async function updateWaterTemp(spot, elId) {
   const el = document.getElementById(elId);
   if (!el) return;
@@ -410,8 +460,7 @@ function daySum(hourly, di) {
 
 function rateCell(spot, sum, skill) {
   if (!sum) return { st:'no-go', reason:'No data', dirDeg:null };
-  const adjApplies = (spot.adjDir != null) ? angDiff(sum.dir, spot.adjDir) <= spot.adjDirTol : true;
-  const appliedAdj = adjApplies ? spot.adj : 0;
+  const appliedAdj = calAdjFor(spot, sum.dir);
   const adj = sum.peak + appliedAdj;
   const dirOk = angDiff(sum.dir, spot.vc) <= spot.vt;
   const r = RANGES[skill]||RANGES.intermediate;
@@ -436,8 +485,8 @@ function spotChipHtml(sp, di, skill) {
     data-sid="${sp.id}" data-di="${di}"
     data-raw="${rv.raw??''}" data-adj="${rv.adj??''}" data-gust="${rv.gust??''}"
     data-dir="${rv.dir||''}" data-dir-deg="${rv.dirDeg??''}"
-    data-reason="${(rv.reason||'').replace(/"/g,"'")}" data-spotadj="${sp.adj}">
-    ${arrHTML}<span class="spd">${spd}</span>
+    data-reason="${(rv.reason||'').replace(/"/g,"'")}" data-spotadj="${sp.adj}" data-adj-applied="${rv.appliedAdj??0}">
+    ${arrHTML}<span class="spd">${spd}${(rv.appliedAdj && rv.appliedAdj!==0) ? '<sup class="calmark" title="Calibrated">±</sup>' : ''}</span>
   </div>`;
 }
 
@@ -582,7 +631,7 @@ function getHourlyDetail(spot, dayIdx) {
     const dir    = sd.hourly.wind_direction_10m[idx];
     const gust   = sd.hourly.wind_gusts_10m[idx];
     if (rawSpd == null || dir == null) continue;
-    const adj  = rawSpd + spot.adj;
+    const adj  = rawSpd + calAdjFor(spot, dir);
     const dirOk = angDiff(dir, spot.vc) <= spot.vt;
     const r    = RANGES[prefs.skill] || RANGES.intermediate;
     let st;
@@ -606,7 +655,9 @@ function buildDetailRow(spot, dayIdx, dayLabel) {
       <span class="hs">${h.adj} kn</span>
     </div>`;
   }).join('');
-  const adjStr = `${spot.adj > 0 ? '+' : ''}${spot.adj} kn local adjustment`;
+  const adjStr = (spot.windCal && spot.windCal.autoApply)
+    ? 'calibrated per wind direction — see spot info'
+    : `${spot.adj > 0 ? '+' : ''}${spot.adj} kn local adjustment`;
   const tr = document.createElement('tr');
   tr.className = 'detail-row';
   tr.dataset.sid = spot.id;
@@ -824,7 +875,48 @@ function buildModalContent(spot) {
       <div id="rose-container"><p class="rose-loading">Loading historical data from Open-Meteo archive&hellip;</p></div>
     </div>`;
 
-  return descHTML + warnsHTML + parkHTML + diagHTML + roseHTML;
+  const calHTML = buildCalibrationSection(spot);
+
+  return descHTML + warnsHTML + parkHTML + diagHTML + calHTML + roseHTML;
+}
+
+// ── Forecast calibration transparency panel ─────────────────────────────────
+function buildCalibrationSection(spot) {
+  const cal = calibrationData[spot.id];
+  const confident = !!(spot.windCal && spot.windCal.autoApply);
+  const distanceKm = spot.windCal ? spot.windCal.distanceKm : null;
+  const note = spot.windCal ? spot.windCal.note : null;
+
+  if (!cal) {
+    return `
+    <div class="modal-section">
+      <h3>Forecast calibration</h3>
+      <p class="cal-status">No live wind station is close enough to this spot to calibrate against — forecast shown uncorrected from the Open-Meteo model.</p>
+    </div>`;
+  }
+
+  const ageDays = cal.generatedAt ? Math.round((Date.now() - new Date(cal.generatedAt).getTime()) / 86400000) : null;
+  const ageStr = ageDays == null ? '' : ageDays <= 0 ? ' · computed today' : ` · computed ${ageDays}d ago`;
+  const stationCode = cal.stationCode || cal.windStation || (spot.station && spot.station.code) || '?';
+
+  const statusHTML = confident
+    ? `<p class="cal-status on"><strong>Applied to forecast.</strong> Station is ${distanceKm}km away${note ? ` — ${note}` : ''}, close and similarly sited enough to trust as a model correction.</p>`
+    : `<p class="cal-status off"><strong>Not applied to forecast — reference only.</strong> Station is ${distanceKm}km away${note ? `, ${note}` : ''}. The gap below vs. the model may be a real regional wind difference rather than a correctable model error, so it isn't baked into the numbers you see.</p>`;
+
+  const bandsHTML = DIR_BANDS.map(b => {
+    const v = cal.bandAdj ? cal.bandAdj[b] : null;
+    const val = (v && v.adj != null) ? `${v.adj >= 0 ? '+' : ''}${v.adj} kn` : '—';
+    const n = v ? v.sampleCount : 0;
+    return `<div class="adj-row"><span class="adj-label">${b}</span><span>${val} <span style="color:var(--muted)">(${n}h)</span></span></div>`;
+  }).join('');
+
+  return `
+    <div class="modal-section">
+      <h3>Forecast calibration</h3>
+      ${statusHTML}
+      <p class="cal-meta">Station ${stationCode} · ${cal.pairedHourCount ?? '?'} hours compared over ${cal.lookbackDays ?? 90} days${ageStr}</p>
+      <div class="modal-adj-wrap">${bandsHTML}</div>
+    </div>`;
 }
 
 // ── Direction arc SVG ──────────────────────────────────────────────────────
@@ -906,10 +998,8 @@ function buildDirArcSVG(spot) {
 
 // ── Wind adjustments table ──────────────────────────────────────────────────
 function buildAdjDetails(spot) {
-  const adjSign = spot.adj >= 0 ? '+' : '';
   const r = RANGES[prefs.skill] || RANGES.intermediate;
   const rows = [
-    ['Speed adjustment',    `${adjSign}${spot.adj} kn`],
     [`GO range (${prefs.skill})`, `${r.goLo}–${r.goHi} kn`],
     ['Marginal range',      `${r.mgLo}–${r.mgHi} kn`],
     ['Direction centre',    dirLabel(spot.vc)],
@@ -993,8 +1083,7 @@ async function loadSeasonalRose(spot) {
     if (spd == null || dir == null) continue;
     const bin = Math.round(dir / (360 / NDIRS)) % NDIRS;
     const dirOk     = angDiff(dir, spot.vc) <= spot.vt;
-    const adjOn     = (spot.adjDir != null) ? angDiff(dir, spot.adjDir) <= spot.adjDirTol : true;
-    const adj       = spd + (adjOn ? spot.adj : 0);
+    const adj       = spd + calAdjFor(spot, dir);
     let outcome;
     if (!dirOk)                          outcome = 'nogo';
     else if (adj >= r.goLo && adj <= r.goHi)   outcome = 'go';
@@ -1124,15 +1213,19 @@ window.addEventListener('resize', updateMainHeight, { passive: true });
 initFilters();
 if (!('area' in savedPrefs)) detectAreaFromGPS();
 
-const cached = loadCache();
-if (cached) {
-  Object.assign(rawData, cached.data);
-  document.getElementById('loading')?.remove();
-  buildGrid();
-  showFreshBar(cached.ts, true);
-} else {
-  fetchAll();
-}
+// Calibration data is small/cheap and needed before the first render so calAdjFor() has
+// real numbers rather than silently applying 0 on first paint then jumping after a re-render.
+loadCalibration().finally(() => {
+  const cached = loadCache();
+  if (cached) {
+    Object.assign(rawData, cached.data);
+    document.getElementById('loading')?.remove();
+    buildGrid();
+    showFreshBar(cached.ts, true);
+  } else {
+    fetchAll();
+  }
+});
 </script>
 </body>
 </html>
