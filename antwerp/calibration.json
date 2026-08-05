@@ -1,42 +1,42 @@
 {
-  "generatedAt": "2026-08-04T12:38:59.122Z",
+  "generatedAt": "2026-08-05T11:11:37.092Z",
   "lookbackDays": 90,
   "spots": {
     "oesterdam": {
-      "stationCode": "marollegat",
-      "pairedHourCount": 2075,
+      "stationCode": "tholen.bergsediepsluis",
+      "pairedHourCount": 2161,
       "bandAdj": {
         "N": {
-          "adj": 1,
-          "sampleCount": 253
+          "adj": 0,
+          "sampleCount": 217
         },
         "NE": {
           "adj": 0,
-          "sampleCount": 343
+          "sampleCount": 355
         },
         "E": {
           "adj": 0,
-          "sampleCount": 133
+          "sampleCount": 152
         },
         "SE": {
           "adj": 0,
-          "sampleCount": 94
+          "sampleCount": 117
         },
         "S": {
           "adj": 0,
-          "sampleCount": 207
+          "sampleCount": 167
         },
         "SW": {
           "adj": 0,
-          "sampleCount": 374
+          "sampleCount": 371
         },
         "W": {
-          "adj": 0,
-          "sampleCount": 272
+          "adj": 63,
+          "sampleCount": 427
         },
         "NW": {
           "adj": 0,
-          "sampleCount": 399
+          "sampleCount": 355
         }
       }
     }

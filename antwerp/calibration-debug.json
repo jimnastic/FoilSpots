@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T12:38:25.444Z",
+  "generatedAt": "2026-08-05T11:11:17.681Z",
   "lookbackDays": 90,
   "windMetaDiscovery": {
     "speed": {
@@ -27,22 +27,146 @@
   },
   "spots": {
     "brouwersdam-lake": {
-      "error": "Non-JSON from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen: "
+      "windStationSearch": {
+        "candidateCount": 25,
+        "windEquippedCount": 27,
+        "top5": [
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 32258,
+            "distKm": 0
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 67203,
+            "distKm": 0
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 99481,
+            "distKm": 0
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 100153,
+            "distKm": 0
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 119663,
+            "distKm": 0
+          }
+        ]
+      }
+    },
+    "brouwersdam-sea": {
+      "windStationSearch": {
+        "candidateCount": 25,
+        "windEquippedCount": 27,
+        "top5": [
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 32258,
+            "distKm": 1
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 67203,
+            "distKm": 1
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 99481,
+            "distKm": 1
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 100153,
+            "distKm": 1
+          },
+          {
+            "code": "scharendijke.diepeput",
+            "ageHours": 119663,
+            "distKm": 1
+          }
+        ]
+      }
     },
     "veerse-meer": {
-      "error": "Non-JSON from https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen: "
+      "windStationSearch": {
+        "candidateCount": 25,
+        "windEquippedCount": 49,
+        "top5": [
+          {
+            "code": "wissenkerke",
+            "ageHours": 32281,
+            "distKm": 3
+          },
+          {
+            "code": "soelekerkepolder.oost",
+            "ageHours": 32305,
+            "distKm": 5
+          },
+          {
+            "code": "soelekerkepolder.oost",
+            "ageHours": 47762,
+            "distKm": 5
+          },
+          {
+            "code": "soelekerkepolder.oost",
+            "ageHours": 61822,
+            "distKm": 5
+          },
+          {
+            "code": "soelekerkepolder.oost",
+            "ageHours": 67226,
+            "distKm": 5
+          }
+        ]
+      }
     },
     "oesterdam": {
-      "stationCode": "marollegat",
-      "speedObsCount": 12394,
-      "dirObsCount": 12392,
+      "windStationSearch": {
+        "candidateCount": 25,
+        "windEquippedCount": 48,
+        "top5": [
+          {
+            "code": "tholen.bergsediepsluis",
+            "ageHours": 0,
+            "distKm": 2
+          },
+          {
+            "code": "tholen.bergsediepsluis",
+            "ageHours": 0,
+            "distKm": 2
+          },
+          {
+            "code": "tholen.bergsediepsluis",
+            "ageHours": 0,
+            "distKm": 2
+          },
+          {
+            "code": "marollegat",
+            "ageHours": 0,
+            "distKm": 5
+          },
+          {
+            "code": "marollegat",
+            "ageHours": 0,
+            "distKm": 5
+          }
+        ]
+      },
+      "stationCode": "tholen.bergsediepsluis",
+      "speedObsCount": 12955,
+      "dirObsCount": 12955,
       "speedSample": [
         {
           "Meetwaarde": {
-            "Waarde_Alfanumeriek": "1.19",
-            "Waarde_Numeriek": 1.19
+            "Waarde_Alfanumeriek": "3.77",
+            "Waarde_Numeriek": 3.77
           },
-          "Tijdstip": "2026-05-06T22:50:00.000+01:00",
+          "Tijdstip": "2026-05-07T12:20:00.000+01:00",
           "WaarnemingMetadata": {
             "Bemonsteringshoogte": "0",
             "Kwaliteitswaardecode": "00",
@@ -53,10 +177,10 @@
         },
         {
           "Meetwaarde": {
-            "Waarde_Alfanumeriek": "4.62",
-            "Waarde_Numeriek": 4.62
+            "Waarde_Alfanumeriek": "3.3",
+            "Waarde_Numeriek": 3.3
           },
-          "Tijdstip": "2026-05-08T22:50:00.000+01:00",
+          "Tijdstip": "2026-05-07T12:30:00.000+01:00",
           "WaarnemingMetadata": {
             "Bemonsteringshoogte": "0",
             "Kwaliteitswaardecode": "00",
@@ -69,10 +193,10 @@
       "dirSample": [
         {
           "Meetwaarde": {
-            "Waarde_Alfanumeriek": "18.3",
-            "Waarde_Numeriek": 18.3
+            "Waarde_Alfanumeriek": "253.7",
+            "Waarde_Numeriek": 253.7
           },
-          "Tijdstip": "2026-05-06T13:40:00.000+01:00",
+          "Tijdstip": "2026-05-07T12:20:00.000+01:00",
           "WaarnemingMetadata": {
             "Bemonsteringshoogte": "0",
             "Kwaliteitswaardecode": "00",
@@ -83,10 +207,10 @@
         },
         {
           "Meetwaarde": {
-            "Waarde_Alfanumeriek": "24.5",
-            "Waarde_Numeriek": 24.5
+            "Waarde_Alfanumeriek": "246.6",
+            "Waarde_Numeriek": 246.6
           },
-          "Tijdstip": "2026-05-06T13:50:00.000+01:00",
+          "Tijdstip": "2026-05-07T12:30:00.000+01:00",
           "WaarnemingMetadata": {
             "Bemonsteringshoogte": "0",
             "Kwaliteitswaardecode": "00",
@@ -113,7 +237,7 @@
         "wind_direction_10m"
       ],
       "archiveHourlyLength": 2184,
-      "pairedHourCount": 2075
+      "pairedHourCount": 2161
     }
   }
 }
