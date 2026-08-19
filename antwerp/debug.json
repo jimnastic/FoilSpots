@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T18:37:52.456Z",
+  "generatedAt": "2026-08-19T19:27:22.635Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -47,31 +47,31 @@
       "top5ByFreshness": [
         {
           "code": "bommenede",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 9
         },
         {
           "code": "bommenede",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 9
         },
         {
           "code": "plaatvanoudetonge.oost",
           "ts": "2026-08-19T09:50:00.000+01:00",
-          "ageHours": 10,
+          "ageHours": 11,
           "distKm": 22
         },
         {
           "code": "plaatvanoudetonge.oost",
           "ts": "2026-08-19T09:50:00.000+01:00",
-          "ageHours": 10,
+          "ageHours": 11,
           "distKm": 22
         },
         {
           "code": "plaatvanoudetonge.oost",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 22
         }
@@ -83,32 +83,32 @@
       "top5ByFreshness": [
         {
           "code": "brouwersdam.brouwershavensegat.2",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 15
         },
         {
           "code": "brouwersdam.brouwershavensegat.2",
           "ts": "2026-07-22T22:30:00.000+01:00",
-          "ageHours": 669,
+          "ageHours": 670,
           "distKm": 15
         },
         {
           "code": "schouwen.10kmuitdekust",
           "ts": "2026-07-08T17:42:00.000+01:00",
-          "ageHours": 1010,
+          "ageHours": 1011,
           "distKm": 24
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-06-25T11:18:00.000+01:00",
-          "ageHours": 1328,
+          "ageHours": 1329,
           "distKm": 1
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-06-25T11:10:00.000+01:00",
-          "ageHours": 1328,
+          "ageHours": 1329,
           "distKm": 1
         }
       ]
@@ -119,13 +119,13 @@
       "top5ByFreshness": [
         {
           "code": "kamperland.schotsman",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 3
         },
@@ -138,7 +138,7 @@
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2025-11-22T19:20:00.000+01:00",
-          "ageHours": 6480,
+          "ageHours": 6481,
           "distKm": 3
         },
         {
@@ -155,31 +155,31 @@
       "top5ByFreshness": [
         {
           "code": "marollegat",
-          "ts": "2026-08-19T19:20:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 5
         },
         {
           "code": "marollegat",
-          "ts": "2026-08-19T19:20:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 5
         },
         {
           "code": "bruinisse.krammersluis.oosterschelde.1",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 16
         },
         {
           "code": "bruinisse.krammersluis.oosterschelde.1",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 16
         },
         {
           "code": "bruinisse.krammersluis.oosterschelde.1",
-          "ts": "2026-08-19T19:10:00.000+01:00",
+          "ts": "2026-08-19T20:00:00.000+01:00",
           "ageHours": 0,
           "distKm": 16
         }
