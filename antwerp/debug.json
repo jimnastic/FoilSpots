@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T08:57:15.145Z",
+  "generatedAt": "2026-09-02T13:31:20.955Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -47,32 +47,32 @@
       "top5ByFreshness": [
         {
           "code": "bommenede",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 9
         },
         {
           "code": "bommenede",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 9
         },
         {
           "code": "plaatvanoudetonge.oost",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 22
         },
         {
           "code": "plaatvanoudetonge.oost",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 22
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-08-19T12:11:00.000+01:00",
-          "ageHours": 334,
+          "ageHours": 338,
           "distKm": 0
         }
       ]
@@ -83,32 +83,32 @@
       "top5ByFreshness": [
         {
           "code": "brouwersdam.brouwershavensegat.2",
-          "ts": "2026-09-02T09:20:00.000+01:00",
+          "ts": "2026-09-02T14:00:00.000+01:00",
           "ageHours": 1,
           "distKm": 15
         },
         {
           "code": "brouwersdam.brouwershavensegat.2",
-          "ts": "2026-09-02T09:20:00.000+01:00",
+          "ts": "2026-09-02T14:00:00.000+01:00",
           "ageHours": 1,
           "distKm": 15
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-08-19T12:11:00.000+01:00",
-          "ageHours": 334,
+          "ageHours": 338,
           "distKm": 1
         },
         {
           "code": "schouwen.10kmuitdekust",
           "ts": "2026-07-08T17:42:00.000+01:00",
-          "ageHours": 1336,
+          "ageHours": 1341,
           "distKm": 24
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-07-08T11:53:00.000+01:00",
-          "ageHours": 1342,
+          "ageHours": 1347,
           "distKm": 1
         }
       ]
@@ -119,32 +119,32 @@
       "top5ByFreshness": [
         {
           "code": "kamperland.schotsman",
-          "ts": "2026-09-02T09:20:00.000+01:00",
+          "ts": "2026-09-02T14:00:00.000+01:00",
           "ageHours": 1,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman",
           "ts": "2026-08-20T11:00:00.000+01:00",
-          "ageHours": 311,
+          "ageHours": 316,
           "distKm": 3
         },
         {
           "code": "wissenkerke",
           "ts": "2026-08-18T09:47:00.000+01:00",
-          "ageHours": 360,
+          "ageHours": 365,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2025-11-22T19:20:00.000+01:00",
-          "ageHours": 6807,
+          "ageHours": 6811,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2025-10-29T14:00:00.000+01:00",
-          "ageHours": 7388,
+          "ageHours": 7393,
           "distKm": 3
         }
       ]
@@ -155,32 +155,32 @@
       "top5ByFreshness": [
         {
           "code": "marollegat",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 5
         },
         {
           "code": "marollegat",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 5
         },
         {
           "code": "bruinisse.krammersluis.oosterschelde.1",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 16
         },
         {
           "code": "bruinisse.krammersluis.oosterschelde.1",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 16
         },
         {
           "code": "bruinisse.krammersluis.oosterschelde.1",
-          "ts": "2026-09-02T09:20:00.000+01:00",
-          "ageHours": 1,
+          "ts": "2026-09-02T14:10:00.000+01:00",
+          "ageHours": 0,
           "distKm": 16
         }
       ]
