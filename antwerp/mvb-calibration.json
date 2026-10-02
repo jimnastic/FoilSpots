@@ -1,80 +1,118 @@
 {
-  "generatedAt": "2026-08-05T12:20:28.491Z",
+  "generatedAt": "2026-10-02T20:59:25.604Z",
   "lookbackDays": 90,
   "spots": {
     "oostende": {
       "windStation": "OMP",
-      "pairedHourCount": 2161,
+      "pairedHourCount": 2160,
       "bandAdj": {
         "N": {
           "adj": 3,
-          "sampleCount": 284
+          "sampleCount": 321
         },
         "NE": {
           "adj": 4,
-          "sampleCount": 457
+          "sampleCount": 348
         },
         "E": {
           "adj": 0,
-          "sampleCount": 113
+          "sampleCount": 177
         },
         "SE": {
           "adj": 0,
-          "sampleCount": 149
+          "sampleCount": 133
         },
         "S": {
-          "adj": 0,
-          "sampleCount": 192
+          "adj": 1,
+          "sampleCount": 292
         },
         "SW": {
           "adj": -1,
-          "sampleCount": 336
+          "sampleCount": 372
         },
         "W": {
-          "adj": 2,
-          "sampleCount": 415
+          "adj": 1,
+          "sampleCount": 321
         },
         "NW": {
           "adj": 3,
-          "sampleCount": 215
+          "sampleCount": 196
+        }
+      }
+    },
+    "de-haan": {
+      "windStation": "OMP",
+      "pairedHourCount": 2160,
+      "bandAdj": {
+        "N": {
+          "adj": 3,
+          "sampleCount": 321
+        },
+        "NE": {
+          "adj": 4,
+          "sampleCount": 348
+        },
+        "E": {
+          "adj": 0,
+          "sampleCount": 177
+        },
+        "SE": {
+          "adj": 1,
+          "sampleCount": 133
+        },
+        "S": {
+          "adj": 1,
+          "sampleCount": 292
+        },
+        "SW": {
+          "adj": -1,
+          "sampleCount": 372
+        },
+        "W": {
+          "adj": 1,
+          "sampleCount": 321
+        },
+        "NW": {
+          "adj": 3,
+          "sampleCount": 196
         }
       }
     },
     "knokke-cadzand": {
       "windStation": "MP4",
-      "pairedHourCount": 2159,
+      "pairedHourCount": 2157,
       "bandAdj": {
         "N": {
           "adj": 4,
-          "sampleCount": 419
+          "sampleCount": 420
         },
         "NE": {
           "adj": 5,
-          "sampleCount": 342
+          "sampleCount": 262
         },
         "E": {
-          "adj": 4,
-          "sampleCount": 162
+          "adj": 5,
+          "sampleCount": 198
         },
         "SE": {
-          "adj": 2,
-          "sampleCount": 102
+          "adj": 3,
+          "sampleCount": 109
         },
         "S": {
-          "adj": 4,
-          "sampleCount": 112
+          "adj": 3,
+          "sampleCount": 151
         },
         "SW": {
           "adj": 6,
-          "sampleCount": 364
+          "sampleCount": 454
         },
         "W": {
           "adj": 5,
-          "sampleCount": 448
+          "sampleCount": 371
         },
         "NW": {
           "adj": 3,
-          "sampleCount": 210
+          "sampleCount": 192
         }
       }
     },
@@ -83,36 +121,36 @@
       "pairedHourCount": 2160,
       "bandAdj": {
         "N": {
-          "adj": 5,
-          "sampleCount": 274
+          "adj": 4,
+          "sampleCount": 311
         },
         "NE": {
-          "adj": 7,
-          "sampleCount": 494
+          "adj": 6,
+          "sampleCount": 393
         },
         "E": {
-          "adj": 1,
-          "sampleCount": 129
+          "adj": 2,
+          "sampleCount": 162
         },
         "SE": {
           "adj": 2,
-          "sampleCount": 138
+          "sampleCount": 147
         },
         "S": {
           "adj": 3,
-          "sampleCount": 147
+          "sampleCount": 227
         },
         "SW": {
-          "adj": 5,
-          "sampleCount": 453
+          "adj": 4,
+          "sampleCount": 477
         },
         "W": {
           "adj": 5,
-          "sampleCount": 366
+          "sampleCount": 283
         },
         "NW": {
           "adj": 4,
-          "sampleCount": 159
+          "sampleCount": 160
         }
       }
     },
@@ -121,36 +159,36 @@
       "pairedHourCount": 2160,
       "bandAdj": {
         "N": {
-          "adj": 5,
-          "sampleCount": 274
+          "adj": 4,
+          "sampleCount": 311
         },
         "NE": {
-          "adj": 7,
-          "sampleCount": 494
+          "adj": 6,
+          "sampleCount": 393
         },
         "E": {
-          "adj": 1,
-          "sampleCount": 129
+          "adj": 2,
+          "sampleCount": 162
         },
         "SE": {
           "adj": 2,
-          "sampleCount": 138
+          "sampleCount": 147
         },
         "S": {
           "adj": 3,
-          "sampleCount": 147
+          "sampleCount": 227
         },
         "SW": {
-          "adj": 5,
-          "sampleCount": 453
+          "adj": 4,
+          "sampleCount": 477
         },
         "W": {
           "adj": 5,
-          "sampleCount": 366
+          "sampleCount": 283
         },
         "NW": {
           "adj": 4,
-          "sampleCount": 159
+          "sampleCount": 160
         }
       }
     }

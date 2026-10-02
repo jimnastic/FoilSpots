@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T12:20:15.012Z",
+  "generatedAt": "2026-10-02T20:59:13.683Z",
   "lookbackDays": 90,
   "spots": {
     "oostende": {
@@ -13,16 +13,16 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 5.5
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 4.8
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 5.1
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 4.8
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 5.5
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 4.4
           }
         ]
       },
@@ -35,23 +35,75 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 39
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 210
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 39
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 211
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 41
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 218
           }
         ]
       },
-      "speedHourCount": 2161,
-      "dirHourCount": 2161,
+      "speedHourCount": 2160,
+      "dirHourCount": 2160,
       "archiveHourlyLength": 2184,
-      "pairedHourCount": 2161,
+      "pairedHourCount": 2160,
+      "droppedImplausible": 0
+    },
+    "de-haan": {
+      "windStation": "OMP",
+      "speedExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": [
+          {
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 4.8
+          },
+          {
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 4.8
+          },
+          {
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 4.4
+          }
+        ]
+      },
+      "dirExtractDebug": {
+        "rawTopLevelKeys": [
+          "StartTime",
+          "EndTime",
+          "Intervals",
+          "Values"
+        ],
+        "pointSample": [
+          {
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 210
+          },
+          {
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 211
+          },
+          {
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 218
+          }
+        ]
+      },
+      "speedHourCount": 2160,
+      "dirHourCount": 2160,
+      "archiveHourlyLength": 2184,
+      "pairedHourCount": 2160,
       "droppedImplausible": 0
     },
     "knokke-cadzand": {
@@ -65,16 +117,16 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 6.5
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 7.9
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 6.6
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 8.1
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 6.7
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 6.8
           }
         ]
       },
@@ -87,23 +139,23 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 13
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 231
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 15
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 237
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 14
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 235
           }
         ]
       },
-      "speedHourCount": 2159,
-      "dirHourCount": 2159,
+      "speedHourCount": 2157,
+      "dirHourCount": 2157,
       "archiveHourlyLength": 2184,
-      "pairedHourCount": 2159,
+      "pairedHourCount": 2157,
       "droppedImplausible": 0
     },
     "de-panne": {
@@ -117,16 +169,16 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 6.1
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 7.1
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 6.4
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 6.9
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 6.7
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 6.9
           }
         ]
       },
@@ -139,20 +191,20 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 33
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 214
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 39
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 213
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 43
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 216
           }
         ]
       },
-      "speedHourCount": 2161,
+      "speedHourCount": 2160,
       "dirHourCount": 2160,
       "archiveHourlyLength": 2184,
       "pairedHourCount": 2160,
@@ -169,16 +221,16 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 6.1
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 7.1
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 6.4
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 6.9
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 6.7
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 6.9
           }
         ]
       },
@@ -191,20 +243,20 @@
         ],
         "pointSample": [
           {
-            "Timestamp": "2026-05-07T12:30:00+00:00",
-            "Value": 33
+            "Timestamp": "2026-07-04T21:00:00+00:00",
+            "Value": 214
           },
           {
-            "Timestamp": "2026-05-07T12:40:00+00:00",
-            "Value": 39
+            "Timestamp": "2026-07-04T21:10:00+00:00",
+            "Value": 213
           },
           {
-            "Timestamp": "2026-05-07T12:50:00+00:00",
-            "Value": 43
+            "Timestamp": "2026-07-04T21:20:00+00:00",
+            "Value": 216
           }
         ]
       },
-      "speedHourCount": 2161,
+      "speedHourCount": 2160,
       "dirHourCount": 2160,
       "archiveHourlyLength": 2184,
       "pairedHourCount": 2160,
