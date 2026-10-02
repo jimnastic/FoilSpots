@@ -1,36 +1,44 @@
 {
-  "generatedAt": "2026-08-05T12:18:07.029Z",
+  "generatedAt": "2026-10-02T21:00:45.970Z",
   "spots": {
     "oostende": {
-      "waterTempC": 22.6,
-      "ts": "2026-08-05T12:00:00+00:00",
+      "waterTempC": 18.5,
+      "ts": "2026-10-02T20:30:00+00:00",
       "stationCode": "OST",
-      "windSpeedKn": 14.773214399999999,
-      "windDir": 248,
+      "windSpeedKn": 4.2764568,
+      "windDir": 165,
+      "windStationCode": "OMP"
+    },
+    "de-haan": {
+      "waterTempC": 18.5,
+      "ts": "2026-10-02T20:30:00+00:00",
+      "stationCode": "OST",
+      "windSpeedKn": 4.2764568,
+      "windDir": 165,
       "windStationCode": "OMP"
     },
     "knokke-cadzand": {
-      "waterTempC": 22.4,
-      "ts": "2026-08-05T12:00:00+00:00",
+      "waterTempC": 18.7,
+      "ts": "2026-10-02T20:30:00+00:00",
       "stationCode": "SWI",
-      "windSpeedKn": 16.7170584,
-      "windDir": 252,
+      "windSpeedKn": 7.969760399999999,
+      "windDir": 122,
       "windStationCode": "MP4"
     },
     "de-panne": {
-      "waterTempC": 22,
-      "ts": "2026-08-05T12:00:00+00:00",
+      "waterTempC": 18.8,
+      "ts": "2026-10-02T20:30:00+00:00",
       "stationCode": "TRG",
-      "windSpeedKn": 22.354205999999998,
-      "windDir": 249,
+      "windSpeedKn": 6.414685199999999,
+      "windDir": 145,
       "windStationCode": "NP7"
     },
     "bray-dunes": {
-      "waterTempC": 22,
-      "ts": "2026-08-05T12:00:00+00:00",
+      "waterTempC": 18.8,
+      "ts": "2026-10-02T20:30:00+00:00",
       "stationCode": "TRG",
-      "windSpeedKn": 22.354205999999998,
-      "windDir": 249,
+      "windSpeedKn": 6.414685199999999,
+      "windDir": 145,
       "windStationCode": "NP7"
     }
   }
