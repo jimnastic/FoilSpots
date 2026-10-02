@@ -66,6 +66,11 @@ const SPOTS = [
     desc:'South face of Long Reef headland, accessed via the Greenlink walking track. SE wind and swell produce excellent reef breaks: ButterBox works in NE and SE, Little Makaha gives a clean right in S wind. A step up from Fishermans in commitment. Advanced only.',
     warnings:['Walk-in required via Greenlink track — carry all gear from the car park','Reef throughout — booties essential','Advanced only — assess swell carefully before committing','Can be offshore in W/SW — check wind direction carefully'],
     parking:{ type:'paid', notes:'Same car park area as Fishermans Beach — paid off Anzac Ave, free on side streets.' },
-    notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' }
+    notes:'South face of Long Reef headland. SE wind. Reef breaks ButterBox and Little Makaha. Advanced.' },
+  { id:'station-beach', name:'Station Beach', area:'north', water:'flat', skill:'intermediate', lat:-33.593, lon:151.325, adj:0, vc:45, vt:90, drive:'45 min',
+    desc:'UNCONFIRMED — not yet sailed, logged from online research only. South section of Station Beach, Governor Phillip Park, Palm Beach, right next to Palm Beach Golf Course. Access via end of Beach Rd or Governor Phillip Park. Western/Pittwater-facing shore, near the base of Barrenjoey headland. General Palm Beach Pittwater-side guidance: NE gives excellent flat water; SW also works but tends to be frustratingly gusty on a short board. There is an active seaplane runway on Pittwater nearby — confirm the flight path before rigging.',
+    warnings:['⚠️ Not yet verified in person — treat wind window, hazards and access as provisional','Active seaplane runway on Pittwater nearby — confirm flight path, stay clear','Not patrolled by lifeguards','Boat traffic and the Boathouse jetty divide the beach — check clearance'],
+    parking:{ type:'unknown', notes:'UNCONFIRMED — no parking cost/capacity found online for the Governor Phillip Park car park (separate from the metered Pittwater Park carpark near the wharf). Palm Beach generally gets very tight on weekends/holidays; council overflow option is Careel Bay park-and-ride + 199 bus. Check on-site or ask locally before relying on it.' },
+    notes:'UNCONFIRMED spot — research only, not yet sailed. Station Beach / Governor Phillip Park, next to Palm Beach Golf Course. NE best, SW gusty alt. Parking TBC — ask locals or scope out in person.' },
 ];
 
