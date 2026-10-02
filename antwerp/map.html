@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Antwerp Wingfoil Spots</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<style>
+  html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  #map { height: 100%; width: 100%; }
+  .legend {
+    position: absolute; top: 10px; right: 10px; z-index: 1000;
+    background: white; padding: 10px 14px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25); font-size: 13px; max-width: 210px;
+  }
+  .legend div { margin: 3px 0; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+  .sq { display: inline-block; width: 10px; height: 10px; margin-right: 6px; }
+  .popup-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .popup-meta { color: #555; font-size: 12px; margin-bottom: 6px; }
+  .popup-section { font-size: 13px; margin-top: 6px; }
+  .pro { color: #1a7a3c; }
+  .con { color: #b3311d; }
+  .fitbtn {
+    position: absolute; bottom: 20px; right: 10px; z-index: 1000;
+    background: white; padding: 8px 12px; border-radius: 6px; font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25); cursor: pointer; border: none;
+  }
+  .routes-panel {
+    position: absolute; top: 10px; left: 10px; z-index: 1000;
+    background: white; padding: 10px 14px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25); font-size: 13px;
+  }
+  .routes-panel label { display: flex; align-items: center; gap: 6px; margin: 4px 0; cursor: pointer; }
+  .line { display: inline-block; width: 18px; height: 3px; border-radius: 2px; }
+  .routes-status { font-size: 11px; color: #777; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="legend">
+  <div><span class="dot" style="background:#2e7d32"></span>Day trip (&lt;2h)</div>
+  <div><span class="sq" style="background:#1565c0"></span>Home / office / Tervuren</div>
+</div>
+<div class="routes-panel">
+  <div style="font-weight:600;margin-bottom:4px;">Driving routes</div>
+  <label><input type="checkbox" id="toggle-berchem" checked> <span class="line" style="background:#1565c0"></span> Berchem</label>
+  <label><input type="checkbox" id="toggle-office" checked> <span class="line" style="background:#8e24aa"></span> Office (Mechelen)</label>
+  <label><input type="checkbox" id="toggle-tervuren" checked> <span class="line" style="background:#ef6c00"></span> Tervuren</label>
+  <div class="routes-status" id="routes-status">Loading routes…</div>
+</div>
+<button class="fitbtn" onclick="map.fitBounds(allBounds)">Fit all spots</button>
+<a href="./index.html" style="position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:white;padding:8px 14px;border-radius:6px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.25);text-decoration:none;color:#1565c0;font-weight:600;">&larr; 16-day forecast</a>
+
+<script>
+const map = L.map('map');
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors',
+  maxZoom: 18
+}).addTo(map);
+
+function colorFor(tier) {
+  return { day: '#2e7d32', weekend: '#f9a825', far: '#c62828', origin: '#1565c0' }[tier];
+}
+
+function markerIcon(tier) {
+  if (tier === 'origin') {
+    return L.divIcon({
+      className: '',
+      html: `<div style="background:${colorFor(tier)};width:14px;height:14px;border:2px solid white;box-shadow:0 0 3px rgba(0,0,0,0.5);"></div>`,
+      iconSize: [14,14], iconAnchor: [7,7]
+    });
+  }
+  return L.divIcon({
+    className: '',
+    html: `<div style="background:${colorFor(tier)};width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 0 3px rgba(0,0,0,0.5);"></div>`,
+    iconSize: [16,16], iconAnchor: [8,8]
+  });
+}
+
+// Origins (home, office, Tervuren)
+const origins = [
+  {
+    key: "berchem", name: "Berchem (home)", lat: 51.1958, lng: 4.4306,
+    note: "Antwerp — home base", color: "#1565c0"
+  },
+  {
+    key: "office", name: "Cochlear CTC (office)", lat: 51.0550, lng: 4.4650,
+    note: "Schaliënhoevedreef, Mechelen-Noord", color: "#8e24aa"
+  },
+  {
+    key: "tervuren", name: "Tervuren", lat: 50.8236, lng: 4.6822,
+    note: "Outside Brussels", color: "#ef6c00"
+  }
+];
+
+// Wingfoil spots
+const spots = [
+  {
+    name: "Brouwersdam ⭐", tier: "day", lat: 51.7377, lng: 3.8567,
+    drive: "Berchem ~1h50m &middot; Office ~2h10m &middot; Tervuren ~3h00m",
+    wind: "SW, W, N, NE",
+    pros: ["Two water states: flat lake or North Sea waves", "Reliable 15–25kn sweet spot", "KBC school on site"],
+    cons: ["Furthest of the close spots", "Sea side has current, needs confidence", "Groynes mark zone edges"]
+  },
+  {
+    name: "Veerse Meer (Vrouwenpolder)", tier: "day", lat: 51.5808, lng: 3.6923,
+    drive: "Berchem ~1h35m &middot; Office ~1h50m &middot; Tervuren ~2h35m",
+    wind: "All directions",
+    pros: ["Works in literally any wind direction", "Flattest water of all spots — great for drills", "Wind 3–5kn lighter, more forgiving"],
+    cons: ["Oyster banks everywhere — booties mandatory", "Less exciting on already-marginal wind days"]
+  },
+  {
+    name: "Oesterdam Westzijde", tier: "day", lat: 51.5215, lng: 4.1971,
+    drive: "Berchem ~45m &middot; Office ~1h00m &middot; Tervuren ~1h35m",
+    wind: "Almost any, incl. E/NE",
+    pros: ["Closest flat-water spot to home", "Works in E/NE (rare on this coast)", "Free parking, showers, club on site"],
+    cons: ["Choppier than Veerse Meer", "Smaller riding area"]
+  },
+  {
+    name: "Oostende (Roze Villa)", tier: "day", lat: 51.2278, lng: 2.9166,
+    drive: "Berchem ~1h10m &middot; Office ~1h15m &middot; Tervuren ~1h30m",
+    wind: "SW, W",
+    pros: ["Proper open-coast feel", "Wave riding after W/NW storms"],
+    cons: ["Groynes are a real hazard if you drift downwind", "Not a learning spot", "NE unreliable / can be offshore"]
+  },
+  {
+    name: "De Haan", tier: "day", lat: 51.2822, lng: 3.0364,
+    drive: "Berchem ~1h10m &middot; Office ~1h15m &middot; Tervuren ~1h30m",
+    wind: "SW, W, NW",
+    pros: ["Belgium's top-ranked spot for annual wind reliability (kiteCOMPASS)", "Quieter than Oostende, same conditions"],
+    cons: ["Statistically close to Oostende in real data, not a step change", "Summer swimmer zone limits launch area", "Groynes"]
+  },
+  {
+    name: "Knokke-Heist / Cadzand-Bad", tier: "day", lat: 51.3700, lng: 3.3900,
+    drive: "Berchem ~55m &middot; Office ~1h05m &middot; Tervuren ~1h25m",
+    wind: "NW, W, SW",
+    pros: ["Closest open-coast option", "NW is ideal side-shore here"],
+    cons: ["More wave-focused, less flat water", "Groynes + tide-dependent sandbanks/currents"]
+  },
+  {
+    name: "De Panne", tier: "day", lat: 51.0937, lng: 2.5836,
+    drive: "Berchem ~1h25m &middot; Office ~1h30m &middot; Tervuren ~1h40m",
+    wind: "SW, W, NW (S partial side-shore)",
+    pros: ["Rare partial S side-shore option", "Good waves in SW/NW storms"],
+    cons: ["Limited flat water", "Advanced-rider spot only"]
+  },
+  {
+    name: "Bray-Dunes / Dunkirk (FR)", tier: "day", lat: 51.0765, lng: 2.5175,
+    drive: "Berchem ~1h35m &middot; Office ~1h40m &middot; Tervuren ~1h50m",
+    wind: "W, WSW, NW, NNE",
+    pros: ["Huge flat sandy beach, wide wind window", "Social scene, active school (DFC)", "Low tide = lots of space"],
+    cons: ["Wind runs +5kn over forecast — undersize wing", "High tide leaves very little beach"]
+  },
+  {
+    name: "Wimereux (FR, Côte d'Opale) ⭐", tier: "day", lat: 50.7696, lng: 1.6114,
+    drive: "Berchem ~2h20m &middot; Office ~2h30m &middot; Tervuren ~2h35m",
+    wind: "W, E (cross-shore)",
+    pros: ["Best-tested summer wind reliability of any spot in this guide (real Jul-Sep 2026 data beat Brouwersdam)", "Côte d'Opale has a genuine windy-coast reputation", "Wissant 15min north as a wider alternative"],
+    cons: ["Longest drive of any 'day trip' spot", "S is offshore — avoid", "Long-term storage unconfirmed"]
+  },
+];
+
+const allMarkers = [];
+
+origins.forEach(o => {
+  const marker = L.marker([o.lat, o.lng], { icon: markerIcon('origin') }).addTo(map);
+  marker.bindPopup(`<div class="popup-title">${o.name}</div><div class="popup-meta">${o.note}</div>`, { maxWidth: 240 });
+  allMarkers.push(marker);
+});
+
+spots.forEach(s => {
+  const marker = L.marker([s.lat, s.lng], { icon: markerIcon(s.tier) }).addTo(map);
+  let html = `<div class="popup-title">${s.name}</div>`;
+  html += `<div class="popup-meta">${s.drive}<br>Best wind: ${s.wind}</div>`;
+  html += `<div class="popup-section pro"><b>Pros:</b><ul>${s.pros.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+  html += `<div class="popup-section con"><b>Cons:</b><ul>${s.cons.map(c => `<li>${c}</li>`).join('')}</ul></div>`;
+  marker.bindPopup(html, { maxWidth: 280 });
+  allMarkers.push(marker);
+});
+
+const allBounds = L.featureGroup(allMarkers).getBounds();
+map.fitBounds(allBounds, { padding: [30, 30] });
+
+// ---- Driving routes (via OSRM public routing API) ----
+const routeLayers = {
+  berchem: L.layerGroup().addTo(map),
+  office: L.layerGroup().addTo(map),
+  tervuren: L.layerGroup().addTo(map)
+};
+
+document.getElementById('toggle-berchem').addEventListener('change', e => {
+  e.target.checked ? map.addLayer(routeLayers.berchem) : map.removeLayer(routeLayers.berchem);
+});
+document.getElementById('toggle-office').addEventListener('change', e => {
+  e.target.checked ? map.addLayer(routeLayers.office) : map.removeLayer(routeLayers.office);
+});
+document.getElementById('toggle-tervuren').addEventListener('change', e => {
+  e.target.checked ? map.addLayer(routeLayers.tervuren) : map.removeLayer(routeLayers.tervuren);
+});
+
+const statusEl = document.getElementById('routes-status');
+let done = 0;
+const total = origins.length * spots.length;
+
+async function fetchRoute(origin, spot) {
+  const url = `https://router.project-osrm.org/route/v1/driving/${origin.lng},${origin.lat};${spot.lng},${spot.lat}?overview=full&geometries=geojson`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.code !== 'Ok' || !data.routes || !data.routes.length) throw new Error('no route');
+    const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+    const km = (data.routes[0].distance / 1000).toFixed(0);
+    const mins = Math.round(data.routes[0].duration / 60);
+    const h = Math.floor(mins / 60), m = mins % 60;
+    const timeStr = h > 0 ? `${h}h ${m}m` : `${m}m`;
+    const line = L.polyline(coords, { color: origin.color, weight: 3, opacity: 0.65 });
+    line.bindPopup(`<b>${origin.name} → ${spot.name}</b><br>${km} km &middot; ~${timeStr} drive`);
+    line.addTo(routeLayers[origin.key]);
+  } catch (err) {
+    console.warn(`Route failed: ${origin.name} -> ${spot.name}`, err);
+  } finally {
+    done++;
+    statusEl.textContent = done < total ? `Loading routes… (${done}/${total})` : `${total} routes loaded`;
+  }
+}
+
+(async () => {
+  for (const origin of origins) {
+    for (const spot of spots) {
+      await fetchRoute(origin, spot);
+    }
+  }
+})();
+</script>
+</body>
+</html>
