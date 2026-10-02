@@ -42,6 +42,14 @@ const SPOTS = [
     warnings:['Groynes everywhere on the Belgian coast — hard and sharp, dangerous in a downwind drift','Shipping traffic offshore — this is a working port','Avoid E and NE — can be offshore depending on exact beach orientation'],
     parking:{ type:'paid', notes:'Along Koningin Astridlaan — scarce in summer; overflow at Thermae Palace.' },
     notes:'Roze Villa (western end) is the safest launch, works even in slightly cross-offshore wind.' },
+  { id:'de-haan', name:'De Haan', area:'be', water:'wave', skill:'intermediate',
+    lat:51.2822, lon:3.0364, adj:0, vc:270, vt:55, drive:'1h 10m from Berchem',
+    station:{ network:'mvb', code:'OST', label:'Ostend Eastern Palisade Buoy — water temp (MVB, shared with Oostende); wind via OMP Ostend weather station' },
+    windCal:{ autoApply:false, distanceKm:8.9, note:'nearest live station is shared with Oostende, ~9km away — same caution as Knokke/De Panne' },
+    desc:'10km east of Oostende, between Wenduine and Bredene — same coastline, same wind, same hazards as Oostende; genuinely a substitute rather than a distinct spot. Ranked Belgium\'s top beach for wind reliability by kiteCOMPASS, though a real-data check puts it statistically close to Oostende rather than meaningfully better.',
+    warnings:['Groynes — same hazard as the rest of the Belgian coast','Summer swimmer zone pushes launch to the sail club\'s patch of beach'],
+    parking:{ type:'paid', notes:'Village-style parking, paid in season. Cafes along the Normandi\u00eblaan promenade.' },
+    notes:'Treat as an alternate to Oostende on the same wind day — useful if Oostende\'s car park is full, or if coming from Tervuren/Brussels where it\'s effectively the same drive.' },
   { id:'knokke-cadzand', name:'Knokke-Heist / Cadzand-Bad', area:'be', water:'wave', skill:'intermediate',
     lat:51.3700, lon:3.3900, adj:0, vc:270, vt:45, drive:'55 min from Berchem',
     station:{ network:'mvb', code:'SWI', label:'Scheur Wielingen Buoy — water temp (MVB); wind via MP4 Scheur Wielingen measuring pile (offshore)' },
@@ -65,5 +73,11 @@ const SPOTS = [
     desc:'A 9-mile sandy beach running from Dunkirk to Bray-Dunes, just inside France. Faces almost due north — W is side-shore, giving a wide wind window. Wind runs consistently ~5 kn stronger than forecast here (funnel effect along the dunes).',
     warnings:['Never ride in E or NE — offshore into the North Sea','High tide leaves very little beach — cramped launch conditions','Tidal currents in the water'],
     parking:{ type:'free', notes:'Direct beachfront parking at the Station Nautique (Digue Nicolas II).' },
-    notes:'Dunkerque Flysurfing Club (DFC) on site. Best at low tide — wide beach, flat water, more space.' }
+    notes:'Dunkerque Flysurfing Club (DFC) on site. Best at low tide — wide beach, flat water, more space.' },
+  { id:'wimereux', name:'Wimereux / Wissant (FR)', area:'fr', water:'wave', skill:'intermediate',
+    lat:50.7696, lon:1.6114, adj:0, vc:270, vt:90, drive:'2h 20m from Berchem',
+    desc:'C\u00f4te d\'Opale, about 45 minutes past Dunkirk — one of the windiest coastlines in France, home to multiple speed-sailing records set near Wissant. The only spot in range whose real hourly wind data beat Brouwersdam on two of three summer months in a direct check. Coastline runs roughly N–S: W and E are both cross-shore (ride out and back on either tack); S is offshore — avoid. Wissant, 15 min north, is the wider, sandier alternative with a bigger established scene.',
+    warnings:['Open-coast beach break at both towns — no major shelter from swell','S is offshore at Wimereux — avoid','Strong currents reported around the capes (Blanc-Nez/Gris-Nez) at either end of the Wissant bay — stay clear of the headlands'],
+    parking:{ type:'free', notes:'Plentiful free parking along the Wimereux dike and in town.' },
+    notes:'A deliberate summer-wind trip, not a casual add-on to a Bray-Dunes session — budget the extra drive. No live wind/water station nearby (outside the Belgian MVB network) — forecast is Open-Meteo only, uncalibrated.' }
 ];

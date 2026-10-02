@@ -32,9 +32,11 @@ const LOOKBACK_DAYS = 90;
 // specifically because it's a genuine offshore measuring pile).
 const SPOT_STATIONS = {
   oostende:          { windStation: 'OMP' },
+  'de-haan':         { windStation: 'OMP' }, // shares Oostende's station, ~9km away
   'knokke-cadzand':  { windStation: 'MP4' },
   'de-panne':        { windStation: 'NP7' },
   'bray-dunes':      { windStation: 'NP7' },
+  // wimereux: no station — see fetch-antwerp-mvb.mjs note.
 };
 
 const DIR_BANDS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];

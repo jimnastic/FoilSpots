@@ -32,9 +32,12 @@ const MS_TO_KN = 1.943844;
 
 const SPOT_STATIONS = {
   oostende:          { windStation: 'OMP', tempStation: 'OST' },
+  'de-haan':         { windStation: 'OMP', tempStation: 'OST' }, // shares Oostende's station, ~9km away
   'knokke-cadzand':  { windStation: 'MP4', tempStation: 'SWI' },
   'de-panne':        { windStation: 'NP7', tempStation: 'TRG' },
   'bray-dunes':      { windStation: 'NP7', tempStation: 'TRG' },
+  // wimereux: no MVB (or any) station nearby — outside the Belgian coastal network, no French
+  // equivalent exists. Intentionally omitted; forecast runs uncalibrated for this spot.
 };
 
 async function login() {
