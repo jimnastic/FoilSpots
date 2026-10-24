@@ -801,7 +801,14 @@ function buildModalContent(spot) {
       <div id="rose-container"><p class="rose-loading">Loading historical data from Open-Meteo archive&hellip;</p></div>
     </div>`;
 
-  return descHTML + warnsHTML + parkHTML + diagHTML + roseHTML;
+  // Webcam
+  const camHTML = spot.webcam ? `
+    <div class="modal-section">
+      <h3>Webcam</h3>
+      <p><a href="${spot.webcam}" target="_blank" rel="noopener" style="color:var(--acc);">&#128249; Live webcam (Narrabeen Lagoon)</a></p>
+    </div>` : '';
+
+  return descHTML + warnsHTML + parkHTML + camHTML + diagHTML + roseHTML;
 }
 
 // ── Direction arc SVG ──────────────────────────────────────────────────────
