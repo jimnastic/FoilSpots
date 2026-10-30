@@ -1,27 +1,27 @@
 {
-  "generatedAt": "2026-10-30T01:40:23.981Z",
+  "generatedAt": "2026-10-30T08:14:41.886Z",
   "spots": {
     "brouwersdam-lake": {
-      "waterTempC": 12.2,
-      "ts": "2026-10-30T02:20:00.000+01:00",
+      "waterTempC": 12,
+      "ts": "2026-10-30T08:50:00.000+01:00",
       "stationCode": "bommenede",
       "stationName": "Bommenede"
     },
     "brouwersdam-sea": {
-      "waterTempC": 13.8,
-      "ts": "2026-10-30T02:20:00.000+01:00",
+      "waterTempC": 13.1,
+      "ts": "2026-10-30T08:50:00.000+01:00",
       "stationCode": "brouwersdam.brouwershavensegat.2",
       "stationName": "Brouwersdam Brouwershavense Gat 2"
     },
     "veerse-meer": {
       "waterTempC": 11.9,
-      "ts": "2026-10-30T02:20:00.000+01:00",
+      "ts": "2026-10-30T08:50:00.000+01:00",
       "stationCode": "kamperland.schotsman",
       "stationName": "Kamperland, Schotsman"
     },
     "oesterdam": {
-      "waterTempC": 11.8,
-      "ts": "2026-10-30T02:20:00.000+01:00",
+      "waterTempC": 11.9,
+      "ts": "2026-10-30T08:50:00.000+01:00",
       "stationCode": "marollegat",
       "stationName": "Marollegat"
     }
