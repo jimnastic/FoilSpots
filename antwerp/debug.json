@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T15:57:53.794Z",
+  "generatedAt": "2026-10-31T19:51:52.748Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -48,31 +48,31 @@
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-10-01T10:52:00.000+01:00",
-          "ageHours": 726,
+          "ageHours": 730,
           "distKm": 0
         },
         {
           "code": "plaatvanoudetonge.oost",
           "ts": "2026-08-19T09:50:00.000+01:00",
-          "ageHours": 1759,
+          "ageHours": 1763,
           "distKm": 22
         },
         {
           "code": "plaatvanoudetonge.oost",
           "ts": "2026-08-19T09:50:00.000+01:00",
-          "ageHours": 1759,
+          "ageHours": 1763,
           "distKm": 22
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-07-08T11:53:00.000+01:00",
-          "ageHours": 2765,
+          "ageHours": 2769,
           "distKm": 0
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-07-08T11:21:00.000+01:00",
-          "ageHours": 2766,
+          "ageHours": 2770,
           "distKm": 0
         }
       ]
@@ -84,31 +84,31 @@
         {
           "code": "schouwen.10kmuitdekust",
           "ts": "2026-10-07T19:50:00.000+01:00",
-          "ageHours": 573,
+          "ageHours": 577,
           "distKm": 24
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-10-01T10:52:00.000+01:00",
-          "ageHours": 726,
+          "ageHours": 730,
           "distKm": 1
         },
         {
           "code": "schouwen.10kmuitdekust",
           "ts": "2026-08-05T11:00:00.000+01:00",
-          "ageHours": 2094,
+          "ageHours": 2098,
           "distKm": 24
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-07-08T11:53:00.000+01:00",
-          "ageHours": 2765,
+          "ageHours": 2769,
           "distKm": 1
         },
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-07-08T11:21:00.000+01:00",
-          "ageHours": 2766,
+          "ageHours": 2770,
           "distKm": 1
         }
       ]
@@ -120,31 +120,31 @@
         {
           "code": "wissenkerke",
           "ts": "2026-09-30T09:00:00.000+01:00",
-          "ageHours": 752,
+          "ageHours": 756,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman",
           "ts": "2026-08-20T11:00:00.000+01:00",
-          "ageHours": 1734,
+          "ageHours": 1738,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2025-11-22T19:20:00.000+01:00",
-          "ageHours": 8230,
+          "ageHours": 8234,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2025-10-29T14:00:00.000+01:00",
-          "ageHours": 8811,
+          "ageHours": 8815,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2025-08-28T00:50:00.000+01:00",
-          "ageHours": 10312,
+          "ageHours": 10316,
           "distKm": 3
         }
       ]
@@ -156,31 +156,31 @@
         {
           "code": "oosterschelde.4",
           "ts": "2026-08-26T13:40:00.000+01:00",
-          "ageHours": 1587,
+          "ageHours": 1591,
           "distKm": 38
         },
         {
           "code": "marollegat",
           "ts": "2026-08-26T09:40:00.000+01:00",
-          "ageHours": 1591,
+          "ageHours": 1595,
           "distKm": 5
         },
         {
           "code": "oesterdam",
           "ts": "2026-08-20T11:40:00.000+01:00",
-          "ageHours": 1733,
+          "ageHours": 1737,
           "distKm": 6
         },
         {
           "code": "marollegat",
           "ts": "2025-11-27T00:50:00.000+01:00",
-          "ageHours": 8128,
+          "ageHours": 8132,
           "distKm": 5
         },
         {
           "code": "marollegat",
           "ts": "2025-11-27T00:50:00.000+01:00",
-          "ageHours": 8128,
+          "ageHours": 8132,
           "distKm": 5
         }
       ]
