@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20T08:12:15.444Z",
+  "generatedAt": "2026-11-20T08:35:15.231Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -47,13 +47,13 @@
       "top5ByFreshness": [
         {
           "code": "bommenede",
-          "ts": "2026-11-20T08:20:00.000+01:00",
+          "ts": "2026-11-20T08:40:00.000+01:00",
           "ageHours": 1,
           "distKm": 9
         },
         {
           "code": "bommenede",
-          "ts": "2026-11-20T08:20:00.000+01:00",
+          "ts": "2026-11-20T08:40:00.000+01:00",
           "ageHours": 1,
           "distKm": 9
         },
@@ -83,13 +83,13 @@
       "top5ByFreshness": [
         {
           "code": "brouwersdam.brouwershavensegat.2",
-          "ts": "2026-11-20T08:30:00.000+01:00",
+          "ts": "2026-11-20T08:40:00.000+01:00",
           "ageHours": 1,
           "distKm": 15
         },
         {
           "code": "brouwersdam.brouwershavensegat.2",
-          "ts": "2026-11-20T08:30:00.000+01:00",
+          "ts": "2026-11-20T08:40:00.000+01:00",
           "ageHours": 1,
           "distKm": 15
         },
@@ -102,13 +102,13 @@
         {
           "code": "schouwen.10kmuitdekust",
           "ts": "2026-10-07T19:50:00.000+01:00",
-          "ageHours": 1045,
+          "ageHours": 1046,
           "distKm": 24
         },
         {
           "code": "schouwen.10kmuitdekust",
           "ts": "2026-08-05T11:00:00.000+01:00",
-          "ageHours": 2566,
+          "ageHours": 2567,
           "distKm": 24
         }
       ]
@@ -126,13 +126,13 @@
         {
           "code": "wissenkerke",
           "ts": "2026-09-30T09:00:00.000+01:00",
-          "ageHours": 1224,
+          "ageHours": 1225,
           "distKm": 3
         },
         {
           "code": "kamperland.schotsman",
           "ts": "2026-08-20T11:00:00.000+01:00",
-          "ageHours": 2206,
+          "ageHours": 2207,
           "distKm": 3
         },
         {
@@ -155,13 +155,13 @@
       "top5ByFreshness": [
         {
           "code": "marollegat",
-          "ts": "2026-11-20T08:30:00.000+01:00",
+          "ts": "2026-11-20T08:40:00.000+01:00",
           "ageHours": 1,
           "distKm": 5
         },
         {
           "code": "marollegat",
-          "ts": "2026-11-20T08:30:00.000+01:00",
+          "ts": "2026-11-20T08:40:00.000+01:00",
           "ageHours": 1,
           "distKm": 5
         },
