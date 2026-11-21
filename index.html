@@ -703,15 +703,19 @@ function buildDetailRow(spot, dayIdx, dayLabel) {
   const dirNow = sd ? daySum(sd, dayIdx) : null;
   const a = dirNow ? adjFor(spot, dirNow.dir) : { adj: spot.adj, band: null };
   const adjStr = `${a.adj > 0 ? '+' : ''}${a.adj} kn local adjustment${a.band ? ' ('+a.band+')' : ''}`;
-  const mStr = det.models.length ? ` · models: ${det.models.map(mlabel).join(', ')}` : '';
+  const sumD = sd ? daySum(sd, dayIdx) : null;
+  const mInfo = sumD ? `Models used (peak 9am–7pm, raw kn): ${sumD.models.map(m => `${mlabel(m)} ${Math.round(sumD.per[m].peak)}`).join(' · ')}`
+      + (sumD.base ? ` · Baseline ${mlabel(FORECAST_CONFIG.baseline)} ${Math.round(sumD.base.peak)}` : '')
+      + ` · Status basis: ${FORECAST_CONFIG.statusBasis}` : '';
   const uStr = det.uncertain ? ` · ⚠ models differ by ${det.spread} kn` : '';
   const tr = document.createElement('tr');
   tr.className = 'detail-row';
   tr.dataset.sid = spot.id;
   tr.dataset.di  = dayIdx;
   tr.innerHTML = `<td colspan="20"><div class="detail-inner">
-    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr}${mStr}${uStr} · hover an hour for per-model values · click again to close</span></div>
+    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr}${uStr} · hover an hour for per-model values · click again to close</span></div>
     <div class="detail-hours">${det.hours.length ? hoursHTML : '<span style="color:var(--muted);font-size:12px">No hourly data</span>'}</div>
+    ${mInfo ? `<div style="margin-top:10px;font-size:11px;color:var(--muted)">${mInfo}</div>` : ''}
   </div></td>`;
   return tr;
 }
@@ -739,10 +743,6 @@ function initTooltip() {
         h += `<div class="ttr"><span>Gusts</span><span>${rv.gust} kn${sum.models.length>1 ? ` (max ${Math.round(sum.gustMax)})` : ''}</span></div>`;
         h += `<div class="ttr"><span>Peak</span><span>~${hourLabel(sum.hour)} · ${rv.dir}</span></div>`;
         if (sum.uncertain) h += `<div class="ttwarn">⚠ Uncertain — models differ by ${rv.spread} kn</div>`;
-        const list = sum.models.map(m => `${mlabel(m)} ${Math.round(sum.per[m].peak)}`).join(' · ');
-        h += `<div class="ttnote">Models used: ${list}`
-           + (sum.base ? `<br>Baseline (${mlabel(FORECAST_CONFIG.baseline)}): ${Math.round(sum.base.peak)} kn` : '')
-           + `<br>Status basis: ${FORECAST_CONFIG.statusBasis}</div>`;
       }
       if (rv && rv.reason) h += `<div class="ttnote">${rv.reason}</div>`;
       if (sp) h += `<div class="ttspot">${sp.notes}</div>`;
