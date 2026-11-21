@@ -41,7 +41,7 @@
 </head>
 <body>
   <h1>Calibration Log</h1>
-  <p class="sub">Log forecast vs a nearby live-station actual each session. The tool averages <code>(actual − forecast)</code> per spot per direction band and gives you the <code>adj</code> to paste into <code>spots-data.js</code>. Data is saved on this device; export CSV to back it up.</p>
+  <p class="sub">Log forecast vs a nearby live-station actual each session. The tool averages <code>(actual − forecast)</code> per spot, and per compass band, and gives you the <code>adj</code> and <code>dirAdj</code> to paste into <code>spots-data.js</code>. Enter the <b>raw, unadjusted model mean</b> (the "Models … mean" / "Wind = raw ± adj" figure in the forecast tooltip), not the adjusted number, or adjustments will double-count. Data is saved on this device; export CSV to back it up.</p>
 
   <div class="card">
     <div class="field">
@@ -50,7 +50,7 @@
     </div>
     <div class="grid3">
       <div class="field">
-        <label>Forecast peak (kn)</label>
+        <label>Forecast peak — raw model mean (kn)</label>
         <input id="fc" type="number" inputmode="decimal" placeholder="e.g. 15">
       </div>
       <div class="field">
@@ -77,12 +77,13 @@
       <tbody id="sumRows"></tbody>
     </table>
     <details>
-      <summary>Direction-band breakdown (for adjDir tuning)</summary>
-      <table id="dirTable"><thead><tr><th>Spot</th><th>Band</th><th class="num">n</th><th class="num">Mean Δ</th></tr></thead><tbody id="dirRows"></tbody></table>
+      <summary>Direction-band breakdown (suggested dirAdj per compass band)</summary>
+      <table id="dirTable"><thead><tr><th>Spot</th><th>Band</th><th class="num">n</th><th class="num">Mean Δ</th><th class="num">dirAdj →</th></tr></thead><tbody id="dirRows"></tbody></table>
     </details>
     <div class="btnrow">
       <button class="ghost" id="export">Export CSV</button>
       <button class="ghost" id="snipBtn">Show paste-ready snippet</button>
+      <button class="ghost" id="seedBtn" title="Adds the 10 Middle Creek sessions (May–Nov 2026) used for the Nov 2026 calibration; skips any already loaded">Load Middle Creek seed sessions</button>
     </div>
     <div class="snip" id="snip" style="display:none"></div>
   </div>
@@ -102,12 +103,15 @@ const SPOTS = [
   {id:'manly',name:'Shelly Beach'},{id:'fishermans',name:'Fishermans Beach'},
   {id:'long-reef',name:'Long Reef Beach'},
 ];
+const SEED=[{"spot": "mid-creek", "fc": 10.2, "act": 9.0, "dir": 45, "note": "2026-05-02 · seed: hist-forecast model-mean peak vs your range midpoint (8-10 kt)", "ts": 1777683600000.0}, {"spot": "mid-creek", "fc": 11.6, "act": 10.0, "dir": 46, "note": "2026-05-03 · seed: hist-forecast model-mean peak vs your range midpoint (9-11 kt)", "ts": 1777770000000.0}, {"spot": "mid-creek", "fc": 9.6, "act": 12.0, "dir": 45, "note": "2026-10-03 · seed: hist-forecast model-mean peak vs your range midpoint (10-14 kt)", "ts": 1790989200000.0}, {"spot": "mid-creek", "fc": 11.0, "act": 11.0, "dir": 45, "note": "2026-10-09 · seed: hist-forecast model-mean peak vs your range midpoint (10-12 kt)", "ts": 1791507600000.0}, {"spot": "mid-creek", "fc": 9.1, "act": 12.0, "dir": null, "note": "2026-10-18 · seed: hist-forecast model-mean peak vs your range midpoint (10-14 kt)", "ts": 1792285200000.0}, {"spot": "mid-creek", "fc": 13.0, "act": 10.0, "dir": 45, "note": "2026-10-23 · seed: hist-forecast model-mean peak vs your range midpoint (8-12 kt)", "ts": 1792717200000.0}, {"spot": "mid-creek", "fc": 11.3, "act": 15.0, "dir": 45, "note": "2026-10-25 · seed: hist-forecast model-mean peak vs your range midpoint (15-15 kt)", "ts": 1792890000000.0}, {"spot": "mid-creek", "fc": 13.0, "act": 12.0, "dir": 45, "note": "2026-10-30 · seed: hist-forecast model-mean peak vs your range midpoint (10-14 kt)", "ts": 1793322000000.0}, {"spot": "mid-creek", "fc": 11.2, "act": 12.5, "dir": null, "note": "2026-11-06 · seed: hist-forecast model-mean peak vs your range midpoint (10-15 kt)", "ts": 1793926800000.0}, {"spot": "mid-creek", "fc": 14, "act": 13.0, "dir": null, "note": "2026-11-20 · seed: hist-forecast model-mean peak vs your range midpoint (8-18 kt)", "ts": 1795136400000.0}];
 const KEY='foilspots_calib_v1';
 const nameOf=id=>(SPOTS.find(s=>s.id===id)||{}).name||id;
 const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
 const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
 const round=(x,n=1)=>Math.round(x*10**n)/10**n;
 const DIRS=['N','NE','E','SE','S','SW','W','NW'];
+const MIN_SPOT_SESSIONS=3;  // a spot needs this many logged sessions before any adj / dirAdj is suggested
+const MIN_BAND_SESSIONS=2;  // a compass band needs this many sessions to get its own dirAdj value
 const band=deg=>deg==null||deg===''?'—':DIRS[Math.round((+deg%360)/45)%8];
 
 const spotSel=document.getElementById('spot');
@@ -131,7 +135,16 @@ function render(){
     sumRows.insertAdjacentHTML('beforeend',
       `<tr><td>${s.name}</td><td class="num ${nCls}">${rs.length}${rs.length<3?' ⚠':''}</td>`+
       `<td class="num">${round(mean)}</td><td class="num adj ${cls}">${adj>0?'+':''}${adj}</td></tr>`);
-    if(rs.length>=3&&adj!==0) snips.push(`  ${s.id}: adj:${adj}`);
+    if(rs.length>=MIN_SPOT_SESSIONS){
+      const parts=[];
+      if(adj!==0) parts.push(`adj:${adj}`);
+      const bb={};
+      rs.forEach(r=>{ if(r.dir!=null&&r.dir!=='') (bb[band(r.dir)]??=[]).push(r.act-r.fc); });
+      const dirParts=DIRS.filter(b=>bb[b]&&bb[b].length>=MIN_BAND_SESSIONS)
+        .map(b=>{const v=Math.round(bb[b].reduce((a,x)=>a+x,0)/bb[b].length);return `${b}:${v}`;});
+      if(dirParts.length) parts.push(`dirAdj:{ ${dirParts.join(', ')} }`);
+      if(parts.length) snips.push(`  ${s.id}: ${parts.join(', ')}`);
+    }
   });
   if(!sumRows.innerHTML) sumRows.innerHTML='<tr><td colspan="4" class="n">No sessions logged yet.</td></tr>';
 
@@ -140,10 +153,15 @@ function render(){
   Object.keys(bySpot).sort().forEach(id=>{
     const byBand={};
     bySpot[id].forEach(r=>{(byBand[band(r.dir)]??=[]).push(r.act-r.fc)});
+    const spotN=bySpot[id].length;
     Object.keys(byBand).forEach(b=>{
       const arr=byBand[b],m=arr.reduce((a,x)=>a+x,0)/arr.length;
+      const ok=spotN>=MIN_SPOT_SESSIONS&&arr.length>=MIN_BAND_SESSIONS&&b!=='—';
+      const v=Math.round(m);
+      const cell=ok?`<span class="adj ${v>0?'pos':v<0?'neg':'zero'}">${v>0?'+':''}${v}</span>`
+                   :`<span class="n">${spotN<MIN_SPOT_SESSIONS?`need ${MIN_SPOT_SESSIONS} sessions`:`need ${MIN_BAND_SESSIONS} in band`}</span>`;
       dirRows.insertAdjacentHTML('beforeend',
-        `<tr><td>${nameOf(id)}</td><td>${b}</td><td class="num">${arr.length}</td><td class="num">${round(m)}</td></tr>`);
+        `<tr><td>${nameOf(id)}</td><td>${b}</td><td class="num">${arr.length}</td><td class="num">${round(m)}</td><td class="num">${cell}</td></tr>`);
     });
   });
 
@@ -165,8 +183,8 @@ function render(){
   // snippet
   const snip=document.getElementById('snip');
   snip.textContent = snips.length
-    ? '// paste each adj into the matching spot in spots-data.js\n'+snips.join('\n')
-    : 'Need ≥3 sessions per spot with a non-zero mean before suggesting an adj.';
+    ? '// paste into the matching spot in spots-data.js (dirAdj replaces adj for those compass bands)\n'+snips.join('\n')
+    : `Need ≥${MIN_SPOT_SESSIONS} sessions per spot (and ≥${MIN_BAND_SESSIONS} in a compass band for dirAdj) with a non-zero result before suggesting values.`;
 }
 
 document.getElementById('add').onclick=()=>{
@@ -193,6 +211,15 @@ document.getElementById('export').onclick=()=>{
   const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   const a=document.createElement('a');a.href=url;a.download='foilspots-calibration.csv';a.click();URL.revokeObjectURL(url);
+};
+
+document.getElementById('seedBtn').onclick=()=>{
+  const d=load();let n=0;
+  SEED.forEach(s=>{ if(!d.some(r=>r.note===s.note)){d.push(s);n++;} });
+  save(d);render();
+  const msg=document.getElementById('msg');msg.style.color='var(--go)';
+  msg.textContent=n?`Added ${n} seed session${n>1?'s':''}.`:'Seed sessions already loaded.';
+  setTimeout(()=>msg.textContent='',3000);
 };
 
 document.getElementById('snipBtn').onclick=()=>{

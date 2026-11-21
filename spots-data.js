@@ -1,8 +1,27 @@
 // Shared spot data — single source of truth for index.html and wind-windows.html
 // Edit here; both pages will pick up changes automatically.
 
+// Forecast model settings (used by index.html).
+//   models      : Open-Meteo model ids combined into the ensemble (min / max / mean).
+//   baseline    : always fetched and shown for reference, but NOT included in the ensemble
+//                 (best_match is itself a blend of the others for Sydney, so it would double-count).
+//   statusBasis : which number drives Go / Marginal / No-go: 'mean' | 'min' | 'max' | 'baseline'.
+//   uncertainKn : a day is flagged "uncertain" when max - min of the model peaks exceeds this.
+const FORECAST_CONFIG = {
+  models: ['ecmwf_ifs025', 'gfs_seamless', 'icon_seamless', 'bom_access_global'],
+  baseline: 'best_match',
+  statusBasis: 'mean',
+  uncertainKn: 5,
+};
+
+// Per-spot, per-direction speed adjustment (optional): dirAdj:{ NE:-3, E:-2 }
+//   Keys are 45-degree compass bands (N NE E SE S SW W NW) of the forecast wind direction.
+//   When the wind falls in a listed band, that value REPLACES the flat `adj` for that day/hour.
+//   Unlisted bands fall back to `adj` (and the adjDir boost zone, if set).
+//   calibrate.html computes suggested values from your logged sessions (needs >=3 sessions per spot).
+
 const SPOTS = [
-  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:0, vc:56,  vt:45, drive:'25 min',
+  { id:'mid-creek', name:'Middle Creek', area:'north', water:'flat', skill:'beginner',     lat:-33.726, lon:151.282, adj:0, dirAdj:{ /* calibrated 2026-11-22 (10 sessions, 6 NE): model-mean bias ~0 kt, no NE reduction needed; re-check at ~15 NE sessions */ }, vc:56,  vt:45, drive:'25 min',
     desc:'Western shore of Narrabeen Lagoon — the most popular lagoon launch. Wind blows cleanly east across the lagoon giving flat, consistent water. When NE is strong and Balmoral chops up, the enclosed water here can be worth the extra drive.',
     warnings:['Shallow near shore — watch foil on launch and landing','Gusty near the treeline on the western shore in light winds'],
     parking:{ type:'paid', notes:'Paid ~$6/hr off Wakehurst Pkwy. Free street options near Jamieson Park ~200m south.' },

@@ -94,18 +94,22 @@
     }
     .arr { font-size: 13px; display: inline-block; line-height: 1; }
     .chip .spd { font-size: 13px; font-weight: 700; line-height: 1.2; margin-top: 1px; }
+    .chip .sub { font-size: 9px; font-weight: 400; opacity: 0.8; line-height: 1.2; margin-top: 2px; white-space: nowrap; }
+    .chip .qm  { font-weight: 700; margin-left: 2px; }
+    .chip.unc  { border-style: dashed !important; }
     .chip.go       { background: var(--go-bg);  border: 1px solid var(--go-bd);  color: var(--go); }
     .chip.marginal { background: var(--mar-bg); border: 1px solid var(--mar-bd); color: var(--mar); }
     .chip.no-go    { background: var(--no-bg);  border: 1px solid var(--no-bd);  color: var(--no); }
     .chip.no-go .spd { font-size: 12px; font-weight: 500; }
 
     /* Tooltip */
-    #tt { position: fixed; background: var(--surf2); border: 1px solid rgba(255,255,255,0.13); border-radius: 8px; padding: 10px 13px; font-size: 12px; max-width: 220px; pointer-events: none; display: none; z-index: 999; line-height: 1.6; }
+    #tt { position: fixed; background: var(--surf2); border: 1px solid rgba(255,255,255,0.13); border-radius: 8px; padding: 10px 13px; font-size: 12px; max-width: 270px; pointer-events: none; display: none; z-index: 999; line-height: 1.6; }
     #tt.vis { display: block; }
     #tt .ttn  { font-weight: 600; color: var(--txt); margin-bottom: 7px; font-size: 13px; }
     #tt .ttr  { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); }
     #tt .ttr span:last-child { color: var(--txt); font-weight: 500; }
     #tt .ttnote  { margin-top: 7px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 7px; }
+    #tt .ttwarn  { color: #fbbf24; margin-top: 4px; font-size: 11px; }
     #tt .ttspot  { margin-top: 5px; font-size: 11px; color: var(--muted); }
 
     /* Loading / error */
@@ -305,7 +309,7 @@
 </div>
 
 <footer>
-  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly, best-match model — ECMWF-based for Sydney).
+  Forecast: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key, 16-day hourly). Each day combines several models (ECMWF, GFS, ICON, BOM ACCESS-G where available): the cell shows the model mean, with min–max, peak gust and peak hour; dashed cells = models disagree. Best-match is fetched as a baseline only.
   Spot adjustments are estimates based on local knowledge — hover any cell to see raw vs adjusted values.
   GO/NO-GO: wind direction within viable range + adjusted speed within skill-level range.
 </footer>
@@ -377,60 +381,167 @@ function dirLabel(d) {
 // Arrow rotation: wind goes TO = FROM direction + 180°
 function arrowRot(fromDeg) { return Math.round((fromDeg + 180) % 360); }
 
-function daySum(hourly, di) {
-  // 9am–7pm (hours 9–19 inclusive); use daily peak speed, direction at peak hour
+// ── Direction bands / per-direction adjustment ─────────────────
+const BANDS8 = ['N','NE','E','SE','S','SW','W','NW'];
+function band8(deg) { return BANDS8[Math.round((((deg%360)+360)%360)/45)%8]; }
+// Speed adjustment for a spot at a given wind direction.
+// dirAdj band (if listed) replaces the flat adj; otherwise flat adj (+ optional adjDir boost zone).
+function adjFor(spot, dirDeg) {
+  if (spot.dirAdj && dirDeg != null) {
+    const b = band8(dirDeg);
+    if (typeof spot.dirAdj[b] === 'number') return { adj: spot.dirAdj[b], band: b, src: 'dir' };
+  }
+  const applies = (spot.adjDir != null) ? angDiff(dirDeg, spot.adjDir) <= spot.adjDirTol : true;
+  return { adj: applies ? spot.adj : 0, band: null, src: applies ? 'flat' : 'none' };
+}
+
+// ── Multi-model day summary ────────────────────────────────────
+const MODEL_LABELS = { best_match:'Best match', ecmwf_ifs025:'ECMWF', gfs_seamless:'GFS', icon_seamless:'ICON', bom_access_global:'BOM ACCESS' };
+const mlabel = m => MODEL_LABELS[m] || m;
+const avg = a => a.reduce((s,v)=>s+v,0)/a.length;
+function hourLabel(h, compact) {
+  const suf = compact ? (h<12?'a':'p') : (h<12?'am':'pm');
+  return `${h%12===0?12:h%12}${suf}`;
+}
+
+// One model, one day: peak sustained 9am–7pm (hours 9–19), peak gust, hour and direction at peak.
+function modelDay(ms, di) {
   const s = di*24+9, e = di*24+20;
-  const slice = hourly.wind_speed_10m.slice(s, e);
-  const gsts  = hourly.wind_gusts_10m.slice(s, e).filter(v=>v!=null);
-  if (!slice.some(v=>v!=null)) return null;
-  let peakSpd = -Infinity, peakIdx = 0;
-  slice.forEach((v, i) => { if (v != null && v > peakSpd) { peakSpd = v; peakIdx = i; } });
-  const peakDir = hourly.wind_direction_10m[s + peakIdx] ?? 0;
-  return { peak:peakSpd, gust:gsts.length ? Math.max(...gsts) : peakSpd, dir:peakDir };
+  let peak = -Infinity, pi = -1, gust = -Infinity;
+  for (let i = s; i < e; i++) {
+    const v = ms.s[i];
+    if (v != null && v > peak) { peak = v; pi = i; }
+    const g = ms.g[i];
+    if (g != null && g > gust) gust = g;
+  }
+  if (pi < 0) return null;
+  return { peak, gust: gust > -Infinity ? gust : peak, dir: ms.d[pi] ?? 0, hour: pi - di*24 };
+}
+
+// Ensemble for one day. sd = { models:{ id:{s,g,d} } } (see normalisePt).
+// peak  = value that drives status (FORECAST_CONFIG.statusBasis); mean/min/max are over per-model peaks.
+// hour/dir come from the ensemble-MEAN hourly series (the hour the models collectively peak).
+function daySum(sd, di) {
+  if (!sd || !sd.models) return null;
+  const cfg = FORECAST_CONFIG;
+  const per = {};
+  Object.keys(sd.models).forEach(m => { const r = modelDay(sd.models[m], di); if (r) per[m] = r; });
+  const base = per[cfg.baseline] || null;
+  let used = cfg.models.filter(m => per[m]);
+  if (!used.length) { if (!base) return null; used = [cfg.baseline]; }
+
+  const peaks = used.map(m => per[m].peak), gusts = used.map(m => per[m].gust);
+  const mean = avg(peaks), min = Math.min(...peaks), max = Math.max(...peaks);
+
+  let bestH = -1, bestV = -Infinity, bestDir = per[used[0]].dir;
+  for (let hr = 9; hr <= 19; hr++) {
+    const idx = di*24+hr;
+    const vals = used.map(m => sd.models[m].s[idx]).filter(v => v != null);
+    if (!vals.length) continue;
+    const v = avg(vals);
+    if (v > bestV) {
+      bestV = v; bestH = hr;
+      const dirs = used.map(m => sd.models[m].d[idx]).filter(v => v != null);
+      if (dirs.length) bestDir = circMean(dirs);
+    }
+  }
+  if (bestH < 0) bestH = per[used[0]].hour;
+
+  let peak = mean;
+  if (cfg.statusBasis === 'min') peak = min;
+  else if (cfg.statusBasis === 'max') peak = max;
+  else if (cfg.statusBasis === 'baseline' && base) peak = base.peak;
+
+  return {
+    peak, mean, min, max, spread: max - min,
+    uncertain: used.length > 1 && (max - min) > cfg.uncertainKn,
+    gust: avg(gusts), gustMax: Math.max(...gusts),
+    dir: bestDir, hour: bestH,
+    models: used, per, base
+  };
 }
 
 function rateCell(spot, sum, skill) {
   if (!sum) return { st:'no-go', reason:'No data', dirDeg:null };
-  const adjApplies = (spot.adjDir != null) ? angDiff(sum.dir, spot.adjDir) <= spot.adjDirTol : true;
-  const appliedAdj = adjApplies ? spot.adj : 0;
+  const ad = adjFor(spot, sum.dir);
+  const appliedAdj = ad.adj;
   const adj = sum.peak + appliedAdj;
   const dirOk = angDiff(sum.dir, spot.vc) <= spot.vt;
   const r = RANGES[skill]||RANGES.intermediate;
   const d = dirLabel(sum.dir);
-  const base = { raw:Math.round(sum.peak), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir), appliedAdj:Math.round(appliedAdj) };
+  const base = {
+    raw:Math.round(sum.peak), adj:Math.round(adj), gust:Math.round(sum.gust), dir:d, dirDeg:Math.round(sum.dir),
+    appliedAdj:Math.round(appliedAdj), adjBand:ad.band,
+    lo:Math.round(sum.min + appliedAdj), hi:Math.round(sum.max + appliedAdj), mean:Math.round(sum.mean),
+    hour:sum.hour, uncertain:sum.uncertain, spread:Math.round(sum.spread), nModels:sum.models.length
+  };
   if (!dirOk)           return { ...base, st:'no-go',    reason:`Wind from ${d} — outside viable range` };
   if (adj>=r.goLo&&adj<=r.goHi) return { ...base, st:'go',       reason:`${d} at ${Math.round(adj)} kn` };
   if (adj>=r.mgLo&&adj<=r.mgHi) return { ...base, st:'marginal', reason: adj<r.goLo ? 'Light wind — marginal' : 'Strong wind — marginal' };
   return { ...base, st:'no-go', reason: adj<r.mgLo ? 'Too light' : 'Too strong' };
 }
 
+// Inner HTML of a chip (shared by first render and re-rate)
+function chipInner(rv) {
+  const spd = rv.adj!=null ? `${rv.adj} kn` : '';
+  const rot = rv.dirDeg!=null ? arrowRot(rv.dirDeg) : 0;
+  const arr = rv.dirDeg!=null ? `<span class="arr" style="transform:rotate(${rot}deg)">↑</span>` : '';
+  const q   = rv.uncertain ? `<span class="qm" title="Models disagree by ${rv.spread} kn">?</span>` : '';
+  const sub = rv.adj!=null
+    ? `<span class="sub">${rv.nModels>1 ? `${rv.lo}–${rv.hi} · ` : ''}g${rv.gust} · ${hourLabel(rv.hour,true)}</span>` : '';
+  return `${arr}<span class="spd">${spd}${q}</span>${sub}`;
+}
+
 // ── Chip HTML helpers ──────────────────────────────────────────
 function spotChipHtml(sp, di, skill) {
   const sd = rawData[sp.id];
   if (!sd) return `<span style="color:var(--muted);font-size:11px">—</span>`;
-  const sum = daySum(sd.hourly, di);
+  const sum = daySum(sd, di);
   const rv  = rateCell(sp, sum, skill);
-  const spd     = rv.adj!=null ? `${rv.adj} kn` : '';
-  const rot     = rv.dirDeg!=null ? arrowRot(rv.dirDeg) : 0;
-  const arrHTML = rv.dirDeg!=null ? `<span class="arr" style="transform:rotate(${rot}deg)">↑</span>` : '';
-  return `<div class="chip ${rv.st}"
+  return `<div class="chip ${rv.st}${rv.uncertain?' unc':''}"
     data-sid="${sp.id}" data-di="${di}"
     data-raw="${rv.raw??''}" data-adj="${rv.adj??''}" data-gust="${rv.gust??''}"
     data-dir="${rv.dir||''}" data-dir-deg="${rv.dirDeg??''}"
     data-reason="${(rv.reason||'').replace(/"/g,"'")}" data-spotadj="${sp.adj}">
-    ${arrHTML}<span class="spd">${spd}</span>
+    ${chipInner(rv)}
   </div>`;
 }
 
 
 // ── Fetch ──────────────────────────────────────────────────────
-function fetchPt(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Australia%2FSydney&models=best_match`;
+function fetchJson(url) {
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 9000);
+  const timer = setTimeout(() => ctrl.abort(), 12000);
   return fetch(url, { signal: ctrl.signal })
     .then(r => { clearTimeout(timer); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
     .catch(e => { clearTimeout(timer); throw e; });
+}
+
+// Multi-model response keys are suffixed per model, e.g. wind_speed_10m_ecmwf_ifs025.
+// Models with no data (e.g. not covering the location/range) come back all-null and are dropped.
+function normalisePt(d, requested) {
+  const hh = d.hourly || {}, out = { models:{} };
+  requested.forEach(m => {
+    let s = hh[`wind_speed_10m_${m}`], g = hh[`wind_gusts_10m_${m}`], dr = hh[`wind_direction_10m_${m}`];
+    if (!s && requested.length === 1) { s = hh.wind_speed_10m; g = hh.wind_gusts_10m; dr = hh.wind_direction_10m; }
+    if (s && dr && s.some(v => v != null)) out.models[m] = { s, g: g || [], d: dr };
+  });
+  return out;
+}
+
+function fetchPt(lat, lon) {
+  const url = ids => `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=16&timezone=Australia%2FSydney&models=${ids.join(',')}`;
+  const all = [FORECAST_CONFIG.baseline, ...FORECAST_CONFIG.models];
+  // If Open-Meteo rejects a model id (HTTP 4xx) retry without BOM, then baseline only.
+  const attempts = [all, all.filter(m => m !== 'bom_access_global'), [FORECAST_CONFIG.baseline]]
+    .filter((a, i, arr) => i === 0 || a.length < arr[i-1].length);
+  const run = i => fetchJson(url(attempts[i]))
+    .then(d => normalisePt(d, attempts[i]))
+    .catch(e => {
+      if (/^HTTP 4/.test(e.message) && i + 1 < attempts.length) return run(i + 1);
+      throw e;
+    });
+  return run(0).then(n => { if (!Object.keys(n.models).length) throw new Error('no model data'); return n; });
 }
 
 // ── Day labels ─────────────────────────────────────────────────
@@ -534,18 +645,15 @@ function rerateAll() {
   document.querySelectorAll('#g .chip').forEach(chip => {
     const sp = SPOTS.find(s=>s.id===chip.dataset.sid);
     if (!sp||!rawData[sp.id]) return;
-    const sum = daySum(rawData[sp.id].hourly, +chip.dataset.di);
+    const sum = daySum(rawData[sp.id], +chip.dataset.di);
     const rv  = rateCell(sp, sum, prefs.skill);
-    chip.className = `chip ${rv.st}`;
+    chip.className = `chip ${rv.st}${rv.uncertain?' unc':''}`;
     Object.assign(chip.dataset, {
       adj:rv.adj??'', raw:rv.raw??'', gust:rv.gust??'',
       dir:rv.dir||'', dirDeg:rv.dirDeg??'',
       reason:(rv.reason||'').replace(/"/g,"'")
     });
-    const spd     = rv.adj!=null?`${rv.adj} kn`:'';
-    const rot     = rv.dirDeg!=null?arrowRot(rv.dirDeg):0;
-    const arrHTML = rv.dirDeg!=null?`<span class="arr" style="transform:rotate(${rot}deg)">↑</span>`:'';
-    chip.innerHTML = `${arrHTML}<span class="spd">${spd}</span>`;
+    chip.innerHTML = chipInner(rv);
   });
 }
 
@@ -553,15 +661,21 @@ function rerateAll() {
 // ── Hourly detail ──────────────────────────────────────────────
 function getHourlyDetail(spot, dayIdx) {
   const sd = rawData[spot.id];
-  if (!sd) return [];
-  const out = [];
+  if (!sd) return { hours: [], models: [] };
+  const sum = daySum(sd, dayIdx);
+  if (!sum) return { hours: [], models: [] };
+  const cfg = FORECAST_CONFIG, out = [];
   for (let h = 9; h <= 19; h++) {
     const idx = dayIdx * 24 + h;
-    const rawSpd = sd.hourly.wind_speed_10m[idx];
-    const dir    = sd.hourly.wind_direction_10m[idx];
-    const gust   = sd.hourly.wind_gusts_10m[idx];
-    if (rawSpd == null || dir == null) continue;
-    const adj  = rawSpd + spot.adj;
+    const per = sum.models.map(m => ({ m, v: sd.models[m].s[idx], d: sd.models[m].d[idx] })).filter(x => x.v != null && x.d != null);
+    if (!per.length) continue;
+    const vals = per.map(x => x.v);
+    let spd = avg(vals);
+    if (cfg.statusBasis === 'min') spd = Math.min(...vals);
+    else if (cfg.statusBasis === 'max') spd = Math.max(...vals);
+    else if (cfg.statusBasis === 'baseline' && sd.models[cfg.baseline]?.s[idx] != null) spd = sd.models[cfg.baseline].s[idx];
+    const dir  = circMean(per.map(x => x.d));
+    const adj  = spd + adjFor(spot, dir).adj;
     const dirOk = angDiff(dir, spot.vc) <= spot.vt;
     const r    = RANGES[prefs.skill] || RANGES.intermediate;
     let st;
@@ -569,30 +683,35 @@ function getHourlyDetail(spot, dayIdx) {
     else if (adj>=r.goLo&&adj<=r.goHi) st = 'go';
     else if (adj>=r.mgLo&&adj<=r.mgHi) st = 'marginal';
     else                               st = 'no-go';
-    const label = h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
-    out.push({ label, adj: Math.round(adj), dirDeg: Math.round(dir), st });
+    const tip = per.map(x => `${mlabel(x.m)} ${Math.round(x.v)}`).join(' · ');
+    out.push({ label: hourLabel(h), adj: Math.round(adj), dirDeg: Math.round(dir), st, tip });
   }
-  return out;
+  return { hours: out, models: sum.models, uncertain: sum.uncertain, spread: Math.round(sum.spread) };
 }
 
 function buildDetailRow(spot, dayIdx, dayLabel) {
-  const hours = getHourlyDetail(spot, dayIdx);
-  const hoursHTML = hours.map(h => {
+  const det = getHourlyDetail(spot, dayIdx);
+  const hoursHTML = det.hours.map(h => {
     const rot = arrowRot(h.dirDeg);
-    return `<div class="hrc ${h.st}">
+    return `<div class="hrc ${h.st}" title="${h.tip} (raw kn)">
       <span class="ht">${h.label}</span>
       <span class="arr" style="transform:rotate(${rot}deg)">↑</span>
       <span class="hs">${h.adj} kn</span>
     </div>`;
   }).join('');
-  const adjStr = `${spot.adj > 0 ? '+' : ''}${spot.adj} kn local adjustment`;
+  const sd = rawData[spot.id];
+  const dirNow = sd ? daySum(sd, dayIdx) : null;
+  const a = dirNow ? adjFor(spot, dirNow.dir) : { adj: spot.adj, band: null };
+  const adjStr = `${a.adj > 0 ? '+' : ''}${a.adj} kn local adjustment${a.band ? ' ('+a.band+')' : ''}`;
+  const mStr = det.models.length ? ` · models: ${det.models.map(mlabel).join(', ')}` : '';
+  const uStr = det.uncertain ? ` · ⚠ models differ by ${det.spread} kn` : '';
   const tr = document.createElement('tr');
   tr.className = 'detail-row';
   tr.dataset.sid = spot.id;
   tr.dataset.di  = dayIdx;
   tr.innerHTML = `<td colspan="20"><div class="detail-inner">
-    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr} · click again to close</span></div>
-    <div class="detail-hours">${hoursHTML}</div>
+    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr}${mStr}${uStr} · hover an hour for per-model values · click again to close</span></div>
+    <div class="detail-hours">${det.hours.length ? hoursHTML : '<span style="color:var(--muted);font-size:12px">No hourly data</span>'}</div>
   </div></td>`;
   return tr;
 }
@@ -608,21 +727,30 @@ function initTooltip() {
     {
       const sp = SPOTS.find(s=>s.id===el.dataset.sid);
       h  = `<div class="ttn">${sp?sp.name:''}</div>`;
-      if (el.dataset.raw!=='') {
-        const appliedAdj = parseFloat(el.dataset.adjApplied||'0');
-        const adj_sign = appliedAdj>=0?'+':'';
-        const adjNote = appliedAdj !== 0 ? ` = ${el.dataset.raw} ${adj_sign}${appliedAdj} kn` : '';
-        h += `<div class="ttr"><span>Wind</span><span>${el.dataset.adj} kn${adjNote}</span></div>`;
-        if (el.dataset.gust) h += `<div class="ttr"><span>Gusts</span><span>${el.dataset.gust} kn</span></div>`;
+      const sum = sp && rawData[sp.id] ? daySum(rawData[sp.id], +el.dataset.di) : null;
+      const rv  = sum ? rateCell(sp, sum, prefs.skill) : null;
+      if (rv && rv.raw != null) {
+        const adjNote = rv.appliedAdj !== 0
+          ? ` = ${rv.raw} ${rv.appliedAdj>=0?'+':'−'}${Math.abs(rv.appliedAdj)} kn${rv.adjBand?' ('+rv.adjBand+')':''}` : '';
+        h += `<div class="ttr"><span>Wind</span><span>${rv.adj} kn${adjNote}</span></div>`;
+        if (sum.models.length > 1) {
+          h += `<div class="ttr"><span>Models</span><span>${Math.round(sum.min)}–${Math.round(sum.max)} kn · mean ${Math.round(sum.mean)}</span></div>`;
+        }
+        h += `<div class="ttr"><span>Gusts</span><span>${rv.gust} kn${sum.models.length>1 ? ` (max ${Math.round(sum.gustMax)})` : ''}</span></div>`;
+        h += `<div class="ttr"><span>Peak</span><span>~${hourLabel(sum.hour)} · ${rv.dir}</span></div>`;
+        if (sum.uncertain) h += `<div class="ttwarn">⚠ Uncertain — models differ by ${rv.spread} kn</div>`;
+        const list = sum.models.map(m => `${mlabel(m)} ${Math.round(sum.per[m].peak)}`).join(' · ');
+        h += `<div class="ttnote">Models used: ${list}`
+           + (sum.base ? `<br>Baseline (${mlabel(FORECAST_CONFIG.baseline)}): ${Math.round(sum.base.peak)} kn` : '')
+           + `<br>Status basis: ${FORECAST_CONFIG.statusBasis}</div>`;
       }
-      if (el.dataset.dir) h += `<div class="ttr"><span>Direction</span><span>${el.dataset.dir}</span></div>`;
-      if (el.dataset.reason) h += `<div class="ttnote">${el.dataset.reason}</div>`;
+      if (rv && rv.reason) h += `<div class="ttnote">${rv.reason}</div>`;
       if (sp) h += `<div class="ttspot">${sp.notes}</div>`;
     }
     tt.innerHTML = h;
     tt.classList.add('vis');
     tt.style.left = Math.min(e.clientX+14, window.innerWidth-235)+'px';
-    tt.style.top  = Math.min(e.clientY+14, window.innerHeight-210)+'px';
+    tt.style.top  = Math.min(e.clientY+14, window.innerHeight-330)+'px';
   });
   document.getElementById('main')?.addEventListener('scroll', ()=>tt.classList.remove('vis'));
 
@@ -664,7 +792,7 @@ function initTooltip() {
 }
 
 // ── Cache ──────────────────────────────────────────────────────
-const CACHE_KEY = 'fs-weather-v1';
+const CACHE_KEY = 'fs-weather-v2'; // v2: multi-model shape
 const CACHE_TTL = 2 * 60 * 60 * 1000; // 2 hours
 
 function saveCache(data) {
@@ -902,6 +1030,10 @@ function buildAdjDetails(spot) {
   if (spot.adjDir != null) {
     rows.push(['Boost applies when', `wind from ${dirLabel(spot.adjDir)} ±${spot.adjDirTol}°`]);
   }
+  if (spot.dirAdj && Object.keys(spot.dirAdj).length) {
+    rows.push(['Per-direction adj', BANDS8.filter(b => typeof spot.dirAdj[b] === 'number')
+      .map(b => `${b} ${spot.dirAdj[b] > 0 ? '+' : ''}${spot.dirAdj[b]}`).join(' · ') + ' kn (replaces speed adj)']);
+  }
   return rows.map(([lbl, val]) =>
     `<div class="adj-row"><span class="adj-label">${lbl}</span><span>${val}</span></div>`
   ).join('');
@@ -932,7 +1064,8 @@ async function loadSeasonalRose(spot) {
   if (!ctnr) return;
 
   // Check cache
-  const month = new Date().getMonth(); const cacheKey = `${ROSE_CACHE_KEY}-${spot.id}-${prefs.skill}-${month}`;
+  const month = new Date().getMonth(); const adjSig = JSON.stringify([spot.adj, spot.adjDir, spot.adjDirTol, spot.dirAdj]).replace(/[^\w.-]/g,'');
+  const cacheKey = `${ROSE_CACHE_KEY}-${spot.id}-${prefs.skill}-${month}-${adjSig}`;
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
     if (cached && (Date.now() - cached.ts) < ROSE_CACHE_TTL) {
@@ -977,8 +1110,7 @@ async function loadSeasonalRose(spot) {
     if (spd == null || dir == null) continue;
     const bin = Math.round(dir / (360 / NDIRS)) % NDIRS;
     const dirOk     = angDiff(dir, spot.vc) <= spot.vt;
-    const adjOn     = (spot.adjDir != null) ? angDiff(dir, spot.adjDir) <= spot.adjDirTol : true;
-    const adj       = spd + (adjOn ? spot.adj : 0);
+    const adj       = spd + adjFor(spot, dir).adj;
     let outcome;
     if (!dirOk)                          outcome = 'nogo';
     else if (adj >= r.goLo && adj <= r.goHi)   outcome = 'go';
