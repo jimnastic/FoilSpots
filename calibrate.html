@@ -41,7 +41,7 @@
 </head>
 <body>
   <h1>Calibration Log</h1>
-  <p class="sub">Log forecast vs a nearby live-station actual each session. The tool averages <code>(actual − forecast)</code> per spot, and per compass band, and gives you the <code>adj</code> and <code>dirAdj</code> to paste into <code>spots-data.js</code>. Enter the <b>raw, unadjusted model mean</b> (the "Models … mean" / "Wind = raw ± adj" figure in the forecast tooltip), not the adjusted number, or adjustments will double-count. Data is saved on this device; export CSV to back it up.</p>
+  <p class="sub">Log forecast vs a nearby live-station actual each session. The tool averages <code>(actual − forecast)</code> per spot, and per compass band, and gives you the <code>adj</code> and <code>dirAdj</code> to paste into <code>spots-data.js</code>. Sessions logged from the forecast page ("Log my session") arrive here with the raw model mean already filled in. For manual entries, enter the <b>raw, unadjusted model mean</b> (the "Models … mean" / "Wind = raw ± adj" figure in the forecast tooltip), not the adjusted number, or adjustments will double-count. Data is saved on this device; export CSV to back it up.</p>
 
   <div class="card">
     <div class="field">
@@ -105,6 +105,16 @@ const SPOTS = [
 ];
 const SEED=[{"spot": "mid-creek", "fc": 10.2, "act": 9.0, "dir": 45, "note": "2026-05-02 · seed: hist-forecast model-mean peak vs your range midpoint (8-10 kt)", "ts": 1777683600000.0}, {"spot": "mid-creek", "fc": 11.6, "act": 10.0, "dir": 46, "note": "2026-05-03 · seed: hist-forecast model-mean peak vs your range midpoint (9-11 kt)", "ts": 1777770000000.0}, {"spot": "mid-creek", "fc": 9.6, "act": 12.0, "dir": 45, "note": "2026-10-03 · seed: hist-forecast model-mean peak vs your range midpoint (10-14 kt)", "ts": 1790989200000.0}, {"spot": "mid-creek", "fc": 11.0, "act": 11.0, "dir": 45, "note": "2026-10-09 · seed: hist-forecast model-mean peak vs your range midpoint (10-12 kt)", "ts": 1791507600000.0}, {"spot": "mid-creek", "fc": 9.1, "act": 12.0, "dir": null, "note": "2026-10-18 · seed: hist-forecast model-mean peak vs your range midpoint (10-14 kt)", "ts": 1792285200000.0}, {"spot": "mid-creek", "fc": 13.0, "act": 10.0, "dir": 45, "note": "2026-10-23 · seed: hist-forecast model-mean peak vs your range midpoint (8-12 kt)", "ts": 1792717200000.0}, {"spot": "mid-creek", "fc": 11.3, "act": 15.0, "dir": 45, "note": "2026-10-25 · seed: hist-forecast model-mean peak vs your range midpoint (15-15 kt)", "ts": 1792890000000.0}, {"spot": "mid-creek", "fc": 13.0, "act": 12.0, "dir": 45, "note": "2026-10-30 · seed: hist-forecast model-mean peak vs your range midpoint (10-14 kt)", "ts": 1793322000000.0}, {"spot": "mid-creek", "fc": 11.2, "act": 12.5, "dir": null, "note": "2026-11-06 · seed: hist-forecast model-mean peak vs your range midpoint (10-15 kt)", "ts": 1793926800000.0}, {"spot": "mid-creek", "fc": 14, "act": 13.0, "dir": null, "note": "2026-11-20 · seed: hist-forecast model-mean peak vs your range midpoint (8-18 kt)", "ts": 1795136400000.0}];
 const KEY='foilspots_calib_v1';
+const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const hrl=h=>`${h%12===0?12:h%12}${h<12?'am':'pm'}`;
+const extra=r=>{const p=[];
+  if(r.lo!=null&&r.hi!=null&&r.lo!==r.hi)p.push(`${r.lo}–${r.hi} kt`);
+  if(r.gust!=null)p.push(`gusts ${r.gust}`);if(r.char)p.push(r.char);
+  if(r.from!=null&&r.to!=null)p.push(`${hrl(r.from)}–${hrl(r.to)}`);
+  if(r.felt)p.push(`fc felt ${r.felt}`);if(r.wing!=null)p.push(`${r.wing}m wing`);
+  if(r.fcBasis==='window')p.push('fc = window mean');
+  if(r.fc==null)p.push('no forecast snapshot (not used)');
+  return p.length?`<div class="n">${esc(p.join(' · '))}</div>`:''};
 const nameOf=id=>(SPOTS.find(s=>s.id===id)||{}).name||id;
 const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
 const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
@@ -121,7 +131,7 @@ function render(){
   const data=load();
   // summary per spot
   const bySpot={};
-  data.forEach(r=>{(bySpot[r.spot]??=[]).push(r)});
+  data.forEach(r=>{ if(r.fc!=null) (bySpot[r.spot]??=[]).push(r); });  // entries without a forecast snapshot can't be calibrated
   const sumRows=document.getElementById('sumRows'); sumRows.innerHTML='';
   const snips=[];
   SPOTS.forEach(s=>{
@@ -169,11 +179,11 @@ function render(){
   const logRows=document.getElementById('logRows'); logRows.innerHTML='';
   [...data].reverse().forEach((r)=>{
     const realIdx=data.indexOf(r);
-    const d=r.act-r.fc;
+    const d=r.fc==null?null:r.act-r.fc;
     logRows.insertAdjacentHTML('beforeend',
-      `<tr><td>${r.note||'—'}</td><td>${nameOf(r.spot)}</td>`+
-      `<td class="num">${r.fc}</td><td class="num">${r.act}</td>`+
-      `<td class="num">${d>0?'+':''}${round(d)}</td><td class="num">${r.dir??'—'}</td>`+
+      `<tr><td>${esc(r.note)||'—'}${extra(r)}</td><td>${nameOf(r.spot)}</td>`+
+      `<td class="num">${r.fc??'—'}</td><td class="num">${r.act}</td>`+
+      `<td class="num">${d==null?'—':(d>0?'+':'')+round(d)}</td><td class="num">${r.dir??'—'}</td>`+
       `<td><button class="del" data-i="${realIdx}">✕</button></td></tr>`);
   });
   document.querySelectorAll('.del').forEach(b=>b.onclick=()=>{
@@ -206,8 +216,10 @@ document.getElementById('add').onclick=()=>{
 document.getElementById('export').onclick=()=>{
   const data=load();
   if(!data.length)return;
-  const rows=[['note','spot','forecast_kn','actual_kn','delta_kn','dir_deg','iso']];
-  data.forEach(r=>rows.push([r.note||'',r.spot,r.fc,r.act,round(r.act-r.fc),r.dir??'',new Date(r.ts).toISOString()]));
+  const rows=[['note','spot','forecast_kn','actual_kn','delta_kn','dir_deg','iso','lo_kn','hi_kn','gust_kn','character','from_hr','to_hr','forecast_felt','wing_m','fc_basis','best_match_peak','ecmwf_peak','gfs_peak','icon_peak','bom_peak','fc_source']];
+  data.forEach(r=>{const m=(r.snap&&r.snap.models)||{};rows.push([r.note||'',r.spot,r.fc??'',r.act,r.fc==null?'':round(r.act-r.fc),r.dir??'',new Date(r.ts).toISOString(),
+    r.lo??'',r.hi??'',r.gust??'',r.char??'',r.from??'',r.to??'',r.felt??'',r.wing??'',r.fcBasis??'',
+    (r.snap&&r.snap.base)??'',m.ecmwf_ifs025??'',m.gfs_seamless??'',m.icon_seamless??'',m.bom_access_global??'',(r.snap&&r.snap.source)??'']);});
   const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   const a=document.createElement('a');a.href=url;a.download='foilspots-calibration.csv';a.click();URL.revokeObjectURL(url);

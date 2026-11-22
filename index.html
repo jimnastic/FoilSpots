@@ -167,6 +167,23 @@
     .badge-beginner     { color:var(--go);  border-color:var(--go); }
     .badge-intermediate { color:var(--mar); border-color:var(--mar); }
     .badge-advanced     { color:#f87171;    border-color:#f87171; }
+    /* ── Log my session form ───────────────────────────────────────── */
+    .logbtn { margin-left:auto; font-size:11px; font-weight:600; color:var(--acc); border:1px solid var(--acc); border-radius:20px; padding:2px 10px; cursor:pointer; white-space:nowrap; }
+    .logbtn:hover { background:rgba(78,205,196,0.12); }
+    .lf-row { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+    .lf-row > label, .lf-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--acc); }
+    .lf-row .lf-opt { color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0; }
+    .lf-inline { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .logform input[type=number], .logform input[type=date], .logform input[type=text], .logform select { background:var(--surf2); color:var(--txt); border:1px solid var(--border); border-radius:6px; padding:7px 9px; font-size:14px; max-width:100%; }
+    .logform input[type=number] { width:84px; }
+    .lf-chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .lf-chip { background:var(--surf2); color:var(--txt); border:1px solid var(--border); border-radius:20px; padding:5px 12px; font-size:12px; cursor:pointer; user-select:none; }
+    .lf-chip.on { background:rgba(78,205,196,0.18); border-color:var(--acc); color:var(--acc); font-weight:700; }
+    .lf-save { background:var(--acc); color:#04121f; border:0; border-radius:8px; padding:10px 16px; font-weight:700; font-size:14px; cursor:pointer; width:100%; }
+    .lf-save:disabled { opacity:0.6; cursor:default; }
+    .lf-msg { font-size:12px; margin-top:10px; min-height:16px; color:var(--go); }
+    .lf-msg.err { color:#f87171; }
+    .lf-hint { font-size:11px; color:var(--muted); }
     .modal-close { background:none; border:none; color:var(--muted); font-size:24px; cursor:pointer; line-height:1; padding:0 0 2px; margin-left:8px; flex-shrink:0; }
     .modal-close:hover { color:var(--txt); }
     .modal-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
@@ -305,6 +322,16 @@
       <div class="bi-name">Manly Cove</div>
       <div class="bi-note">South-facing harbour beach on the Manly foreshore. N/NE/NW may be onshore or cross-onshore. Sheltered, flat water. To verify: usable wind directions, wingfoil tolerance, hazards, parking.</div>
     </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="logModal" onclick="if(event.target===this)closeLogForm()">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-hdr">
+      <div style="flex:1"><h2 id="log-title">Log my session</h2><div class="lf-hint" style="margin-top:4px">Saved on this device. Feeds the calibration log.</div></div>
+      <button class="modal-close" onclick="closeLogForm()" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body logform" id="log-body"></div>
   </div>
 </div>
 
@@ -713,7 +740,7 @@ function buildDetailRow(spot, dayIdx, dayLabel) {
   tr.dataset.sid = spot.id;
   tr.dataset.di  = dayIdx;
   tr.innerHTML = `<td colspan="20"><div class="detail-inner">
-    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr}${uStr} · hover an hour for per-model values · click again to close</span></div>
+    <div class="detail-hdr">${spot.name} — ${dayLabel} <span>· ${adjStr}${uStr} · hover an hour for per-model values · click again to close</span><a href="#" class="logbtn" onclick="openLogForm('${spot.id}',${dayIdx});return false">Log my session</a></div>
     <div class="detail-hours">${det.hours.length ? hoursHTML : '<span style="color:var(--muted);font-size:12px">No hourly data</span>'}</div>
     ${mInfo ? `<div style="margin-top:10px;font-size:11px;color:var(--muted)">${mInfo}</div>` : ''}
   </div></td>`;
@@ -898,7 +925,7 @@ function closeSpotModal() {
   document.body.style.overflow = '';
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSpotModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSpotModal(); closeLogForm(); } });
 
 // ── Modal content builder ──────────────────────────────────────────────────
 function buildModalContent(spot) {
@@ -1253,6 +1280,135 @@ function updateMainHeight() {
   if (main) main.style.height = `calc(100vh - ${used}px)`;
 }
 window.addEventListener('resize', updateMainHeight, { passive: true });
+
+
+// ── Log my session ─────────────────────────────────────────────────────────
+// Saves into the same localStorage log calibrate.html reads (foilspots_calib_v1).
+// fc = RAW (unadjusted) model-mean forecast: mean over the hours you were on the water if you gave
+// them, else the day's peak mean (9am–7pm). A snapshot of the per-model forecast is stored too.
+const CALIB_KEY = 'foilspots_calib_v1';
+const FELT_OPTS = ['too light', 'about right', 'too strong'];
+const CHAR_OPTS = ['steady', 'gusty', 'very gusty'];
+const r1 = v => Math.round(v * 10) / 10;
+function ymd(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function dayIndexFor(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number), t = new Date();
+  return Math.round((Date.UTC(y, m-1, d) - Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 86400000);
+}
+
+function openLogForm(sid) {
+  const sp = SPOTS.find(s => s.id === sid);
+  if (!sp) return;
+  const today = ymd(new Date());
+  const hrOpts = '<option value="">—</option>' + Array.from({ length: 16 }, (_, i) => i + 6).map(hr => `<option value="${hr}">${hourLabel(hr)}</option>`).join('');
+  const chips = (grp, arr) => `<div class="lf-chips" data-grp="${grp}">${arr.map(o => `<span class="lf-chip" data-val="${o}">${o}</span>`).join('')}</div>`;
+  document.getElementById('log-title').textContent = `Log my session — ${sp.name}`;
+  document.getElementById('log-body').innerHTML = `
+    <input type="hidden" id="lf-sid" value="${sp.id}">
+    <div class="lf-row"><label for="lf-date">Date</label>
+      <input type="date" id="lf-date" value="${today}" max="${today}">
+      <span class="lf-hint">Defaults to today. Past dates use that day's archived forecast.</span></div>
+    <div class="lf-row"><label>Wind on the water (kt) — sustained</label>
+      <div class="lf-inline"><input type="number" id="lf-lo" min="0" max="60" step="0.5" placeholder="low"> <span>to</span>
+      <input type="number" id="lf-hi" min="0" max="60" step="0.5" placeholder="high (optional)"></div></div>
+    <div class="lf-row"><label for="lf-gust">Strongest gusts (kt) <span class="lf-opt">optional</span></label>
+      <input type="number" id="lf-gust" min="0" max="80" step="1"></div>
+    <div class="lf-row"><span class="lf-lbl">Direction <span class="lf-opt">optional</span></span>${chips('band', BANDS8)}</div>
+    <div class="lf-row"><span class="lf-lbl">Character <span class="lf-opt">optional</span></span>${chips('char', CHAR_OPTS)}</div>
+    <div class="lf-row"><span class="lf-lbl">Time on the water <span class="lf-opt">optional</span></span>
+      <div class="lf-inline"><select id="lf-from">${hrOpts}</select> <span>to</span> <select id="lf-to">${hrOpts}</select></div></div>
+    <div class="lf-row"><span class="lf-lbl">The forecast felt… <span class="lf-opt">optional</span></span>${chips('felt', FELT_OPTS)}</div>
+    <div class="lf-row"><label for="lf-wing">Wing size (m) <span class="lf-opt">optional</span></label>
+      <input type="number" id="lf-wing" min="1" max="10" step="0.5"></div>
+    <div class="lf-row"><label for="lf-notes">Notes <span class="lf-opt">optional</span></label>
+      <input type="text" id="lf-notes" maxlength="300"></div>
+    <button class="lf-save" id="lf-save" onclick="submitLog()">Save session</button>
+    <div class="lf-msg" id="lf-msg"></div>`;
+  document.querySelectorAll('#log-body .lf-chips').forEach(g => g.addEventListener('click', e => {
+    const c = e.target.closest('.lf-chip'); if (!c) return;
+    const was = c.classList.contains('on');
+    g.querySelectorAll('.lf-chip').forEach(x => x.classList.remove('on'));
+    if (!was) c.classList.add('on');
+  }));
+  document.getElementById('logModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLogForm() {
+  const m = document.getElementById('logModal');
+  if (!m || !m.classList.contains('open')) return;
+  m.classList.remove('open');
+  if (!document.getElementById('spotModal').classList.contains('open')) document.body.style.overflow = '';
+}
+
+// Archived forecast for a past date (single day → day index 0). Same model-id fallback as fetchPt.
+function fetchArchiveDay(sp, date) {
+  const url = ids => `https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${sp.lat}&longitude=${sp.lon}&start_date=${date}&end_date=${date}&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&timezone=Australia%2FSydney&models=${ids.join(',')}`;
+  const all = [FORECAST_CONFIG.baseline, ...FORECAST_CONFIG.models];
+  const attempts = [all, all.filter(m => m !== 'bom_access_global'), [FORECAST_CONFIG.baseline]];
+  const run = i => fetchJson(url(attempts[i])).then(d => normalisePt(d, attempts[i]))
+    .catch(e => (/^HTTP 4/.test(e.message) && i + 1 < attempts.length) ? run(i + 1) : Promise.reject(e));
+  return run(0);
+}
+
+async function submitLog() {
+  const $ = id => document.getElementById(id), msg = $('lf-msg'), btn = $('lf-save');
+  const fail = t => { msg.className = 'lf-msg err'; msg.textContent = t; btn.disabled = false; };
+  const num = id => { const v = $(id).value; return v === '' ? null : Number(v); };
+  const chip = g => document.querySelector(`#log-body .lf-chips[data-grp="${g}"] .lf-chip.on`)?.dataset.val ?? null;
+  const sp = SPOTS.find(s => s.id === $('lf-sid').value);
+  const date = $('lf-date').value;
+  const lo = num('lf-lo'); let hi = num('lf-hi');
+  const from = $('lf-from').value === '' ? null : +$('lf-from').value, to = $('lf-to').value === '' ? null : +$('lf-to').value;
+  msg.className = 'lf-msg'; btn.disabled = true;
+  if (!sp) return fail('Unknown spot.');
+  if (!date || dayIndexFor(date) > 0) return fail('Pick today or an earlier date.');
+  if (lo == null || lo < 0) return fail('Enter the wind you had (at least the low number).');
+  if (hi == null) hi = lo;
+  if (hi < lo) return fail('High is lower than low.');
+  if ((from == null) !== (to == null)) return fail('Set both a start and end hour, or neither.');
+  if (from != null && to < from) return fail('End hour is before start hour.');
+  msg.textContent = 'Saving…';
+
+  // Forecast snapshot (live data for today, archived forecast for past days)
+  const di = dayIndexFor(date);
+  let sd = null, source = null, dayI = 0;
+  if (di === 0 && rawData[sp.id]) { sd = rawData[sp.id]; source = 'live'; }
+  else if (di < 0) { try { sd = await fetchArchiveDay(sp, date); source = 'archive'; } catch (e) { sd = null; } }
+  const sum = sd ? daySum(sd, dayI) : null;
+  let fc = null, fcBasis = null, hours = null, snap = null;
+  if (sum) {
+    hours = {};
+    for (let hr = 0; hr < 24; hr++) {
+      const vals = sum.models.map(m => sd.models[m].s[dayI*24+hr]).filter(v => v != null);
+      if (vals.length) hours[hr] = r1(avg(vals));
+    }
+    if (from != null) {
+      const hs = []; for (let hr = from; hr <= to; hr++) if (hours[hr] != null) hs.push(hours[hr]);
+      if (hs.length) { fc = avg(hs); fcBasis = 'window'; }
+    }
+    if (fc == null) { fc = sum.mean; fcBasis = 'peak'; }
+    const per = {}; sum.models.forEach(m => per[m] = r1(sum.per[m].peak));
+    snap = { source, meanPeak: r1(sum.mean), minPeak: r1(sum.min), maxPeak: r1(sum.max), models: per,
+             base: sum.base ? r1(sum.base.peak) : null, dirDeg: Math.round(sum.dir), peakHour: sum.hour,
+             gust: r1(sum.gust), adjApplied: adjFor(sp, sum.dir).adj, hours };
+  }
+  const band = chip('band'), notes = $('lf-notes').value.trim();
+  const entry = {
+    spot: sp.id, date, fc: fc == null ? null : r1(fc), fcBasis, act: (lo + hi) / 2, lo, hi, gust: num('lf-gust'),
+    dir: band ? BANDS8.indexOf(band) * 45 : null, band, char: chip('char'), from, to, felt: chip('felt'), wing: num('lf-wing'),
+    note: date + (notes ? ' · ' + notes : ''), notes, ts: Date.parse(date + 'T12:00:00'), loggedAt: Date.now(), snap
+  };
+  try {
+    const arr = JSON.parse(localStorage.getItem(CALIB_KEY) || '[]');
+    arr.push(entry);
+    localStorage.setItem(CALIB_KEY, JSON.stringify(arr));
+  } catch (e) { return fail('Could not save (browser storage unavailable).'); }
+  msg.className = 'lf-msg';
+  msg.innerHTML = (fc == null ? 'Saved — but no forecast was available for that date, so it can\'t be used for calibration yet. ' : 'Saved. ')
+    + '<a href="calibrate.html">Open calibration log</a>';
+  btn.textContent = 'Saved'; 
+}
 
 // ── Boot ───────────────────────────────────────────────────────
 initFilters();
