@@ -35,13 +35,14 @@
     .hdr-nav { display: flex; gap: 16px; }
     .hdr-nav a { font-size: 12px; color: var(--muted); }
     .hdr-nav a:hover { color: var(--acc); }
-    .hdr-nav a.hdr-cta { color: var(--acc); border: 1px solid var(--acc); border-radius: 20px; padding: 2px 11px; font-weight: 600; }
-    .hdr-nav a.hdr-cta:hover { background: rgba(78,205,196,0.12); }
 
     /* Filters */
     .filters { position: sticky; top: 0; z-index: 30; background: var(--surf); border-bottom: 1px solid var(--border); padding: 8px 0; display: flex; flex-wrap: wrap; align-items: center; }
     .fg { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 6px 18px; border-right: 1px solid rgba(255,255,255,0.1); }
     .fg:last-child { border-right: none; }
+    .fg-cta { margin-left: auto; border-right: none; justify-content: center; }
+    .filters-cta { background: none; color: var(--acc); border: 1px solid var(--acc); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .filters-cta:hover { background: rgba(78,205,196,0.12); }
     .fg label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--acc); white-space: nowrap; }
     .brow { display: flex; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); }
     .brow button { background: none; border: none; border-right: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 500; padding: 5px 11px; cursor: pointer; white-space: nowrap; transition: background 0.12s, color 0.12s; }
@@ -230,7 +231,6 @@
     <a href="sydney-wind-rose.html">Wind rose</a>
     <a href="wind-windows.html">Wind windows</a>
     <a href="antwerp/">Antwerp spots</a>
-    <a href="#" class="hdr-cta" onclick="openLogForm();return false">Log my session</a>
   </nav>
 </header>
 
@@ -265,6 +265,9 @@
       <button data-v="intermediate">Intermediate</button>
       <button data-v="advanced">Advanced</button>
     </div>
+  </div>
+  <div class="fg fg-cta">
+    <button class="filters-cta" onclick="openLogForm()">+ Log my session</button>
   </div>
 </div>
 
