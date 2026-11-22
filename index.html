@@ -35,6 +35,8 @@
     .hdr-nav { display: flex; gap: 16px; }
     .hdr-nav a { font-size: 12px; color: var(--muted); }
     .hdr-nav a:hover { color: var(--acc); }
+    .hdr-nav a.hdr-cta { color: var(--acc); border: 1px solid var(--acc); border-radius: 20px; padding: 2px 11px; font-weight: 600; }
+    .hdr-nav a.hdr-cta:hover { background: rgba(78,205,196,0.12); }
 
     /* Filters */
     .filters { position: sticky; top: 0; z-index: 30; background: var(--surf); border-bottom: 1px solid var(--border); padding: 8px 0; display: flex; flex-wrap: wrap; align-items: center; }
@@ -228,6 +230,7 @@
     <a href="sydney-wind-rose.html">Wind rose</a>
     <a href="wind-windows.html">Wind windows</a>
     <a href="antwerp/">Antwerp spots</a>
+    <a href="#" class="hdr-cta" onclick="openLogForm();return false">Log my session</a>
   </nav>
 </header>
 
@@ -981,7 +984,12 @@ function buildModalContent(spot) {
       <p><a href="${spot.webcam}" target="_blank" rel="noopener" style="color:var(--acc);">&#128249; Live webcam (Narrabeen Lagoon)</a></p>
     </div>` : '';
 
-  return descHTML + warnsHTML + parkHTML + camHTML + diagHTML + roseHTML;
+  const logCta = `
+    <div class="modal-section" style="display:flex">
+      <a href="#" class="logbtn" style="margin-left:0;font-size:12px;padding:4px 14px" onclick="openLogForm('${spot.id}');return false">Log my session at ${spot.name}</a>
+    </div>`;
+
+  return logCta + descHTML + warnsHTML + parkHTML + camHTML + diagHTML + roseHTML;
 }
 
 // ── Direction arc SVG ──────────────────────────────────────────────────────
@@ -1296,15 +1304,17 @@ function dayIndexFor(dateStr) {
   return Math.round((Date.UTC(y, m-1, d) - Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 86400000);
 }
 
-function openLogForm(sid) {
-  const sp = SPOTS.find(s => s.id === sid);
-  if (!sp) return;
+function openLogForm(sid) {   // sid optional (header link): the form has a spot picker
   const today = ymd(new Date());
   const hrOpts = '<option value="">—</option>' + Array.from({ length: 16 }, (_, i) => i + 6).map(hr => `<option value="${hr}">${hourLabel(hr)}</option>`).join('');
   const chips = (grp, arr) => `<div class="lf-chips" data-grp="${grp}">${arr.map(o => `<span class="lf-chip" data-val="${o}">${o}</span>`).join('')}</div>`;
-  document.getElementById('log-title').textContent = `Log my session — ${sp.name}`;
+  let last = ''; try { last = localStorage.getItem('fs-last-log-spot') || ''; } catch (e) {}
+  const pick = sid || last;
+  const spotOpts = '<option value="">Choose a spot…</option>' + [...SPOTS].sort((a, b) => a.name.localeCompare(b.name))
+    .map(s => `<option value="${s.id}"${s.id === pick ? ' selected' : ''}>${s.name}</option>`).join('');
+  document.getElementById('log-title').textContent = 'Log my session';
   document.getElementById('log-body').innerHTML = `
-    <input type="hidden" id="lf-sid" value="${sp.id}">
+    <div class="lf-row"><label for="lf-sid">Spot</label><select id="lf-sid">${spotOpts}</select></div>
     <div class="lf-row"><label for="lf-date">Date</label>
       <input type="date" id="lf-date" value="${today}" max="${today}">
       <span class="lf-hint">Defaults to today. Past dates use that day's archived forecast.</span></div>
@@ -1361,7 +1371,7 @@ async function submitLog() {
   const lo = num('lf-lo'); let hi = num('lf-hi');
   const from = $('lf-from').value === '' ? null : +$('lf-from').value, to = $('lf-to').value === '' ? null : +$('lf-to').value;
   msg.className = 'lf-msg'; btn.disabled = true;
-  if (!sp) return fail('Unknown spot.');
+  if (!sp) return fail('Pick a spot.');
   if (!date || dayIndexFor(date) > 0) return fail('Pick today or an earlier date.');
   if (lo == null || lo < 0) return fail('Enter the wind you had (at least the low number).');
   if (hi == null) hi = lo;
@@ -1407,7 +1417,8 @@ async function submitLog() {
   msg.className = 'lf-msg';
   msg.innerHTML = (fc == null ? 'Saved — but no forecast was available for that date, so it can\'t be used for calibration yet. ' : 'Saved. ')
     + '<a href="calibrate.html">Open calibration log</a>';
-  btn.textContent = 'Saved'; 
+  btn.textContent = 'Saved';
+  try { localStorage.setItem('fs-last-log-spot', sp.id); } catch (e) {}
 }
 
 // ── Boot ───────────────────────────────────────────────────────
