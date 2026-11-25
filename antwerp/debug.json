@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T06:42:48.616Z",
+  "generatedAt": "2026-11-25T07:10:42.733Z",
   "topLevelKeys": [
     "Succesvol",
     "AquoMetadataLijst",
@@ -72,7 +72,7 @@
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-10-14T10:38:00.000+01:00",
-          "ageHours": 1005,
+          "ageHours": 1006,
           "distKm": 0
         }
       ]
@@ -96,7 +96,7 @@
         {
           "code": "scharendijke.diepeput",
           "ts": "2026-10-14T10:38:00.000+01:00",
-          "ageHours": 1005,
+          "ageHours": 1006,
           "distKm": 1
         },
         {
@@ -138,7 +138,7 @@
         {
           "code": "kamperland.schotsman.ruiterplaat",
           "ts": "2023-11-22T08:20:00.000+01:00",
-          "ageHours": 26375,
+          "ageHours": 26376,
           "distKm": 3
         },
         {
